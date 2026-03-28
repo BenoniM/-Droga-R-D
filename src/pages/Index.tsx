@@ -87,10 +87,10 @@ const Index = () => {
         <div className="absolute inset-0 bg-foreground/40" />
         
         {/* Content - Aligned with Logo (Left) */}
-        <div className="relative w-full z-10">
+        <div className="relative w-full z-1">
           <div className="container mx-auto px-4 md:px-6">
             <div className="max-w-3xl">
-              <span className="inline-block text-xs font-bold uppercase tracking-[0.3em] text-highlight mb-6">
+              <span className="inline-block text-xs font-bold uppercase tracking-[0.1em] text-highlight mb-1">
                 {slide.subtitle}
               </span>
               <h1 className="font-heading text-4xl md:text-6xl lg:text-8xl font-bold tracking-tighter leading-[0.95] text-surface-dark-foreground">
