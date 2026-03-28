@@ -69,8 +69,8 @@ const Navbar = () => {
   return (
     <header className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ${getHeaderStyle()} py-2 md:py-3`}>
       <div className="container mx-auto flex items-center justify-between px-4 md:px-6">
-        {/* Logo with Image */}
-        <Link to="/" className="flex flex-col items-center md:items-start gap-0 md:gap-0.5 group">
+        {/* Logo with Image - Left aligned */}
+        <Link to="/" className="flex items-center gap-2 group">
           <motion.img 
             src={logo} 
             alt="Droga R&D" 
@@ -141,16 +141,16 @@ const Navbar = () => {
           ))}
         </nav>
 
-        {/* Contact Button */}
+        {/* Contact Button - Simple Modern Animation */}
         <motion.div 
           className="hidden lg:flex items-center"
           whileHover={{ scale: 1.05 }}
-          whileTap={{ scale: 0.95 }}
+          whileTap={{ scale: 0.98 }}
           transition={{ duration: 0.2 }}
         >
           <Link
             to="/contact"
-            className="px-4 py-1.5 text-sm font-heading font-bold tracking-wide text-black bg-highlight hover:bg-highlight/90 transition-all duration-300 shadow-md rounded-md"
+            className="px-5 py-2 text-base font-heading font-bold tracking-wide text-black bg-highlight hover:bg-black hover:text-highlight transition-all duration-300 shadow-md rounded-md"
           >
             Contact Us
           </Link>
