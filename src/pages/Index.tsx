@@ -93,7 +93,8 @@ const Index = () => {
               <span className="inline-block text-xs font-bold uppercase tracking-[0.1em] text-highlight mb-1">
                 {slide.subtitle}
               </span>
-              <h1 className="font-heading text-4xl md:text-6xl lg:text-8xl font-bold tracking-tighter leading-[0.95] text-surface-dark-foreground">
+              {/* Title sizes reduced by 1 step */}
+              <h1 className="font-heading text-3xl md:text-5xl lg:text-7xl font-bold tracking-tighter leading-[0.95] text-surface-dark-foreground">
                 {slide.title}
                 <span className="text-highlight"> {slide.highlight}</span>
               </h1>
