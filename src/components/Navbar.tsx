@@ -69,15 +69,14 @@ const Navbar = () => {
                 </div>
               </div>
 
-              {/* Right Side - Black Text on White */}
+              {/* Right Side - Social Media Icons */}
               <div className="flex items-center gap-6 text-black">
-               
                 <span className="text-gray-200">|</span>
                 <div className="flex items-center gap-4">
-                  <a href="#" className="hover:text-highlight transition-colors"><Facebook className="w-4 h-4" /></a>
-                  <a href="#" className="hover:text-highlight transition-colors"><Twitter className="w-4 h-4" /></a>
-                  <a href="#" className="hover:text-highlight transition-colors"><Instagram className="w-4 h-4" /></a>
-                  <a href="#" className="hover:text-highlight transition-colors"><Linkedin className="w-4 h-4" /></a>
+                  <a href="#" className="text-black hover:bg-highlight hover:text-black p-1 rounded transition-all duration-300"><Facebook className="w-4 h-4" /></a>
+                  <a href="#" className="text-black hover:bg-highlight hover:text-black p-1 rounded transition-all duration-300"><Twitter className="w-4 h-4" /></a>
+                  <a href="#" className="text-black hover:bg-highlight hover:text-black p-1 rounded transition-all duration-300"><Instagram className="w-4 h-4" /></a>
+                  <a href="#" className="text-black hover:bg-highlight hover:text-black p-1 rounded transition-all duration-300"><Linkedin className="w-4 h-4" /></a>
                 </div>
               </div>
             </div>
@@ -116,10 +115,10 @@ const Navbar = () => {
               >
                 <Link
                   to={item.path}
-                  className={`px-4 py-2 text-[15px] font-bold transition-all duration-300 flex items-center whitespace-nowrap ${
+                  className={`px-4 py-2 text-[15px] font-bold transition-all duration-300 flex items-center whitespace-nowrap rounded-md ${
                     location.pathname === item.path
-                      ? "text-highlight bg-black rounded-md"
-                      : "text-black hover:bg-black hover:text-highlight rounded-md"
+                      ? "text-highlight bg-black" // Active: Yellow text, Black background
+                      : "text-black hover:bg-highlight hover:text-black" // Hover: Yellow background, Black text
                   }`}
                 >
                   {item.label}
@@ -141,7 +140,7 @@ const Navbar = () => {
                           <Link
                             key={child.label}
                             to={child.path}
-                            className="block px-5 py-2.5 text-sm font-bold text-black hover:bg-black hover:text-highlight transition-all duration-200"
+                            className="block px-5 py-2.5 text-sm font-bold text-black hover:bg-highlight hover:text-black transition-all duration-200"
                             onClick={() => setActiveDropdown(null)}
                           >
                             {child.label}
@@ -155,7 +154,7 @@ const Navbar = () => {
             ))}
           </nav>
 
-          {/* Right Section */}
+          {/* Right Section - Contact Us button */}
           <div className="flex items-center gap-4 shrink-0">
             <motion.div 
               whileHover={{ scale: 1.05 }}
