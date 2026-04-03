@@ -3,7 +3,7 @@ import { Users, Target, Eye } from "lucide-react";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import SectionReveal from "@/components/SectionReveal";
-import TimeLineParent from "@/components/TimeLineParent"; // Add this import
+import TimeLineParent from "@/components/TimeLineParent";
 import facilityImg from "@/assets/facility.jpg";
 import labImg from "@/assets/lab-research.jpg";
 import heroImg from "@/assets/hero-science.jpg";
@@ -30,8 +30,8 @@ const About = () => {
     <div className="min-h-screen bg-background">
       <Navbar />
 
-      {/* Hero with image */}
-      <section className="relative h-[70vh] flex items-end overflow-hidden">
+      {/* Hero with image - Title moved to top and centered */}
+      <section className="relative h-[70vh] flex items-start justify-center overflow-hidden">
         <motion.img
           src={facilityImg}
           alt="Droga R&D facility"
@@ -41,7 +41,7 @@ const About = () => {
           transition={{ duration: 1.4, ease: [0.22, 1, 0.36, 1] }}
         />
         <div className="absolute inset-0 bg-foreground/60" />
-        <div className="relative container-grid px-6 pb-20 z-10">
+        <div className="relative container-grid px-6 pt-32 md:pt-40 z-10 text-center">
           <motion.div initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8 }}>
             <span className="text-xs font-bold uppercase tracking-[0.3em] text-highlight">About Us</span>
             <h1 className="font-heading text-5xl md:text-7xl font-bold tracking-tighter text-surface-dark-foreground mt-4">Our Story</h1>
@@ -128,7 +128,6 @@ const About = () => {
         </div>
       </section>
       
-
       {/* Timeline */}
       <section className="section-padding">
         <div className="container-grid">

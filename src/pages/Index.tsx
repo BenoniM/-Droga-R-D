@@ -83,22 +83,24 @@ const Index = () => {
           ))}
         </div>
         
-        {/* Dark Overlay */}
-        <div className="absolute inset-0 bg-foreground/40" />
+        {/* Dark Overlay - Made darker for better white text visibility */}
+        <div className="absolute inset-0 bg-black/60" />
         
         {/* Content - Aligned with Logo (Left) */}
         <div className="relative w-full z-1">
           <div className="container mx-auto px-4 md:px-6">
             <div className="max-w-3xl">
-              <span className="inline-block text-xs font-bold uppercase tracking-[0.1em] text-highlight mb-1">
+              {/* Subtitle - White color */}
+              <span className="inline-block text-xs font-black uppercase tracking-[0.1em] text-white mb-1">
                 {slide.subtitle}
               </span>
-              {/* Title sizes reduced by 1 step */}
-              <h1 className="font-heading text-3xl md:text-5xl lg:text-7xl font-bold tracking-tighter leading-[0.95] text-surface-dark-foreground">
+              {/* Title - Original colors */}
+              <h1 className="font-heading text-3xl md:text-5xl lg:text-7xl font-bold tracking-tighter leading-[0.95] text-white">
                 {slide.title}
                 <span className="text-highlight"> {slide.highlight}</span>
               </h1>
-              <p className="mt-6 md:mt-8 text-base md:text-xl font-body text-surface-dark-foreground/70 max-w-xl leading-relaxed">
+              {/* Description - White with opacity */}
+              <p className="mt-6 md:mt-8 text-base md:text-xl font-body text-white/80 max-w-xl leading-relaxed">
                 {slide.desc}
               </p>
               <div className="mt-8 md:mt-10 flex flex-wrap gap-4">
@@ -106,7 +108,7 @@ const Index = () => {
                   variant="default" 
                   size="lg" 
                   asChild 
-                  className="bg-highlight text-foreground hover:bg-highlight/90 transition-all duration-300 border-none"
+                  className="bg-highlight text-black hover:bg-highlight/90 transition-all duration-300 border-none"
                 >
                   <Link to="/droga-science">Explore Research</Link>
                 </Button>
@@ -115,7 +117,7 @@ const Index = () => {
                   variant="default" 
                   size="lg" 
                   asChild 
-                  className="bg-transparent border border-highlight text-white hover:bg-highlight hover:text-foreground transition-all duration-300"
+                  className="bg-transparent border border-white text-white hover:bg-white hover:text-black transition-all duration-300"
                 >
                   <Link to="/droga-science/projects">View Projects</Link>
                 </Button>
@@ -131,7 +133,7 @@ const Index = () => {
               key={i}
               onClick={() => setCurrentSlide(i)}
               className={`h-1 rounded-full transition-all duration-500 ${
-                i === currentSlide ? "w-10 bg-highlight" : "w-4 bg-surface-dark-foreground/30"
+                i === currentSlide ? "w-10 bg-highlight" : "w-4 bg-white/30"
               }`}
             />
           ))}
@@ -252,12 +254,12 @@ const Index = () => {
           className="w-full h-[130%] object-cover absolute -top-[15%]"
           style={{ y: facilityY }}
         />
-        <div className="absolute inset-0 bg-foreground/50 flex items-center justify-center">
+        <div className="absolute inset-0 bg-black/50 flex items-center justify-center">
           <SectionReveal className="text-center max-w-2xl px-6">
-            <h2 className="font-heading text-3xl md:text-5xl font-bold text-surface-dark-foreground tracking-tight">
+            <h2 className="font-heading text-3xl md:text-5xl font-bold text-white tracking-tight">
               World-Class Facilities
             </h2>
-            <p className="mt-6 text-base md:text-lg font-body text-surface-dark-foreground/70">
+            <p className="mt-6 text-base md:text-lg font-body text-white/70">
               Our integrated research campus houses laboratories, bioequivalence units, and quality control centers.
             </p>
             <Button variant="default" size="lg" className="mt-8 bg-white text-black hover:bg-white/90" asChild>
