@@ -7,7 +7,7 @@ import Footer from "@/components/Footer";
 import SectionReveal from "@/components/SectionReveal";
 import labImg from "@/assets/lab-research.jpg";
 import facilityImg from "@/assets/facility.jpg";
-import plantsImg from "@/assets/hearbal2.png";
+import plantsImg from "@/assets/herbal8.jpg";
 import heroImg from "@/assets/hero-science.jpg";
 
 const Spline = lazy(() => import("@splinetool/react-spline"));

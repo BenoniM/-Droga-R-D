@@ -6,7 +6,7 @@ import Footer from "@/components/Footer";
 import SectionReveal from "@/components/SectionReveal";
 import labImg from "@/assets/lab-research.jpg";
 import moleculesImg from "@/assets/molecules.jpg";
-import plantsImg from "@/assets/hearbal2.png";
+import plantsImg from "@/assets/herbal8.jpg";
 import facilityImg from "@/assets/facility.jpg";
 import heroImg from "@/assets/hero-science.jpg";
 

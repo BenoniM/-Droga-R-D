@@ -1,3 +1,4 @@
+
 import { Suspense, lazy } from "react";
 import { motion } from "framer-motion";
 import { FlaskConical, Lightbulb, Cpu, BarChart3, Microscope, Users, ArrowRight } from "lucide-react";

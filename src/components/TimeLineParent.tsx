@@ -47,7 +47,7 @@ export default function App() {
                   <motion.div 
                     whileHover={{ y: -6 }}
                     transition={{ duration: 0.3 }}
-                    className="group bg-white p-6 rounded-lg shadow-md transition-all duration-300 hover:bg-[#FFEB00] cursor-pointer"
+                    className="group p-6 rounded-lg shadow-md transition-all duration-300 hover:bg-[#FFEB00] cursor-pointer"
                   >
                     <h2 className="text-xl font-bold text-gray-800 group-hover:text-gray-900 transition-colors duration-300">{item.title}</h2>
                     <p className="text-gray-600 mt-4 group-hover:text-gray-800 transition-colors duration-300">{item.description}</p>

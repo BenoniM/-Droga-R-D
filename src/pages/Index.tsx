@@ -11,7 +11,7 @@ import heroImg from "@/assets/hero-science.jpg";
 import labImg from "@/assets/lab-research.jpg";
 import facilityImg from "@/assets/facility.jpg";
 import moleculesImg from "@/assets/molecules.jpg";
-import plantsImg from "@/assets/hearbal2.png";
+import plantsImg from "@/assets/herbal8.jpg";
 
 const heroSlides = [
   { image: heroImg, subtitle: "Droga Research & Development Center", title: "Engineering the Future of", highlight: "Human Health", desc: "Translating complex biological data into scalable pharmaceutical solutions through innovative research and scientific excellence." },

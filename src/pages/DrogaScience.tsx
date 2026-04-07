@@ -9,7 +9,7 @@ import AnimatedCounter from "@/components/AnimatedCounter";
 import moleculesImg from "@/assets/molecules.jpg";
 import labImg from "@/assets/lab-research.jpg";
 import facilityImg from "@/assets/facility.jpg";
-import plantsImg from "@/assets/hearbal2.png";
+import plantsImg from "@/assets/herbal8.jpg";
 
 const pillars = [
   { icon: FlaskConical, title: "Drug Discovery", desc: "Natural and herbal pharmaceutical research with modern scientific methodologies." },

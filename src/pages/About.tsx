@@ -9,15 +9,15 @@ import labImg from "@/assets/lab-research.jpg";
 import heroImg from "@/assets/hero-science.jpg";
 
 const leaders = [
-  { name: "Dr. Abreham Bekele", role: "Director of R&D", area: "Pharmaceutical Sciences" },
-  { name: "Dr. Sara Mengistu", role: "Head of Drug Discovery", area: "Natural Products Chemistry" },
+  { name: "Muluken Nigatu", role: " R&D Director", area: "Pharmaceutical Sciences" },
+  { name: "Fortuna Kidane ", role: "Head of Drug Discovery", area: "Natural Products Chemistry" },
   { name: "Dr. Yonas Tadesse", role: "Head of Bioequivalence", area: "Clinical Pharmacology" },
   { name: "Dr. Helen Getachew", role: "Head of Food Sciences", area: "Nutritional Sciences" },
 ];
 
 const timeline = [
   { year: "2020", event: "Droga R&D Center established" },
-  { year: "2021", event: "First Droga Research Grant awarded" },
+  { year: "2021", event: "First Droga Researc h Grant awarded" },
   { year: "2022", event: "Drug Discovery wing launched" },
   { year: "2023", event: "Bioequivalence Center announced" },
   { year: "2024", event: "Kilinto facility construction begins" },
