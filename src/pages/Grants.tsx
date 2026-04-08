@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
-import { Award, Medal, Trophy, Star, BadgeCheck, Crown } from "lucide-react";
+import { Award, Medal, Trophy, Star, BadgeCheck, Crown, FileCheck, Users, ShieldCheck, Clock } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
@@ -18,11 +18,11 @@ const grantCategories = [
 ];
 
 const pastGrants = [
-  { title: "Hypolipidemic effect of Lippia Adoensis var. Koseret leaf extract", amount: "71,984", year: "2022", icon: Award, image: labImg },
-  { title: "Spirulina & Oyster Mushroom Nutraceutical Formulation", amount: "100,000", year: "2022", icon: Trophy, image: facilityImg },
-  { title: "Wheat replacement with fava bean and black cumin bread formulation", amount: "62,800", year: "2023", icon: Medal, image: heroImg },
-  { title: "Milk-based oral dispersible Griseofulvin tablets", amount: "90,750", year: "2023", icon: Star, image: labImg },
-  { title: "Diabetic foot care emollient formulation design", amount: "89,400", year: "2024", icon: BadgeCheck, image: facilityImg },
+  { title: "Evaluation of the hypolipidemic effect of leaf extract of Lippia Adoensis var. Koseret in hypercholesterolemic mice", amount: "71,984.00", icon: Award, image: labImg },
+  { title: "Exploration Of Spirulina (Arthrospira Fusiformis) And Oyster Mushroom Formulation as Potential Nutraceuticals for improved Nutrition and Better Human Health", amount: "100,000.00", icon: Trophy, image: facilityImg },
+  { title: "Effect of replacement of Wheat with fava bean and black cumin flours on nutritional properties and sensory attributes of bread", amount: "62,800.00", icon: Medal, image: heroImg },
+  { title: "Formulation, In-Vitro evaluation & optimization of milk based oral dispersible Griseofulvin tablets prepared by direct compression method", amount: "90,750.00", icon: Star, image: labImg },
+  { title: "Formulation design and physicochemical evaluation of Diabetic foot care emollient, A way to tackling diabetic foot xerosis (DFX)", amount: "89,400.00", icon: BadgeCheck, image: facilityImg },
 ];
 
 function FlaskIcon({ className }: { className?: string }) {
@@ -41,12 +41,25 @@ function SparkleIcon({ className }: { className?: string }) {
   return <svg className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><path d="m12 3-1.912 5.813a2 2 0 0 1-1.275 1.275L3 12l5.813 1.912a2 2 0 0 1 1.275 1.275L12 21l1.912-5.813a2 2 0 0 1 1.275-1.275L21 12l-5.813-1.912a2 2 0 0 1-1.275-1.275L12 3Z"/></svg>;
 }
 
+const containerVariants = {
+  hidden: { opacity: 0 },
+  visible: {
+    opacity: 1,
+    transition: { staggerChildren: 0.1, delayChildren: 0.2 }
+  }
+};
+
+const itemVariants = {
+  hidden: { opacity: 0, y: 30 },
+  visible: { opacity: 1, y: 0, transition: { duration: 0.6, ease: "easeOut" } }
+};
+
 const Grants = () => {
   return (
     <div className="min-h-screen bg-background">
       <Navbar />
 
-      {/* Hero with image */}
+      {/* Hero with image - Centered */}
       <section className="relative pt-32 pb-24 px-6 overflow-hidden">
         <motion.img
           src={heroImg}
@@ -58,8 +71,13 @@ const Grants = () => {
         />
         <div className="absolute inset-0 bg-foreground/70" />
         <div className="relative container-grid z-10">
-          <motion.div initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8 }}>
-            <div className="flex items-center gap-3 mb-6">
+          <motion.div
+            initial={{ opacity: 0, y: 30 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8 }}
+            className="text-center max-w-4xl mx-auto"
+          >
+            <div className="flex items-center justify-center gap-3 mb-6">
               <motion.div
                 animate={{ rotate: [0, 10, -10, 0] }}
                 transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
@@ -71,16 +89,16 @@ const Grants = () => {
             <h1 className="font-heading text-5xl md:text-7xl font-bold tracking-tighter text-surface-dark-foreground mt-4">
               Droga Research Grant
             </h1>
-            <p className="mt-6 text-lg text-surface-dark-foreground/70 max-w-2xl font-body leading-relaxed">
+            <p className="mt-6 text-lg text-surface-dark-foreground/70 max-w-2xl mx-auto font-body leading-relaxed">
               Recognizing and funding outstanding pharmaceutical research that transforms healthcare outcomes.
             </p>
           </motion.div>
         </div>
       </section>
 
-      {/* About DRG - Award style */}
+      {/* About DRG - already centered */}
       <section className="section-padding">
-        <div className="container-grid max-w-4xl text-center">
+        <div className="container-grid max-w-4xl text-center mx-auto">
           <SectionReveal>
             <motion.div
               animate={{ y: [0, -5, 0] }}
@@ -89,32 +107,83 @@ const Grants = () => {
             >
               <Trophy className="w-16 h-16 text-highlight mx-auto" strokeWidth={1} />
             </motion.div>
-            <h2 className="font-heading text-3xl md:text-4xl font-semibold tracking-tight text-foreground">Our Commitment to Excellence</h2>
+            <h2 className="font-heading text-3xl md:text-4xl font-semibold tracking-tight text-foreground">Our Commitment to Advancing Pharmaceutical Research</h2>
             <p className="mt-6 text-lg font-body text-muted-foreground leading-relaxed max-w-2xl mx-auto">
-              At Droga Research Grant (DRG), we believe that meaningful health solutions start with innovative research. Our mission is to support both junior and senior researchers who are dedicated to improving human health through pharmaceutical and related research.
+              At Droga Research Grant (DRG), we believe that meaningful health solutions start with innovative research.
+              Our mission is to support both junior and senior researchers who are dedicated to improving human health
+              through pharmaceutical and related research. We are particularly interested in projects that address real
+              challenges faced by our communities and country, and that have the potential to make a tangible impact on people’s lives.
+            </p>
+            <p className="mt-4 text-md font-body text-muted-foreground leading-relaxed max-w-2xl mx-auto">
+              Our goal is to empower researchers to transform ideas into solutions that improve the quality of pharmaceuticals and healthcare products.
             </p>
           </SectionReveal>
         </div>
       </section>
 
-      {/* Grant Categories */}
+      {/* Eligibility & Requirements - Centered heading */}
       <section className="section-padding bg-surface-subtle">
         <div className="container-grid">
           <SectionReveal>
-            <span className="overline-dark">Categories</span>
-            <h2 className="font-heading text-3xl md:text-4xl font-semibold tracking-tight mt-4 text-foreground">Research Areas We Fund</h2>
+            <div className="text-center">
+              <span className="overline-dark">Who Can Apply</span>
+              <h2 className="font-heading text-3xl md:text-4xl font-semibold tracking-tight mt-4 text-foreground">Eligibility & Requirements</h2>
+            </div>
           </SectionReveal>
-          <div className="mt-12 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-            {grantCategories.map((cat, i) => {
+          <motion.div
+            className="mt-12 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6"
+            variants={containerVariants}
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true, margin: "-50px" }}
+          >
+            {[
+              { icon: Users, title: "Eligible Applicants", desc: "Ethiopian healthcare professionals, researchers, and academicians committed to advancing knowledge in pharmaceutical and health sciences." },
+              { icon: FileCheck, title: "Submission Limit", desc: "Each applicant can submit one proposal per year." },
+              { icon: ShieldCheck, title: "IRB Approval", desc: "For projects involving human subjects or animals, Institutional Review Board (IRB) approval is required before funds are released." },
+              { icon: Clock, title: "No-Cost Extensions", desc: "We consider requests for no-cost extensions only under special circumstances on a case-by-case basis." }
+            ].map((item) => (
+              <motion.div
+                key={item.title}
+                variants={itemVariants}
+                whileHover={{ y: -8, transition: { duration: 0.3 } }}
+                className="group p-6 bg-card card-shadow rounded-sm border-t-4 border-highlight hover:bg-highlight transition-all duration-300 cursor-pointer"
+              >
+                <item.icon className="w-8 h-8 text-highlight group-hover:text-foreground mb-4 transition-colors duration-300" />
+                <h3 className="font-heading font-bold text-lg text-foreground group-hover:text-foreground transition-colors duration-300">{item.title}</h3>
+                <p className="mt-2 text-muted-foreground font-body text-sm group-hover:text-foreground/70 transition-colors duration-300">{item.desc}</p>
+              </motion.div>
+            ))}
+          </motion.div>
+        </div>
+      </section>
+
+      {/* Grant Categories - Centered heading */}
+      <section className="section-padding">
+        <div className="container-grid">
+          <SectionReveal>
+            <div className="text-center">
+              <span className="overline-dark">Research Areas We Support</span>
+              <h2 className="font-heading text-3xl md:text-4xl font-semibold tracking-tight mt-4 text-foreground">Funded Research Areas</h2>
+              <p className="mt-4 text-muted-foreground font-body max-w-2xl mx-auto">
+                We fund research across key areas in pharmaceutical sciences and related fields.
+              </p>
+            </div>
+          </SectionReveal>
+          <motion.div
+            className="mt-12 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6"
+            variants={containerVariants}
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true }}
+          >
+            {grantCategories.map((cat) => {
               const Icon = cat.icon;
               return (
                 <motion.div
                   key={cat.name}
-                  initial={{ opacity: 0, y: 20 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true }}
-                  transition={{ delay: i * 0.1, duration: 0.6 }}
-                  whileHover={{ y: -6, transition: { duration: 0.3 } }}
+                  variants={itemVariants}
+                  whileHover={{ y: -6, scale: 1.02, transition: { duration: 0.2 } }}
                   className="group p-8 bg-card card-shadow rounded-sm border-l-4 border-highlight hover:bg-highlight transition-all duration-300 cursor-pointer"
                 >
                   <Icon className="w-8 h-8 text-highlight group-hover:text-foreground mb-4 transition-colors duration-300" />
@@ -122,54 +191,62 @@ const Grants = () => {
                 </motion.div>
               );
             })}
-          </div>
+          </motion.div>
         </div>
       </section>
 
-      {/* Past Achievements - Award style cards */}
-      <section className="section-padding">
+      {/* Past Achievements - Centered heading */}
+      <section className="section-padding bg-surface-subtle">
         <div className="container-grid">
           <SectionReveal>
-            <span className="overline-dark">Track Record</span>
-            <h2 className="font-heading text-3xl md:text-4xl font-semibold tracking-tight mt-4 text-foreground">Funded Research Achievements</h2>
-            <p className="mt-4 text-muted-foreground font-body">Over the past four years, DRG has proudly funded impactful pharmaceutical research.</p>
+            <div className="text-center">
+              <span className="overline-dark">Celebrating Past Research Achievements</span>
+              <h2 className="font-heading text-3xl md:text-4xl font-semibold tracking-tight mt-4 text-foreground">Funded Research Achievements</h2>
+              <p className="mt-4 text-muted-foreground font-body max-w-2xl mx-auto">
+                Over the past four years, DRG has proudly funded projects that showcase the diversity and impact of pharmaceutical research.
+              </p>
+            </div>
           </SectionReveal>
-          <div className="mt-12 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <motion.div
+            className="mt-12 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"
+            variants={containerVariants}
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true }}
+          >
             {pastGrants.map((grant, i) => {
               const Icon = grant.icon;
               return (
                 <motion.div
                   key={grant.title}
-                  initial={{ opacity: 0, y: 30 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true }}
-                  transition={{ delay: i * 0.1, duration: 0.6 }}
+                  variants={itemVariants}
                   whileHover={{ y: -8, transition: { duration: 0.3 } }}
                   className="group relative bg-card rounded-sm overflow-hidden card-shadow hover:shadow-2xl transition-all duration-500"
                 >
-                  {/* Image header */}
                   <div className="relative aspect-[16/9] overflow-hidden">
-                    <img src={grant.image} alt={grant.title} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" />
-                    <div className="absolute inset-0 bg-foreground/40" />
-                    {/* Award icon */}
+                    <img
+                      src={grant.image}
+                      alt={grant.title}
+                      className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-t from-foreground/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
                     <motion.div
                       className="absolute bottom-4 right-4"
                       animate={{ rotate: [0, 5, -5, 0] }}
                       transition={{ duration: 4, repeat: Infinity, ease: "easeInOut", delay: i * 0.5 }}
                     >
-                      <div className="w-12 h-12 rounded-full bg-highlight flex items-center justify-center">
+                      <div className="w-12 h-12 rounded-full bg-highlight flex items-center justify-center shadow-lg">
                         <Icon className="w-6 h-6 text-foreground" strokeWidth={1.5} />
                       </div>
                     </motion.div>
-                    {/* Year badge */}
-                    <div className="absolute top-4 left-4 px-3 py-1 bg-highlight rounded-sm">
-                      <span className="text-xs font-heading font-bold text-foreground">{grant.year}</span>
+                    <div className="absolute top-4 left-4 px-3 py-1 bg-highlight rounded-sm shadow-md">
+                      <span className="text-xs font-heading font-bold text-foreground">GRANTED</span>
                     </div>
                   </div>
-
-                  {/* Content */}
                   <div className="p-6 group-hover:bg-highlight transition-colors duration-300">
-                    <h4 className="font-heading text-base font-bold text-foreground leading-snug">{grant.title}</h4>
+                    <h4 className="font-heading text-base font-bold text-foreground leading-snug line-clamp-3 group-hover:line-clamp-none transition-all duration-300">
+                      {grant.title}
+                    </h4>
                     <div className="mt-4 flex items-center gap-2">
                       <span className="font-heading text-xl font-bold text-foreground">{grant.amount}</span>
                       <span className="text-sm text-muted-foreground group-hover:text-foreground/60 transition-colors duration-300">ETB</span>
@@ -178,11 +255,11 @@ const Grants = () => {
                 </motion.div>
               );
             })}
-          </div>
+          </motion.div>
         </div>
       </section>
 
-      {/* Parallax banner */}
+      {/* Parallax banner - already centered */}
       <section className="relative h-[40vh] overflow-hidden">
         <motion.img
           src={facilityImg}
@@ -202,41 +279,49 @@ const Grants = () => {
         </div>
       </section>
 
-      {/* Application CTA */}
-     {/* Decorative floating elements */}
-<motion.div
-  className="absolute top-10 left-10 opacity-10"
-  animate={{ y: [0, -15, 0], rotate: [0, 180, 360] }}
-  transition={{ duration: 10, repeat: Infinity, ease: "easeInOut" }}
->
-  <Award className="w-24 h-24 text-foreground" strokeWidth={0.5} />
-</motion.div>
-<motion.div
-  className="absolute bottom-10 right-10 opacity-10"
-  animate={{ y: [0, 10, 0], rotate: [360, 180, 0] }}
-  transition={{ duration: 12, repeat: Infinity, ease: "easeInOut" }}
->
-  <Medal className="w-20 h-20 text-foreground" strokeWidth={0.5} />
-</motion.div>
+      {/* Application CTA - already centered */}
+      <section className="section-padding bg-surface-subtle relative overflow-hidden">
+        <motion.div
+          className="absolute top-10 left-10 opacity-10"
+          animate={{ y: [0, -15, 0], rotate: [0, 180, 360] }}
+          transition={{ duration: 10, repeat: Infinity, ease: "easeInOut" }}
+        >
+          <Award className="w-24 h-24 text-foreground" strokeWidth={0.5} />
+        </motion.div>
+        <motion.div
+          className="absolute bottom-10 right-10 opacity-10"
+          animate={{ y: [0, 10, 0], rotate: [360, 180, 0] }}
+          transition={{ duration: 12, repeat: Infinity, ease: "easeInOut" }}
+        >
+          <Medal className="w-20 h-20 text-foreground" strokeWidth={0.5} />
+        </motion.div>
 
-<section className="section-padding bg-surface-subtle relative overflow-hidden">
-  <div className="container-grid text-center relative z-10">
-    <SectionReveal>
-      <motion.div
-        animate={{ y: [0, -8, 0] }}
-        transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
-        className="inline-block mb-6"
-      >
-        <Crown className="w-14 h-14 text-foreground mx-auto" strokeWidth={1} />
-      </motion.div>
-      <h2 className="font-heading text-3xl md:text-5xl font-bold tracking-tight text-foreground">Apply for DRG</h2>
-      <p className="mt-4 text-base md:text-lg font-body text-foreground/70 max-w-xl mx-auto">Applications open every January. Ethiopian healthcare professionals, researchers, and academicians are welcome.</p>
-      <Button variant="default" size="lg" className="mt-8">
-        Start Application
-      </Button>
-    </SectionReveal>
-  </div>
-</section>
+        <div className="container-grid text-center relative z-10">
+          <SectionReveal>
+            <motion.div
+              animate={{ y: [0, -8, 0] }}
+              transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
+              className="inline-block mb-6"
+            >
+              <Crown className="w-14 h-14 text-foreground mx-auto" strokeWidth={1} />
+            </motion.div>
+            <h2 className="font-heading text-3xl md:text-5xl font-bold tracking-tight text-foreground">Apply for DRG</h2>
+            <p className="mt-4 text-base md:text-lg font-body text-foreground/70 max-w-xl mx-auto">
+              Applications open every January. Ethiopian healthcare professionals, researchers, and academicians are welcome to submit their proposals.
+            </p>
+            <Link to="/apply">
+              <Button
+                variant="default"
+                size="lg"
+                className="mt-8 transition-all duration-300 hover:scale-105 hover:shadow-lg active:scale-95"
+              >
+                Start Application
+              </Button>
+            </Link>
+          </SectionReveal>
+        </div>
+      </section>
+
       <Footer />
     </div>
   );

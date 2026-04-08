@@ -1,12 +1,10 @@
-import { useState, Suspense, lazy } from "react";
+import { useState } from "react";
 import { motion } from "framer-motion";
 import { Mail, MapPin, Send } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import SectionReveal from "@/components/SectionReveal";
-
-const Spline = lazy(() => import("@splinetool/react-spline"));
 
 const Contact = () => {
   const [formData, setFormData] = useState({ name: "", company: "", email: "", phone: "", industry: "", requirements: "" });
@@ -19,26 +17,22 @@ const Contact = () => {
     <div className="min-h-screen bg-background">
       <Navbar />
 
+      {/* Hero Section - Centered */}
       <section className="pt-32 pb-20 px-6 bg-highlight relative overflow-hidden">
-        <div className="container-grid grid grid-cols-1 lg:grid-cols-2 gap-8 items-center">
-          <motion.div initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8 }}>
+        <div className="container-grid">
+          <motion.div
+            initial={{ opacity: 0, y: 30 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8 }}
+            className="text-center max-w-3xl mx-auto"
+          >
             <span className="text-xs font-bold uppercase tracking-[0.3em] text-foreground/60">Get in Touch</span>
             <h1 className="font-heading text-5xl md:text-7xl font-bold tracking-tighter text-foreground mt-4">
               Contact Us
             </h1>
-            <p className="mt-6 text-lg text-foreground/70 max-w-md font-body leading-relaxed">
+            <p className="mt-6 text-lg text-foreground/70 max-w-md mx-auto font-body leading-relaxed">
               Tell us your requirements and we'll craft a custom solution.
             </p>
-          </motion.div>
-          <motion.div
-            initial={{ opacity: 0, scale: 0.9 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ duration: 1, delay: 0.3 }}
-            className="hidden lg:block h-[320px] relative"
-          >
-            <Suspense fallback={<div className="w-full h-full" />}>
-              <Spline scene="https://prod.spline.design/lS3etg9lRDaSsxx7/scene.splinecode" style={{ width: "100%", height: "100%" }} />
-            </Suspense>
           </motion.div>
         </div>
       </section>
@@ -59,7 +53,7 @@ const Contact = () => {
                 <Mail className="w-5 h-5 text-highlight mt-1 shrink-0" />
                 <div>
                   <h4 className="font-heading text-sm font-bold text-foreground">Email</h4>
-                  <p className="text-sm text-muted-foreground mt-1">rnd1@drogapharma.com </p>
+                  <p className="text-sm text-muted-foreground mt-1">rnd1@drogapharma.com</p>
                   <p className="text-sm text-muted-foreground">info@drogapharma.com</p>
                 </div>
               </div>
@@ -100,16 +94,16 @@ const Contact = () => {
                 </div>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
                   <div>
-                    <label className="block text-xs font-heading font-bold uppercase tracking-widest text-muted-foreground mb-2">Email</label>
+                    <label className="block text-xs font-heading font-bold uppercase tracking-widest text-muted-foreground mb-2">Your Email</label>
                     <input type="email" name="email" value={formData.email} onChange={handleChange} className="w-full h-12 px-4 bg-background border border-border rounded-sm text-sm font-body text-foreground focus:outline-none focus:ring-2 focus:ring-highlight transition-all" placeholder="your@email.com" />
                   </div>
                   <div>
-                    <label className="block text-xs font-heading font-bold uppercase tracking-widest text-muted-foreground mb-2">Phone</label>
+                    <label className="block text-xs font-heading font-bold uppercase tracking-widest text-muted-foreground mb-2">Your Phone</label>
                     <input type="tel" name="phone" value={formData.phone} onChange={handleChange} className="w-full h-12 px-4 bg-background border border-border rounded-sm text-sm font-body text-foreground focus:outline-none focus:ring-2 focus:ring-highlight transition-all" placeholder="+251..." />
                   </div>
                 </div>
                 <div>
-                  <label className="block text-xs font-heading font-bold uppercase tracking-widest text-muted-foreground mb-2">Industry</label>
+                  <label className="block text-xs font-heading font-bold uppercase tracking-widest text-muted-foreground mb-2">Your Industry</label>
                   <select name="industry" value={formData.industry} onChange={handleChange} className="w-full h-12 px-4 bg-background border border-border rounded-sm text-sm font-body text-foreground focus:outline-none focus:ring-2 focus:ring-highlight transition-all">
                     <option value="">Select your industry</option>
                     <option value="pharmaceutical">Pharmaceutical</option>
@@ -121,7 +115,7 @@ const Contact = () => {
                   </select>
                 </div>
                 <div>
-                  <label className="block text-xs font-heading font-bold uppercase tracking-widest text-muted-foreground mb-2">Requirements</label>
+                  <label className="block text-xs font-heading font-bold uppercase tracking-widest text-muted-foreground mb-2">Share detailed Requirements</label>
                   <textarea name="requirements" value={formData.requirements} onChange={handleChange} rows={5} className="w-full px-4 py-3 bg-background border border-border rounded-sm text-sm font-body text-foreground focus:outline-none focus:ring-2 focus:ring-highlight transition-all resize-none" placeholder="Share your detailed requirements..." />
                 </div>
                 <Button variant="hero" size="lg" className="w-full">
