@@ -272,7 +272,7 @@ const About = () => {
               transition={{ duration: 0.3 }}
               className="group p-10 bg-card card-shadow hover:bg-highlight rounded-sm h-full transition-all duration-300 cursor-pointer"
             >
-              <Eye className="w-8 h-8 text-black group-hover:text-black mb-6 transition-colors duration-300" />
+              <Eye className="w-8 h-8 text-highlight group-hover:text-black mb-6 transition-colors duration-300" />
               <h3 className="font-heading text-2xl font-bold text-foreground">Our Vision</h3>
               <p className="mt-4 text-lg font-body text-muted-foreground group-hover:text-black/80 leading-relaxed transition-colors duration-300">
                 To be a hub of scientific excellence, innovation, and self-reliance in pharmaceuticals, nutraceuticals, cosmetics, and functional foods — transforming Ethiopia's botanical wealth into world-class health solutions.
@@ -285,7 +285,7 @@ const About = () => {
               transition={{ duration: 0.3 }}
               className="group p-10 bg-card card-shadow hover:bg-highlight rounded-sm h-full transition-all duration-300 cursor-pointer"
             >
-              <Target className="w-8 h-8 text-black group-hover:text-black mb-6 transition-colors duration-300" />
+              <Target className="w-8 h-8 text-highlight group-hover:text-black mb-6 transition-colors duration-300" />
               <h3 className="font-heading text-2xl font-bold text-foreground">Our Mission</h3>
               <p className="mt-4 text-lg font-body text-muted-foreground group-hover:text-black/80 leading-relaxed transition-colors duration-300">
                 To support local innovation, reduce dependence on imported APIs and excipients, and advance therapeutic discoveries through rigorous research, regulatory compliance, and cross-disciplinary collaboration.
