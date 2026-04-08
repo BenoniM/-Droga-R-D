@@ -297,7 +297,7 @@ const Index = () => {
                         transition={{ duration: 0.3 }}
                         className="shrink-0 mt-1"
                       >
-                        <ChevronDown className="w-5 h-5 text-highlight group-hover:text-black transition-colors duration-300" />
+                        <ChevronDown className="w-5 h-5 text-black group-hover:text-black transition-colors duration-300" />
                       </motion.div>
                     </div>
                   </div>
