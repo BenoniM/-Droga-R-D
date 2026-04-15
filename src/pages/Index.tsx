@@ -57,7 +57,7 @@ const heroSlides = [
   { image: plantsImg, subtitle: "Sustainable Science", title: "Harnessing Nature's", highlight: "Healing Power", desc: "Leveraging Ethiopia's indigenous medicinal plants and biodiversity for innovative health solutions." },
 ];
 
-// Core Research Pillars – with hover expansion
+// Core Research Pillars data (unchanged)
 const pillarCards = [
   {
     icon: FlaskConical,
@@ -139,7 +139,7 @@ const pillarCards = [
   }
 ];
 
-// Active Projects
+// Active Projects data
 const activeProjects = [
   { icon: Dna, title: "Bioactive Compound Screening", category: "Biotechnology", status: "Active", image: moleculesImg },
   { icon: Beaker, title: "Oral Dispersible Tablet Formulation", category: "Medicine", status: "Active", image: labImg },
@@ -196,16 +196,13 @@ const Index = () => {
         <div className="relative w-full z-1">
           <div className="container mx-auto px-4 md:px-6">
             <div className="max-w-3xl">
-              {/* Hero subtitle - increased size */}
               <span className="inline-block text-sm md:text-base font-black uppercase tracking-[0.1em] text-white mb-1">
                 {slide.subtitle}
               </span>
-              {/* Hero title - unchanged size */}
               <h1 className="font-heading text-3xl md:text-5xl lg:text-7xl font-bold tracking-tighter leading-[0.95] text-white">
                 {slide.title}
                 <span className="text-highlight"> {slide.highlight}</span>
               </h1>
-              {/* Hero description - increased size */}
               <p className="mt-6 md:mt-8 text-lg md:text-xl font-body text-white/80 max-w-xl leading-relaxed">
                 {slide.desc}
               </p>
@@ -237,9 +234,7 @@ const Index = () => {
       <section className="section-padding bg-surface-subtle">
         <div className="container-grid">
           <SectionReveal>
-            {/* Overline - increased size */}
             <span className="text-sm md:text-base font-bold uppercase tracking-[0.2em] text-muted-foreground">Research Impact</span>
-            {/* Section title - unchanged */}
             <h2 className="font-heading text-4xl md:text-5xl font-semibold tracking-tight mt-4 text-foreground text-center">
               Measurable Results
             </h2>
@@ -253,85 +248,83 @@ const Index = () => {
         </div>
       </section>
 
-      {/* Our Core Research Pillars */}
+      {/* Our Core Research Pillars - Fully responsive timeline */}
       <section className="section-padding">
         <div className="container-grid">
           <SectionReveal>
-            {/* Overline - increased size */}
-            <span className="text-sm md:text-base font-bold uppercase tracking-[0.2em] text-muted-foreground">In‑Depth Capabilities</span>
-            {/* Section title - unchanged */}
+            <span className="text-sm md:text-base font-bold uppercase tracking-[0.2em] text-muted-foreground">
+              In‑Depth Capabilities
+            </span>
             <h2 className="font-heading text-4xl md:text-5xl font-semibold tracking-tight mt-4 text-foreground text-center">
               Our Core Research Pillars
             </h2>
-            {/* Section description - increased size */}
             <p className="mt-4 text-lg text-muted-foreground max-w-2xl mx-auto text-center">
-              End‑to‑end services spanning bioequivalence, drug discovery, nutraceuticals, and cosmetic science. Hover over any card to see full details.
+              End‑to‑end services spanning bioequivalence, drug discovery, nutraceuticals, and cosmetic science.
             </p>
           </SectionReveal>
 
-          <div className="mt-16 grid grid-cols-1 md:grid-cols-2 gap-6">
+          {/* Timeline container - responsive */}
+          <div className="relative max-w-5xl mx-auto mt-16">
+            {/* Vertical line - hidden on mobile */}
+            <div className="absolute left-1/2 transform -translate-x-1/2 w-0.5 h-full bg-gray-300/30 hidden md:block"></div>
+            
             {pillarCards.map((pillar, idx) => {
-              const [hovered, setHovered] = useState(false);
+              const isEven = idx % 2 === 0;
               return (
-                <motion.div
+                <motion.div 
                   key={pillar.title}
+                  className={`relative flex flex-col md:flex-row md:items-center md:justify-between mb-8 md:mb-10 ${isEven ? '' : 'md:flex-row-reverse'}`}
                   initial={{ opacity: 0, y: 30 }}
                   whileInView={{ opacity: 1, y: 0 }}
                   viewport={{ once: true, margin: "-80px" }}
-                  transition={{ duration: 0.6, delay: idx * 0.1 }}
-                  onMouseEnter={() => setHovered(true)}
-                  onMouseLeave={() => setHovered(false)}
-                  className="group bg-white/5 backdrop-blur-sm border border-white/10 rounded-xl overflow-hidden shadow-lg transition-all duration-300 cursor-pointer hover:bg-highlight hover:shadow-xl"
+                  transition={{ duration: 0.7, delay: idx * 0.1, ease: [0.25, 0.1, 0.25, 1] }}
                 >
-                  <div className="p-6 transition-colors duration-300">
-                    <div className="flex items-start justify-between gap-4">
-                      <div className="flex-1">
-                        <pillar.icon className="w-8 h-8 text-highlight group-hover:text-black mb-4 transition-colors duration-300" strokeWidth={1.5} />
-                        {/* Card title - unchanged */}
-                        <h3 className="font-heading text-xl font-bold text-foreground group-hover:text-black transition-colors duration-300">{pillar.title}</h3>
-                        {/* Card summary - increased size */}
-                        <p className="mt-2 text-base text-muted-foreground group-hover:text-black/80 transition-colors duration-300">{pillar.summary}</p>
-                      </div>
-                      <motion.div
-                        animate={{ rotate: hovered ? 180 : 0 }}
-                        transition={{ duration: 0.3 }}
-                        className="shrink-0 mt-1"
-                      >
-                        <ChevronDown className="w-5 h-5 text-black group-hover:text-black transition-colors duration-300" />
-                      </motion.div>
+                  {/* Side title - hidden on mobile, visible on desktop */}
+                  <div className={`hidden md:flex w-5/12 ${isEven ? 'justify-end' : 'justify-start'}`}>
+                    <div className="text-right md:text-left">
+                      <h3 className="font-heading text-xl md:text-2xl font-bold text-foreground">
+                        {pillar.title}
+                      </h3>
                     </div>
                   </div>
-
-                  <AnimatePresence>
-                    {hovered && (
-                      <motion.div
-                        initial={{ height: 0, opacity: 0 }}
-                        animate={{ height: "auto", opacity: 1 }}
-                        exit={{ height: 0, opacity: 0 }}
-                        transition={{ duration: 0.3, ease: "easeInOut" }}
-                        className="overflow-hidden"
-                      >
-                        <div className="px-6 pb-6 pt-2 border-t border-white/10 group-hover:border-black/20">
-                          <div className="space-y-4">
-                            {pillar.details.map((detail, i) => (
-                              <div key={i}>
-                                <h4 className="font-heading text-base font-bold text-foreground group-hover:text-black mb-2 transition-colors duration-300">{detail.heading}</h4>
-                                <ul className="grid grid-cols-1 gap-1">
-                                  {detail.items.map((item, j) => (
-                                    // Detail bullet points - increased size
-                                    <li key={j} className="flex items-start gap-2 text-base text-muted-foreground group-hover:text-black/80 transition-colors duration-300">
-                                      <span className="text-highlight group-hover:text-black text-base leading-5">•</span>
-                                      <span>{item}</span>
-                                    </li>
-                                  ))}
-                                </ul>
-                              </div>
-                            ))}
+                  
+                  {/* Center dot - hidden on mobile */}
+                  <div className="absolute left-1/2 transform -translate-x-1/2 w-4 h-4 bg-highlight rounded-full border-4 border-background shadow-md z-10 hidden md:block"></div>
+                  
+                  {/* Content card - full width on mobile, half on desktop */}
+                  <div className="w-full md:w-5/12">
+                    <motion.div 
+                      whileHover={{ y: -6 }}
+                      transition={{ duration: 0.3 }}
+                      className="group bg-white/5 backdrop-blur-sm border border-white/10 p-5 rounded-xl shadow-md transition-all duration-300 hover:bg-highlight cursor-pointer"
+                    >
+                      <pillar.icon className="w-8 h-8 text-highlight mb-3 transition-colors duration-300 group-hover:text-black" strokeWidth={1.5} />
+                      {/* Title always visible on mobile, hidden on desktop (since side title shows) */}
+                      <h3 className="font-heading text-xl font-bold text-foreground transition-colors duration-300 group-hover:text-black md:hidden">
+                        {pillar.title}
+                      </h3>
+                      <p className="mt-2 text-base text-muted-foreground transition-colors duration-300 group-hover:text-black">
+                        {pillar.summary}
+                      </p>
+                      <div className="mt-4 space-y-3">
+                        {pillar.details.map((detail, i) => (
+                          <div key={i}>
+                            <h4 className="font-heading text-base font-bold text-foreground mb-1 transition-colors duration-300 group-hover:text-black">
+                              {detail.heading}
+                            </h4>
+                            <ul className="space-y-1">
+                              {detail.items.map((item, j) => (
+                                <li key={j} className="flex items-start gap-2 text-base text-muted-foreground transition-colors duration-300 group-hover:text-black">
+                                  <span className="text-highlight group-hover:text-black">•</span>
+                                  <span>{item}</span>
+                                </li>
+                              ))}
+                            </ul>
                           </div>
-                        </div>
-                      </motion.div>
-                    )}
-                  </AnimatePresence>
+                        ))}
+                      </div>
+                    </motion.div>
+                  </div>
                 </motion.div>
               );
             })}
@@ -343,9 +336,7 @@ const Index = () => {
       <section className="section-padding bg-surface-subtle">
         <div className="container-grid">
           <SectionReveal>
-            {/* Overline - increased size */}
             <span className="text-sm md:text-base font-bold uppercase tracking-[0.2em] text-black">Featured</span>
-            {/* Section title - unchanged */}
             <h2 className="font-heading text-4xl md:text-5xl font-semibold tracking-tight mt-4 text-black text-center">
               Active Projects
             </h2>
@@ -370,8 +361,9 @@ const Index = () => {
                   </div>
                   <div className="p-6 flex flex-col justify-center">
                     <div className="flex items-center gap-2 mb-2">
-                      {/* Category text - increased size */}
-                      <span className="text-sm md:text-base font-heading font-bold uppercase tracking-wider text-black transition-colors duration-300">{project.category}</span>
+                      <span className="text-sm md:text-base font-heading font-bold uppercase tracking-wider text-black transition-colors duration-300 group-hover:text-black">
+                        {project.category}
+                      </span>
                       <span className={`px-2 py-0.5 rounded-sm text-[10px] md:text-xs font-bold uppercase tracking-wider transition-colors duration-300 ${
                         project.status === "Active" 
                           ? "bg-black/10 text-black group-hover:bg-white group-hover:text-black" 
@@ -380,8 +372,9 @@ const Index = () => {
                         {project.status}
                       </span>
                     </div>
-                    {/* Project title - unchanged */}
-                    <h3 className="font-heading text-lg font-bold text-black transition-colors duration-300">{project.title}</h3>
+                    <h3 className="font-heading text-lg font-bold text-black transition-colors duration-300 group-hover:text-black">
+                      {project.title}
+                    </h3>
                   </div>
                 </motion.div>
               );
@@ -429,9 +422,7 @@ const Index = () => {
         <div className="container-grid">
           <div className="flex items-end justify-between">
             <SectionReveal>
-              {/* Overline - increased size */}
               <span className="text-sm md:text-base font-bold uppercase tracking-[0.2em] text-muted-foreground">Stay Updated</span>
-              {/* Section title - unchanged */}
               <h2 className="font-heading text-4xl md:text-5xl font-semibold tracking-tight mt-4 text-foreground">
                 Latest News
               </h2>
@@ -456,11 +447,8 @@ const Index = () => {
                   <img src={item.image} alt={item.title} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
                 </div>
                 <div className="p-6 group-hover:bg-highlight transition-colors duration-300">
-                  {/* News date - increased size */}
                   <span className="text-sm md:text-base font-body text-muted-foreground group-hover:text-black/80 transition-colors duration-300">{item.date}</span>
-                  {/* News title - unchanged */}
                   <h3 className="font-heading text-xl font-bold mt-2 text-foreground group-hover:text-black transition-colors duration-300">{item.title}</h3>
-                  {/* News excerpt - increased size */}
                   <p className="mt-2 text-base font-body text-muted-foreground group-hover:text-black/80 leading-relaxed transition-colors duration-300">{item.excerpt}</p>
                 </div>
               </motion.article>
@@ -473,11 +461,9 @@ const Index = () => {
       <section className="section-padding bg-surface-subtle">
         <div className="container-grid text-center">
           <SectionReveal>
-            {/* CTA heading - unchanged */}
             <h2 className="font-heading text-3xl md:text-5xl font-bold tracking-tight text-foreground">
               Partner with Us in Research
             </h2>
-            {/* CTA paragraph - increased size */}
             <p className="mt-6 text-lg font-body text-foreground/70 max-w-2xl mx-auto">
               Join our growing network of researchers and institutions. Apply for the Droga Research Grant or explore collaboration opportunities.
             </p>
@@ -493,7 +479,7 @@ const Index = () => {
         </div>
       </section>
 
-      <Footer />
+      <Footer /> 
     </div>
   );
 };
