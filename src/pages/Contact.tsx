@@ -17,20 +17,20 @@ const Contact = () => {
     <div className="min-h-screen bg-background">
       <Navbar />
 
-      {/* Hero Section - Centered */}
+      {/* Hero Section - Left aligned */}
       <section className="pt-32 pb-20 px-6 bg-highlight relative overflow-hidden">
         <div className="container-grid">
           <motion.div
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8 }}
-            className="text-center max-w-3xl mx-auto"
+            className="max-w-3xl text-left"
           >
             <span className="text-xs font-bold uppercase tracking-[0.3em] text-foreground/60">Get in Touch</span>
             <h1 className="font-heading text-5xl md:text-7xl font-bold tracking-tighter text-foreground mt-4">
               Contact Us
             </h1>
-            <p className="mt-6 text-lg text-foreground/70 max-w-md mx-auto font-body leading-relaxed">
+            <p className="mt-6 text-lg text-foreground/70 max-w-md font-body leading-relaxed">
               Tell us your requirements and we'll craft a custom solution.
             </p>
           </motion.div>

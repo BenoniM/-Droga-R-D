@@ -10,7 +10,7 @@ import facilityImg from "@/assets/facility.jpg";
 import plantsImg from "@/assets/herbal8.jpg";
 import heroImg from "@/assets/hero-science.jpg";
 
-const Spline = lazy(() => import("@splinetool/react-spline"));
+// const Spline = lazy(() => import("@splinetool/react-spline"));
 
 const newsArticles = [
   { title: "New Bioequivalence Study Center Opens at Kilinto", date: "March 10, 2026", category: "Announcement", image: facilityImg, excerpt: "Droga R&D's state-of-the-art bioequivalence center at Kilinto Industrial Park officially begins operations, marking a milestone in pharmaceutical research capability." },
@@ -37,6 +37,7 @@ const News = () => {
               Stay informed about our latest research, announcements, and partnerships.
             </p>
           </motion.div>
+          {/* Spline 3D element commented out
           <motion.div
             initial={{ opacity: 0, scale: 0.9 }}
             animate={{ opacity: 1, scale: 1 }}
@@ -47,6 +48,7 @@ const News = () => {
               <Spline scene="https://prod.spline.design/kIBCzEA26MbIqNPT/scene.splinecode" style={{ width: "100%", height: "100%" }} />
             </Suspense>
           </motion.div>
+          */}
         </div>
       </section>
 
