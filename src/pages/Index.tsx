@@ -1,6 +1,8 @@
 import { useState, useEffect, useRef } from "react";
 import { Link } from "react-router-dom";
-import { motion, useScroll, useTransform, useInView, AnimatePresence } from "framer-motion";
+import gsap from "gsap";
+import { useGSAP } from "@gsap/react";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { 
   ArrowRight, FlaskConical, Microscope, Brain, HeartPulse, Leaf, Newspaper, 
   Dna, Beaker, Zap, Activity, Pill, Apple, Droplet, ChevronDown
@@ -15,29 +17,34 @@ import facilityImg from "@/assets/facility.jpg";
 import moleculesImg from "@/assets/molecules.jpg";
 import plantsImg from "@/assets/herbal8.jpg";
 
+gsap.registerPlugin(ScrollTrigger);
+
 // CountUp component (unchanged)
 const CountUp = ({ end, suffix = "", label, prefix = "" }: { end: number; suffix?: string; label: string; prefix?: string }) => {
   const [count, setCount] = useState(0);
-  const ref = useRef(null);
-  const isInView = useInView(ref, { once: true, margin: "-100px" });
+  const ref = useRef<HTMLDivElement>(null);
 
-  useEffect(() => {
-    if (isInView) {
-      let start = 0;
-      const duration = 2000;
-      const step = Math.ceil(end / (duration / 16));
-      const timer = setInterval(() => {
-        start += step;
-        if (start >= end) {
-          setCount(end);
-          clearInterval(timer);
-        } else {
-          setCount(start);
-        }
-      }, 16);
-      return () => clearInterval(timer);
-    }
-  }, [isInView, end]);
+  useGSAP(() => {
+    ScrollTrigger.create({
+      trigger: ref.current,
+      start: "top 90%",
+      once: true,
+      onEnter: () => {
+        let start = 0;
+        const duration = 2000;
+        const step = Math.ceil(end / (duration / 16));
+        const timer = setInterval(() => {
+          start += step;
+          if (start >= end) {
+            setCount(end);
+            clearInterval(timer);
+          } else {
+            setCount(start);
+          }
+        }, 16);
+      }
+    });
+  }, { scope: ref });
 
   return (
     <div ref={ref} className="text-center">
@@ -155,9 +162,66 @@ const newsItems = [
 
 const Index = () => {
   const [currentSlide, setCurrentSlide] = useState(0);
-  const { scrollY } = useScroll();
-  const heroY = useTransform(scrollY, [0, 800], [0, 300]);
-  const facilityY = useTransform(scrollY, [2000, 3500], [0, -150]);
+  const containerRef = useRef<HTMLDivElement>(null);
+
+  useGSAP(() => {
+    // Hero Parallax
+    gsap.to(".hero-img", {
+      y: 300,
+      ease: "none",
+      scrollTrigger: {
+        trigger: ".hero-section",
+        start: "top top",
+        end: "bottom top",
+        scrub: true,
+      }
+    });
+
+    // Facility Parallax
+    gsap.to(".facility-parallax-img", {
+      y: -150,
+      ease: "none",
+      scrollTrigger: {
+        trigger: ".facility-parallax-section",
+        start: "top bottom",
+        end: "bottom top",
+        scrub: true,
+      }
+    });
+
+    // Pillar Cards Reveal
+    gsap.utils.toArray<HTMLElement>('.pillar-card').forEach((card, i) => {
+      gsap.fromTo(card, 
+        { autoAlpha: 0, y: 30 },
+        { 
+          autoAlpha: 1, y: 0, duration: 0.7, delay: i % 2 === 0 ? 0 : 0.1, ease: "power2.out",
+          scrollTrigger: { trigger: card, start: "top 85%", once: true }
+        }
+      );
+    });
+
+    // Projects Reveal
+    gsap.utils.toArray<HTMLElement>('.project-card').forEach((card) => {
+      gsap.fromTo(card,
+        { autoAlpha: 0, y: 40 },
+        {
+          autoAlpha: 1, y: 0, duration: 0.8, ease: "power2.out",
+          scrollTrigger: { trigger: card, start: "top 85%", once: true }
+        }
+      );
+    });
+
+    // News Reveal
+    gsap.utils.toArray<HTMLElement>('.news-card').forEach((card, i) => {
+      gsap.fromTo(card,
+        { autoAlpha: 0, y: 30 },
+        {
+          autoAlpha: 1, y: 0, duration: 0.6, delay: i * 0.1, ease: "power2.out",
+          scrollTrigger: { trigger: card, start: "top 90%", once: true }
+        }
+      );
+    });
+  }, { scope: containerRef });
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -169,27 +233,23 @@ const Index = () => {
   const slide = heroSlides[currentSlide];
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen bg-background" ref={containerRef}>
       <Navbar />
 
       {/* Hero Slideshow */}
-      <section className="relative h-screen flex items-center overflow-hidden">
-        <div className="absolute inset-0">
+      <section className="relative h-screen flex items-center overflow-hidden hero-section">
+        <div className="absolute inset-0 bg-black">
           {heroSlides.map((s, idx) => (
-            <motion.div
+            <div
               key={idx}
-              className="absolute inset-0"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: idx === currentSlide ? 1 : 0 }}
-              transition={{ duration: 1.5, ease: "easeInOut" }}
+              className={`absolute inset-0 transition-opacity duration-1500 ease-in-out ${idx === currentSlide ? "opacity-100" : "opacity-0"}`}
             >
               <img
                 src={s.image}
                 alt={`Slide ${idx + 1}`}
-                className="w-full h-full object-cover"
-                style={{ y: heroY }}
+                className="w-full h-full object-cover hero-img"
               />
-            </motion.div>
+            </div>
           ))}
         </div>
         <div className="absolute inset-0 bg-black/60" />
@@ -239,11 +299,12 @@ const Index = () => {
               Measurable Results
             </h2>
           </SectionReveal>
-          <div className="mt-16 grid grid-cols-2 md:grid-cols-4 gap-8 md:gap-12">
-            <CountUp end={42} suffix="+" label="Research Projects" />
-            <CountUp end={5} suffix="+" label="Grants Funded" />
-            <CountUp end={30} suffix="+" label="Research Partners" />
-            <CountUp end={9951} suffix="" label="Sq.m R&D Facility" prefix="" />
+          <div className="mt-16 grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-8 md:gap-10">
+            <CountUp end={12} suffix="+" label="Projects" />
+            <CountUp end={17} suffix="+" label="Research Partners" />
+            <CountUp end={5} suffix="" label="Grant Funded" />
+            <CountUp end={300} suffix=" sq.m" label="Analytical Lab Facility" />
+            <CountUp end={9951} suffix=" sq.m" label="R&D Center Facility" />
           </div>
         </div>
       </section>
@@ -271,13 +332,9 @@ const Index = () => {
             {pillarCards.map((pillar, idx) => {
               const isEven = idx % 2 === 0;
               return (
-                <motion.div 
+                <div 
                   key={pillar.title}
-                  className={`relative flex flex-col md:flex-row md:items-center md:justify-between mb-8 md:mb-10 ${isEven ? '' : 'md:flex-row-reverse'}`}
-                  initial={{ opacity: 0, y: 30 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true, margin: "-80px" }}
-                  transition={{ duration: 0.7, delay: idx * 0.1, ease: [0.25, 0.1, 0.25, 1] }}
+                  className={`relative flex flex-col md:flex-row md:items-center md:justify-between mb-8 md:mb-10 pillar-card invisible ${isEven ? '' : 'md:flex-row-reverse'}`}
                 >
                   {/* Side title - hidden on mobile, visible on desktop */}
                   <div className={`hidden md:flex w-5/12 ${isEven ? 'justify-end' : 'justify-start'}`}>
@@ -293,10 +350,8 @@ const Index = () => {
                   
                   {/* Content card - full width on mobile, half on desktop */}
                   <div className="w-full md:w-5/12">
-                    <motion.div 
-                      whileHover={{ y: -6 }}
-                      transition={{ duration: 0.3 }}
-                      className="group bg-white/5 backdrop-blur-sm border border-white/10 p-5 rounded-xl shadow-md transition-all duration-300 hover:bg-highlight cursor-pointer"
+                    <div 
+                      className="group bg-white/5 backdrop-blur-sm border border-white/10 p-5 rounded-xl shadow-md transition-all duration-300 hover:bg-highlight hover:-translate-y-1.5 cursor-pointer"
                     >
                       <pillar.icon className="w-8 h-8 text-highlight mb-3 transition-colors duration-300 group-hover:text-black" strokeWidth={1.5} />
                       {/* Title always visible on mobile, hidden on desktop (since side title shows) */}
@@ -323,84 +378,185 @@ const Index = () => {
                           </div>
                         ))}
                       </div>
-                    </motion.div>
+                    </div>
                   </div>
-                </motion.div>
+                </div>
               );
             })}
           </div>
         </div>
       </section>
 
-      {/* Active Projects */}
+      {/* Projects */}
       <section className="section-padding bg-surface-subtle">
         <div className="container-grid">
           <SectionReveal>
             <span className="text-sm md:text-base font-bold uppercase tracking-[0.2em] text-black">Featured</span>
             <h2 className="font-heading text-4xl md:text-5xl font-semibold tracking-tight mt-4 text-black text-center">
-              Active Projects
+              Projects
             </h2>
+            <p className="mt-6 text-lg text-muted-foreground max-w-4xl mx-auto text-center leading-relaxed">
+              Our projects focus on the expansion and scale up of inhouse pharmaceutical and herbal product developments, as well as the expansion of research & development laboratories, ensuring a seamless transition from research to commercial manufacturing while maintaining quality and regulatory compliance.
+            </p>
           </SectionReveal>
 
-          <div className="mt-16 grid grid-cols-1 md:grid-cols-2 gap-6">
-            {activeProjects.map((project, i) => {
-              const Icon = project.icon;
-              return (
-                <motion.div
-                  key={project.title}
-                  initial={{ opacity: 0, y: 40 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true, margin: "-60px" }}
-                  transition={{ duration: 0.7, delay: i * 0.1 }}
-                  whileHover={{ y: -6, transition: { duration: 0.3 } }}
-                  className="group grid grid-cols-1 sm:grid-cols-[140px_1fr] gap-0 bg-card rounded-sm overflow-hidden cursor-pointer hover:bg-highlight transition-all duration-300"
-                >
-                  <div className="relative aspect-video sm:aspect-auto overflow-hidden">
-                    <img src={project.image} alt={project.title} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" />
-                    <div className="absolute inset-0 bg-black/20 group-hover:bg-black/10 transition-colors duration-300" />
-                  </div>
-                  <div className="p-6 flex flex-col justify-center">
-                    <div className="flex items-center gap-2 mb-2">
-                      <span className="text-sm md:text-base font-heading font-bold uppercase tracking-wider text-black transition-colors duration-300 group-hover:text-black">
-                        {project.category}
-                      </span>
-                      <span className={`px-2 py-0.5 rounded-sm text-[10px] md:text-xs font-bold uppercase tracking-wider transition-colors duration-300 ${
-                        project.status === "Active" 
-                          ? "bg-black/10 text-black group-hover:bg-white group-hover:text-black" 
-                          : "bg-black/5 text-black/60 group-hover:bg-white/20 group-hover:text-black"
-                      }`}>
-                        {project.status}
-                      </span>
-                    </div>
-                    <h3 className="font-heading text-lg font-bold text-black transition-colors duration-300 group-hover:text-black">
-                      {project.title}
-                    </h3>
-                  </div>
-                </motion.div>
-              );
-            })}
+          <div className="mt-20 space-y-24 md:space-y-32">
+            {/* Project 1 */}
+            <div 
+              className="grid grid-cols-1 lg:grid-cols-2 gap-10 items-center project-card invisible"
+            >
+              <div className="order-2 lg:order-1 space-y-6">
+                <h3 className="font-heading text-3xl md:text-4xl font-bold text-foreground">
+                  Project 1. Droga Research and Development Center
+                </h3>
+                <p className="text-lg text-muted-foreground leading-relaxed">
+                  Situated on 9,951 sq.m of land in Kilinto Industrial Park, our state-of-the-art center is designed to advance research, development, and quality testing for the pharmaceutical, academic, research, cosmetic, and food & beverage industries.
+                </p>
+                <div>
+                  <h4 className="font-heading text-xl font-bold text-foreground mb-2">Our Aim</h4>
+                  <p className="text-base text-muted-foreground leading-relaxed">
+                    The center is dedicated to supporting local innovation and reducing dependence on imported APIs, excipients, formulations, and other raw materials by leveraging the country's indigenous knowledge and natural resources.
+                  </p>
+                </div>
+                <div>
+                  <h4 className="font-heading text-xl font-bold text-foreground mb-2">Our Facilities</h4>
+                  <p className="text-base text-muted-foreground mb-3">The center will house:</p>
+                  <ul className="space-y-2">
+                    <li className="flex items-start gap-3">
+                      <div className="w-1.5 h-1.5 rounded-full bg-highlight mt-2 flex-shrink-0" />
+                      <span className="text-base text-muted-foreground">Research Laboratories for drug discovery, food & nutrition, and cosmetic product development</span>
+                    </li>
+                    <li className="flex items-start gap-3">
+                      <div className="w-1.5 h-1.5 rounded-full bg-highlight mt-2 flex-shrink-0" />
+                      <span className="text-base text-muted-foreground">Bioequivalence Study Units to support preclinical and clinical evaluation</span>
+                    </li>
+                    <li className="flex items-start gap-3">
+                      <div className="w-1.5 h-1.5 rounded-full bg-highlight mt-2 flex-shrink-0" />
+                      <span className="text-base text-muted-foreground">Quality Control Testing Units for reliable and regulatory-compliant analysis</span>
+                    </li>
+                    <li className="flex items-start gap-3">
+                      <div className="w-1.5 h-1.5 rounded-full bg-highlight mt-2 flex-shrink-0" />
+                      <span className="text-base text-muted-foreground">Formulation and Development Units for scaling innovations from concept to market-ready products</span>
+                    </li>
+                  </ul>
+                  <p className="mt-4 text-base text-muted-foreground leading-relaxed italic border-l-4 border-highlight pl-4">
+                    With these integrated facilities, the center aims to be a hub of scientific excellence, innovation, and self-reliance in pharmaceuticals, nutraceuticals, cosmetics, and functional foods.
+                  </p>
+                </div>
+              </div>
+              <div className="order-1 lg:order-2 rounded-2xl overflow-hidden shadow-2xl relative aspect-[4/3] group">
+                <img src={facilityImg} alt="Droga Research and Development Center" className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" />
+                <div className="absolute inset-0 bg-black/10 group-hover:bg-transparent transition-colors duration-500" />
+              </div>
+            </div>
+
+            {/* Project II */}
+            <div 
+              className="grid grid-cols-1 lg:grid-cols-2 gap-10 items-center project-card invisible"
+            >
+              <div className="rounded-2xl overflow-hidden shadow-2xl relative aspect-[4/3] group">
+                <img src="https://images.unsplash.com/photo-1532187863486-abf9dbad1b69?auto=format&fit=crop&q=80&w=1200" alt="Droga Oil Manufacturing Plant" className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" />
+                <div className="absolute inset-0 bg-black/10 group-hover:bg-transparent transition-colors duration-500" />
+              </div>
+              <div className="space-y-6">
+                <h3 className="font-heading text-3xl md:text-4xl font-bold text-foreground">
+                  Project II. Droga Oil Manufacturing Plant
+                </h3>
+                <p className="text-lg text-muted-foreground leading-relaxed">
+                  A 1,000 sq.m processing facility is being established to harness the health promoting potential of fixed and volatile oils. The facility is designed to process these natural oils at scale, ensuring high-quality standards suitable for both local markets and export.
+                </p>
+                <div>
+                  <h4 className="font-heading text-xl font-bold text-foreground mb-3">Purpose and Capacity</h4>
+                  <ul className="space-y-3">
+                    <li className="flex items-start gap-3">
+                      <div className="w-1.5 h-1.5 rounded-full bg-highlight mt-2 flex-shrink-0" />
+                      <span className="text-base text-muted-foreground">Can process 792.064 ton per annum</span>
+                    </li>
+                    <li className="flex items-start gap-3">
+                      <div className="w-1.5 h-1.5 rounded-full bg-highlight mt-2 flex-shrink-0" />
+                      <span className="text-base text-muted-foreground">Processing of fixed and volatile oils with recognized health benefits</span>
+                    </li>
+                    <li className="flex items-start gap-3">
+                      <div className="w-1.5 h-1.5 rounded-full bg-highlight mt-2 flex-shrink-0" />
+                      <span className="text-base text-muted-foreground">Support for local and international distribution of natural health products</span>
+                    </li>
+                    <li className="flex items-start gap-3">
+                      <div className="w-1.5 h-1.5 rounded-full bg-highlight mt-2 flex-shrink-0" />
+                      <span className="text-base text-muted-foreground">Integration with the R&D wing to ensure quality, safety, and efficacy from raw material to finished product</span>
+                    </li>
+                  </ul>
+                  <p className="mt-5 text-base text-muted-foreground leading-relaxed italic border-l-4 border-highlight pl-4">
+                    This facility aligns with our mission to leverage indigenous resources, create value-added products, and contribute to both public health and economic growth.
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            {/* Project III */}
+            <div 
+              className="grid grid-cols-1 lg:grid-cols-2 gap-10 items-center project-card invisible"
+            >
+              <div className="order-2 lg:order-1 space-y-6">
+                <h3 className="font-heading text-3xl md:text-4xl font-bold text-foreground">
+                  Project III. Droga Soap Manufacturing Plant
+                </h3>
+                <p className="text-lg text-muted-foreground leading-relaxed">
+                  The Droga Soap and Cosmetics Manufacturing Plant is an upcoming initiative designed to strengthen local production of 100% natural skincare solutions. The facility will serve as a hub for innovation in natural cosmetics, reducing reliance on imports while addressing common skin concerns with effective, botanically infused products.
+                </p>
+                <p className="text-base text-muted-foreground leading-relaxed">
+                  One branch of the initiative, the Droga Soap Manufacturing Plant, will occupy 200 m² and focus on producing two distinct soap varieties which are crafted from natural ingredients and are enriched with beneficial botanicals.
+                </p>
+                <p className="text-base text-muted-foreground leading-relaxed">
+                  With an annual production capacity of 51,840 pieces of each type, the project aims to supply for the local demand and promote healthier skin through sustainable, natural formulations. By combining modern manufacturing with traditional herbal wisdom, the Droga Soap Plant will contribute to community well-being, job creation, and the growth of Ethiopia's personal care industry.
+                </p>
+              </div>
+              <div className="order-1 lg:order-2 rounded-2xl overflow-hidden shadow-2xl relative aspect-[4/3] group">
+                <img src="https://images.unsplash.com/photo-1600857062241-98e5dba7f214?auto=format&fit=crop&q=80&w=1200" alt="Droga Soap Manufacturing Plant" className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" />
+                <div className="absolute inset-0 bg-black/10 group-hover:bg-transparent transition-colors duration-500" />
+              </div>
+            </div>
+
+            {/* Project IV */}
+            <div 
+              className="grid grid-cols-1 lg:grid-cols-2 gap-10 items-center project-card invisible"
+            >
+              <div className="rounded-2xl overflow-hidden shadow-2xl relative aspect-[4/3] group">
+                <img src="https://images.unsplash.com/photo-1595826978160-c32f8319f395?auto=format&fit=crop&q=80&w=1200" alt="Butajira Rosemary Manufacturing Plant" className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" />
+                <div className="absolute inset-0 bg-black/10 group-hover:bg-transparent transition-colors duration-500" />
+              </div>
+              <div className="space-y-6">
+                <h3 className="font-heading text-3xl md:text-4xl font-bold text-foreground">
+                  Project IV. Butajira Rosmary Manufacturing Plant
+                </h3>
+                <p className="text-lg text-muted-foreground leading-relaxed">
+                  The Butajira Rosemary Processing Plant aims to improve the livelihood of farmers in Meskan Woreda, Eastern Gurage Zone, through sustainable rosemary cultivation and market integration. The initiative covers 20 hectares of investment land and 40 hectares of partner farms, engaging 160 local farmers in modern rosemary production supported by training, technology transfer, and cooperative formation.
+                </p>
+                <p className="text-base text-muted-foreground leading-relaxed">
+                  With a total investment of ETB 77.24 million, the project focuses on producing high-quality rosemary for essential oil extraction used in pharmaceutical, cosmetic, and food industries. It combines scientific cultivation practices with irrigation technology to yield over 20,000 quintals of rosemary twice a year, ensuring consistent supply and export potential.
+                </p>
+                <p className="text-base text-muted-foreground leading-relaxed italic border-l-4 border-highlight pl-4">
+                  Beyond its economic impact, the project promotes environmental sustainability, job creation (11 permanent and 60 temporary positions), and community empowerment. By linking farmers to formal markets and improving production standards, Droga Pharma PLC is positioning Meskan Woreda as a center of excellence for essential oil-bearing crops and contributing to Ethiopia's growing natural product industry.
+                </p>
+              </div>
+            </div>
           </div>
 
-          <motion.div
-            initial={{ opacity: 0 }}
-            whileInView={{ opacity: 1 }}
-            viewport={{ once: true }}
-            className="mt-10 text-center"
+          <div
+            className="mt-16 text-center project-card invisible"
           >
             <Button variant="hero" size="lg" asChild>
               <Link to="/droga-science/projects">View All Projects <ArrowRight className="w-4 h-4 ml-2" /></Link>
             </Button>
-          </motion.div>
+          </div>
         </div>
       </section>
 
       {/* Facility Parallax */}
-      <section className="relative h-[50vh] md:h-[60vh] overflow-hidden">
-        <motion.img
+      <section className="relative h-[50vh] md:h-[60vh] overflow-hidden facility-parallax-section">
+        <img
           src={facilityImg}
           alt="Research facility"
-          className="w-full h-[130%] object-cover absolute -top-[15%]"
-          style={{ y: facilityY }}
+          className="w-full h-[130%] object-cover absolute -top-[15%] facility-parallax-img"
         />
         <div className="absolute inset-0 bg-black/50 flex items-center justify-center">
           <SectionReveal className="text-center max-w-2xl px-6">
@@ -411,7 +567,7 @@ const Index = () => {
               Our integrated research campus houses laboratories, bioequivalence units, and quality control centers.
             </p>
             <Button variant="default" size="lg" className="mt-8 bg-white text-black hover:bg-white/90" asChild>
-              <Link to="/droga-science#labs">Explore Facilities</Link>
+              <Link to="/about#labs">Explore Facilities</Link>
             </Button>
           </SectionReveal>
         </div>
@@ -434,14 +590,9 @@ const Index = () => {
 
           <div className="mt-12 grid grid-cols-1 md:grid-cols-3 gap-6">
             {newsItems.map((item, i) => (
-              <motion.article
+              <article
                 key={item.title}
-                initial={{ opacity: 0, y: 30 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.6, delay: i * 0.1 }}
-                whileHover={{ y: -6, transition: { duration: 0.3 } }}
-                className="group cursor-pointer overflow-hidden rounded-sm bg-card transition-all duration-300 hover:bg-highlight"
+                className="group cursor-pointer overflow-hidden rounded-sm bg-card transition-all duration-300 hover:bg-highlight hover:-translate-y-1.5 news-card invisible"
               >
                 <div className="aspect-[16/10] bg-surface-subtle overflow-hidden">
                   <img src={item.image} alt={item.title} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
@@ -451,7 +602,7 @@ const Index = () => {
                   <h3 className="font-heading text-xl font-bold mt-2 text-foreground group-hover:text-black transition-colors duration-300">{item.title}</h3>
                   <p className="mt-2 text-base font-body text-muted-foreground group-hover:text-black/80 leading-relaxed transition-colors duration-300">{item.excerpt}</p>
                 </div>
-              </motion.article>
+              </article>
             ))}
           </div>
         </div>
