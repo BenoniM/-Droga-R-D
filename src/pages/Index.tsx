@@ -188,24 +188,45 @@ const Index = () => {
 
     // Research Impact 5-Segment Reveal
     const segments = gsap.utils.toArray<HTMLElement>('.section-segment');
-    if (segments.length === 5) {
+    const impactCols = gsap.utils.toArray<HTMLElement>('.impact-col');
+    if (segments.length === 5 && impactCols.length === 5) {
       const getSegs = (indices: number[]) => indices.map(i => segments[i]);
+      const getImpactCols = (indices: number[]) => indices.map(i => impactCols[i]);
       
       const tl = gsap.timeline({
         scrollTrigger: {
           trigger: ".research-impact-section",
-          start: "top 85%", // Start when section enters
-          end: "top 15%",   // End when section is near top
-          scrub: 1.5,       // Extremely smooth, fluid scrubbing tied directly to scroll
+          start: "top 85%",
+          end: "top 15%",
+          scrub: 1.5,
         }
       });
 
-      // The middle segment starts immediately and takes the full scroll distance.
-      // The outer segments start later but catch up so they all arrive together.
-      tl.to(getSegs([2]), { y: 0, duration: 1, ease: "none" }, 0)
-        .to(getSegs([1, 3]), { y: 0, duration: 0.65, ease: "none" }, 0.35)
-        .to(getSegs([0, 4]), { y: 0, duration: 0.3, ease: "none" }, 0.7)
-        .to(".impact-content", { autoAlpha: 1, duration: 0.15 }, 0.85);
+      const updateText = (index: number, val: number) => {
+        const col = impactCols[index];
+        const textEl = col.querySelector('.count-text');
+        const suffix = col.dataset.suffix || "";
+        if (textEl) textEl.innerHTML = Math.round(val).toLocaleString() + suffix;
+      };
+
+      const c0 = { val: 0 };
+      const c1 = { val: 0 };
+      const c2 = { val: 0 };
+      const c3 = { val: 0 };
+      const c4 = { val: 0 };
+
+      tl.to([...getSegs([2]), ...getImpactCols([2])], { y: 0, duration: 1, ease: "none" }, 0)
+        .to(c2, { val: parseInt(impactCols[2].dataset.end || "0"), duration: 1, ease: "none", onUpdate: () => updateText(2, c2.val) }, 0)
+
+        .to([...getSegs([1, 3]), ...getImpactCols([1, 3])], { y: 0, duration: 0.65, ease: "none" }, 0.35)
+        .to(c1, { val: parseInt(impactCols[1].dataset.end || "0"), duration: 0.65, ease: "none", onUpdate: () => updateText(1, c1.val) }, 0.35)
+        .to(c3, { val: parseInt(impactCols[3].dataset.end || "0"), duration: 0.65, ease: "none", onUpdate: () => updateText(3, c3.val) }, 0.35)
+
+        .to([...getSegs([0, 4]), ...getImpactCols([0, 4])], { y: 0, duration: 0.3, ease: "none" }, 0.7)
+        .to(c0, { val: parseInt(impactCols[0].dataset.end || "0"), duration: 0.3, ease: "none", onUpdate: () => updateText(0, c0.val) }, 0.7)
+        .to(c4, { val: parseInt(impactCols[4].dataset.end || "0"), duration: 0.3, ease: "none", onUpdate: () => updateText(4, c4.val) }, 0.7)
+        
+        .to(".impact-header", { autoAlpha: 1, duration: 0.15 }, 0.85);
     }
 
     // Featured Projects 5-Segment Reveal
@@ -267,8 +288,10 @@ const Index = () => {
 
     // Latest News 3-Segment Reveal
     const newsSegments = gsap.utils.toArray<HTMLElement>('.news-segment');
-    if (newsSegments.length === 3) {
+    const newsCols = gsap.utils.toArray<HTMLElement>('.news-content-col');
+    if (newsSegments.length === 3 && newsCols.length === 3) {
       const getNewsSegs = (indices: number[]) => indices.map(i => newsSegments[i]);
+      const getNewsCols = (indices: number[]) => indices.map(i => newsCols[i]);
       
       const tl = gsap.timeline({
         scrollTrigger: {
@@ -279,9 +302,8 @@ const Index = () => {
         }
       });
 
-      tl.to(getNewsSegs([1]), { y: 0, duration: 1, ease: "none" }, 0)
-        .to(getNewsSegs([0, 2]), { y: 0, duration: 0.5, ease: "none" }, 0.5)
-        .to(".news-content", { autoAlpha: 1, duration: 0.15 }, 0.85);
+      tl.to([...getNewsSegs([1]), ...getNewsCols([1])], { y: 0, duration: 1, ease: "none" }, 0)
+        .to([...getNewsSegs([0, 2]), ...getNewsCols([0, 2])], { y: 0, duration: 0.5, ease: "none" }, 0.5);
     }
 
     // Pillar Cards Reveal
@@ -386,7 +408,7 @@ const Index = () => {
       </section>
 
       {/* Research Impact Stats */}
-      <section className="relative z-20 section-padding research-impact-section overflow-hidden">
+      <section className="relative z-20 min-h-screen research-impact-section overflow-hidden">
         {/* 5-segment background */}
         <div className="absolute inset-0 flex z-0">
           <div className="w-1/5 h-full bg-white translate-y-full section-segment"></div>
@@ -396,19 +418,40 @@ const Index = () => {
           <div className="w-1/5 h-full bg-white translate-y-full section-segment"></div>
         </div>
 
-        <div className="container-grid relative z-10 impact-content invisible">
-          <SectionReveal>
-            <span className="text-sm md:text-base font-bold uppercase tracking-[0.2em] text-muted-foreground">Research Impact</span>
-            <h2 className="font-heading text-4xl md:text-5xl font-semibold tracking-tight mt-4 text-foreground text-center">
-              Measurable Results
-            </h2>
-          </SectionReveal>
-          <div className="mt-16 grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-8 md:gap-10">
-            <CountUp end={12} suffix="+" label="Projects" />
-            <CountUp end={17} suffix="+" label="Research Partners" />
-            <CountUp end={5} suffix="" label="Grant Funded" />
-            <CountUp end={300} suffix=" sq.m" label="Analytical Lab Facility" />
-            <CountUp end={9951} suffix=" sq.m" label="R&D Center Facility" />
+        {/* 100vh Window that clips the content while translated down */}
+        <div className="absolute inset-x-0 bottom-0 h-[100vh] overflow-hidden pointer-events-none z-10 flex flex-col justify-center">
+          <div className="container-grid pointer-events-auto w-full">
+            
+            <SectionReveal className="text-center impact-header invisible">
+              <span className="text-sm md:text-base font-bold uppercase tracking-[0.2em] text-muted-foreground block text-center w-full">Research Impact</span>
+              <h2 className="font-heading text-4xl md:text-5xl font-semibold tracking-tight mt-4 text-foreground text-center">
+                Measurable Results
+              </h2>
+            </SectionReveal>
+
+            <div className="mt-16 flex flex-col lg:flex-row lg:justify-between lg:items-end gap-8 md:gap-4 w-full">
+              <div className="impact-col flex-1 translate-y-[100vh] text-center w-full lg:w-1/5 shrink-0" data-end="12" data-suffix="+">
+                <div className="font-heading text-3xl md:text-4xl font-bold text-foreground count-text">0+</div>
+                <div className="mt-2 text-xs md:text-sm font-body text-muted-foreground uppercase tracking-wider">Projects</div>
+              </div>
+              <div className="impact-col flex-1 translate-y-[100vh] text-center w-full lg:w-1/5 shrink-0" data-end="17" data-suffix="+">
+                <div className="font-heading text-3xl md:text-4xl font-bold text-foreground count-text">0+</div>
+                <div className="mt-2 text-xs md:text-sm font-body text-muted-foreground uppercase tracking-wider">Research Partners</div>
+              </div>
+              <div className="impact-col flex-1 translate-y-[100vh] text-center w-full lg:w-1/5 shrink-0" data-end="5" data-suffix="">
+                <div className="font-heading text-3xl md:text-4xl font-bold text-foreground count-text">0</div>
+                <div className="mt-2 text-xs md:text-sm font-body text-muted-foreground uppercase tracking-wider">Grant Funded</div>
+              </div>
+              <div className="impact-col flex-1 translate-y-[100vh] text-center w-full lg:w-1/5 shrink-0" data-end="300" data-suffix=" sq.m">
+                <div className="font-heading text-3xl md:text-4xl font-bold text-foreground count-text">0 sq.m</div>
+                <div className="mt-2 text-xs md:text-sm font-body text-muted-foreground uppercase tracking-wider">Analytical Lab Facility</div>
+              </div>
+              <div className="impact-col flex-1 translate-y-[100vh] text-center w-full lg:w-1/5 shrink-0" data-end="9951" data-suffix=" sq.m">
+                <div className="font-heading text-3xl md:text-4xl font-bold text-foreground count-text">0 sq.m</div>
+                <div className="mt-2 text-xs md:text-sm font-body text-muted-foreground uppercase tracking-wider">R&D Center Facility</div>
+              </div>
+            </div>
+
           </div>
         </div>
       </section>
@@ -702,35 +745,66 @@ const Index = () => {
           <div className="w-1/3 h-full bg-white translate-y-full news-segment"></div>
         </div>
 
-        <div className="container-grid relative z-10 news-content invisible">
-          <div className="flex items-end justify-between">
-            <SectionReveal>
-              <span className="text-sm md:text-base font-bold uppercase tracking-[0.2em] text-muted-foreground">Stay Updated</span>
-              <h2 className="font-heading text-4xl md:text-5xl font-semibold tracking-tight mt-4 text-foreground">
-                Latest News
-              </h2>
-            </SectionReveal>
-            <Link to="/news" className="hidden md:flex items-center gap-2 text-sm md:text-base font-heading font-medium text-foreground hover:text-highlight transition-colors">
-              View All <ArrowRight className="w-4 h-4" />
-            </Link>
-          </div>
+        {/* 100vh Window that clips the content while translated down */}
+        <div className="absolute inset-x-0 top-0 h-[100vh] overflow-hidden pointer-events-none z-10">
+          <div className="container-grid h-full pt-[15vh] md:pt-[20vh] pb-[5vh] md:pb-[10vh] flex gap-4 md:gap-6 pointer-events-auto">
+            
+            {/* Left Column */}
+            <div className="flex-1 flex flex-col justify-between translate-y-[100vh] news-content-col h-full">
+              <div className="pt-2">
+                <span className="text-xs md:text-base font-bold uppercase tracking-[0.2em] text-muted-foreground">Stay Updated</span>
+                <h2 className="font-heading text-2xl md:text-5xl font-semibold tracking-tight mt-2 md:mt-4 text-foreground">
+                  Latest News
+                </h2>
+              </div>
+              <div className="mt-auto">
+                <article className="group cursor-pointer overflow-hidden rounded-sm bg-card transition-all duration-300 hover:bg-highlight hover:-translate-y-1.5 shadow-sm">
+                  <div className="aspect-[16/10] bg-surface-subtle overflow-hidden">
+                    <img src={newsItems[0].image} alt={newsItems[0].title} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
+                  </div>
+                  <div className="p-3 md:p-6 group-hover:bg-highlight transition-colors duration-300">
+                    <span className="text-[10px] md:text-sm font-body text-muted-foreground group-hover:text-black/80 transition-colors duration-300">{newsItems[0].date}</span>
+                    <h3 className="font-heading text-sm md:text-xl font-bold mt-1 text-foreground group-hover:text-black transition-colors duration-300 line-clamp-2">{newsItems[0].title}</h3>
+                  </div>
+                </article>
+              </div>
+            </div>
 
-          <div className="mt-12 grid grid-cols-1 md:grid-cols-3 gap-6">
-            {newsItems.map((item, i) => (
-              <article
-                key={item.title}
-                className="group cursor-pointer overflow-hidden rounded-sm bg-card transition-all duration-300 hover:bg-highlight hover:-translate-y-1.5 news-card invisible"
-              >
-                <div className="aspect-[16/10] bg-surface-subtle overflow-hidden">
-                  <img src={item.image} alt={item.title} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
-                </div>
-                <div className="p-6 group-hover:bg-highlight transition-colors duration-300">
-                  <span className="text-sm md:text-base font-body text-muted-foreground group-hover:text-black/80 transition-colors duration-300">{item.date}</span>
-                  <h3 className="font-heading text-xl font-bold mt-2 text-foreground group-hover:text-black transition-colors duration-300">{item.title}</h3>
-                  <p className="mt-2 text-base font-body text-muted-foreground group-hover:text-black/80 leading-relaxed transition-colors duration-300">{item.excerpt}</p>
-                </div>
-              </article>
-            ))}
+            {/* Middle Column */}
+            <div className="flex-1 flex flex-col justify-end translate-y-[100vh] news-content-col h-full">
+              <div className="mt-auto">
+                <article className="group cursor-pointer overflow-hidden rounded-sm bg-card transition-all duration-300 hover:bg-highlight hover:-translate-y-1.5 shadow-sm">
+                  <div className="aspect-[16/10] bg-surface-subtle overflow-hidden">
+                    <img src={newsItems[1].image} alt={newsItems[1].title} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
+                  </div>
+                  <div className="p-3 md:p-6 group-hover:bg-highlight transition-colors duration-300">
+                    <span className="text-[10px] md:text-sm font-body text-muted-foreground group-hover:text-black/80 transition-colors duration-300">{newsItems[1].date}</span>
+                    <h3 className="font-heading text-sm md:text-xl font-bold mt-1 text-foreground group-hover:text-black transition-colors duration-300 line-clamp-2">{newsItems[1].title}</h3>
+                  </div>
+                </article>
+              </div>
+            </div>
+
+            {/* Right Column */}
+            <div className="flex-1 flex flex-col justify-between translate-y-[100vh] news-content-col h-full">
+              <div className="flex justify-end pt-2">
+                <Link to="/news" className="flex items-center gap-1 md:gap-2 text-xs md:text-base font-heading font-medium text-foreground hover:text-highlight transition-colors">
+                  View All <ArrowRight className="w-3 h-3 md:w-4 md:h-4" />
+                </Link>
+              </div>
+              <div className="mt-auto">
+                <article className="group cursor-pointer overflow-hidden rounded-sm bg-card transition-all duration-300 hover:bg-highlight hover:-translate-y-1.5 shadow-sm">
+                  <div className="aspect-[16/10] bg-surface-subtle overflow-hidden">
+                    <img src={newsItems[2].image} alt={newsItems[2].title} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
+                  </div>
+                  <div className="p-3 md:p-6 group-hover:bg-highlight transition-colors duration-300">
+                    <span className="text-[10px] md:text-sm font-body text-muted-foreground group-hover:text-black/80 transition-colors duration-300">{newsItems[2].date}</span>
+                    <h3 className="font-heading text-sm md:text-xl font-bold mt-1 text-foreground group-hover:text-black transition-colors duration-300 line-clamp-2">{newsItems[2].title}</h3>
+                  </div>
+                </article>
+              </div>
+            </div>
+
           </div>
         </div>
       </section>

@@ -1,11 +1,46 @@
 import { Link } from "react-router-dom";
 import { Mail, Phone, MapPin } from "lucide-react";
 import logo from "@/assets/logo.png";
+import { useGSAP } from "@gsap/react";
+import gsap from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
+
+gsap.registerPlugin(ScrollTrigger);
 
 const Footer = () => {
+  useGSAP(() => {
+    const footerSegments = gsap.utils.toArray<HTMLElement>('.footer-segment');
+    if (footerSegments.length === 5) {
+      const getFooterSegs = (indices: number[]) => indices.map(i => footerSegments[i]);
+      
+      const tl = gsap.timeline({
+        scrollTrigger: {
+          trigger: ".footer-section",
+          start: "top 90%", // Start animating when footer enters screen
+          end: "bottom bottom", // Finish when it hits bottom
+          scrub: 0.8,
+        }
+      });
+
+      tl.to(getFooterSegs([2]), { y: 0, duration: 1, ease: "none" }, 0)
+        .to(getFooterSegs([1, 3]), { y: 0, duration: 0.65, ease: "none" }, 0.35)
+        .to(getFooterSegs([0, 4]), { y: 0, duration: 0.3, ease: "none" }, 0.7)
+        .to(".footer-content", { autoAlpha: 1, duration: 0.15 }, 0.85);
+    }
+  }, []);
+
   return (
-    <footer className="bg-highlight text-foreground">
-      <div className="container mx-auto px-4 md:px-6 py-12 md:py-16">
+    <footer className="relative bg-white text-foreground overflow-hidden footer-section">
+      {/* 5-segment background */}
+      <div className="absolute inset-0 flex z-0">
+        <div className="w-1/5 h-full bg-highlight translate-y-full footer-segment"></div>
+        <div className="w-1/5 h-full bg-highlight translate-y-full footer-segment"></div>
+        <div className="w-1/5 h-full bg-highlight translate-y-full footer-segment"></div>
+        <div className="w-1/5 h-full bg-highlight translate-y-full footer-segment"></div>
+        <div className="w-1/5 h-full bg-highlight translate-y-full footer-segment"></div>
+      </div>
+
+      <div className="container relative z-10 mx-auto px-4 md:px-6 py-12 md:py-16 footer-content invisible">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 md:gap-12">
           {/* Brand with Logo - Centered on mobile, left on desktop */}
           <div className="text-center md:text-left">
