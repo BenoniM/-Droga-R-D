@@ -17,7 +17,7 @@ const Footer = () => {
         scrollTrigger: {
           trigger: ".footer-section",
           start: "top 90%", // Start animating when footer enters screen
-          end: "bottom bottom", // Finish when it hits bottom
+          end: "bottom 105%", // Finish slightly before actual bottom to guarantee perfect alignment
           scrub: 0.8,
         }
       });

@@ -412,12 +412,12 @@ const Index = () => {
         
         {/* Header - Static, invisible until end */}
         <div className="absolute inset-x-0 top-0 pt-8 md:pt-12 pointer-events-none z-20">
-          <SectionReveal className="text-center impact-header invisible">
+          <div className="text-center impact-header invisible">
             <span className="text-xs md:text-sm font-bold uppercase tracking-[0.2em] text-muted-foreground block text-center w-full">Research Impact</span>
             <h2 className="font-heading text-3xl md:text-4xl font-semibold tracking-tight mt-2 text-foreground text-center">
               Measurable Results
             </h2>
-          </SectionReveal>
+          </div>
         </div>
 
         {/* 5-segment background with content perfectly pinned inside */}
