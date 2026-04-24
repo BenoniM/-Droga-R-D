@@ -215,14 +215,14 @@ const Index = () => {
       const c3 = { val: 0 };
       const c4 = { val: 0 };
 
-      tl.to([...getSegs([2]), ...getImpactCols([2])], { y: 0, duration: 1, ease: "none" }, 0)
+      tl.to(getSegs([2]), { y: 0, duration: 1, ease: "none" }, 0)
         .to(c2, { val: parseInt(impactCols[2].dataset.end || "0"), duration: 1, ease: "none", onUpdate: () => updateText(2, c2.val) }, 0)
 
-        .to([...getSegs([1, 3]), ...getImpactCols([1, 3])], { y: 0, duration: 0.65, ease: "none" }, 0.35)
+        .to(getSegs([1, 3]), { y: 0, duration: 0.65, ease: "none" }, 0.35)
         .to(c1, { val: parseInt(impactCols[1].dataset.end || "0"), duration: 0.65, ease: "none", onUpdate: () => updateText(1, c1.val) }, 0.35)
         .to(c3, { val: parseInt(impactCols[3].dataset.end || "0"), duration: 0.65, ease: "none", onUpdate: () => updateText(3, c3.val) }, 0.35)
 
-        .to([...getSegs([0, 4]), ...getImpactCols([0, 4])], { y: 0, duration: 0.3, ease: "none" }, 0.7)
+        .to(getSegs([0, 4]), { y: 0, duration: 0.3, ease: "none" }, 0.7)
         .to(c0, { val: parseInt(impactCols[0].dataset.end || "0"), duration: 0.3, ease: "none", onUpdate: () => updateText(0, c0.val) }, 0.7)
         .to(c4, { val: parseInt(impactCols[4].dataset.end || "0"), duration: 0.3, ease: "none", onUpdate: () => updateText(4, c4.val) }, 0.7)
         
@@ -408,50 +408,49 @@ const Index = () => {
       </section>
 
       {/* Research Impact Stats */}
-      <section className="relative z-20 min-h-screen research-impact-section overflow-hidden">
-        {/* 5-segment background */}
-        <div className="absolute inset-0 flex z-0">
-          <div className="w-1/5 h-full bg-white translate-y-full section-segment"></div>
-          <div className="w-1/5 h-full bg-white translate-y-full section-segment"></div>
-          <div className="w-1/5 h-full bg-white translate-y-full section-segment"></div>
-          <div className="w-1/5 h-full bg-white translate-y-full section-segment"></div>
-          <div className="w-1/5 h-full bg-white translate-y-full section-segment"></div>
+      <section className="relative z-20 h-[60vh] md:h-[40vh] research-impact-section overflow-hidden">
+        
+        {/* Header - Static, invisible until end */}
+        <div className="absolute inset-x-0 top-0 pt-8 md:pt-12 pointer-events-none z-20">
+          <SectionReveal className="text-center impact-header invisible">
+            <span className="text-xs md:text-sm font-bold uppercase tracking-[0.2em] text-muted-foreground block text-center w-full">Research Impact</span>
+            <h2 className="font-heading text-3xl md:text-4xl font-semibold tracking-tight mt-2 text-foreground text-center">
+              Measurable Results
+            </h2>
+          </SectionReveal>
         </div>
 
-        {/* 100vh Window that clips the content while translated down */}
-        <div className="absolute inset-x-0 bottom-0 h-[100vh] overflow-hidden pointer-events-none z-10 flex flex-col justify-center">
-          <div className="container-grid pointer-events-auto w-full">
-            
-            <SectionReveal className="text-center impact-header invisible">
-              <span className="text-sm md:text-base font-bold uppercase tracking-[0.2em] text-muted-foreground block text-center w-full">Research Impact</span>
-              <h2 className="font-heading text-4xl md:text-5xl font-semibold tracking-tight mt-4 text-foreground text-center">
-                Measurable Results
-              </h2>
-            </SectionReveal>
-
-            <div className="mt-16 flex flex-col lg:flex-row lg:justify-between lg:items-end gap-8 md:gap-4 w-full">
-              <div className="impact-col flex-1 translate-y-[100vh] text-center w-full lg:w-1/5 shrink-0" data-end="12" data-suffix="+">
-                <div className="font-heading text-3xl md:text-4xl font-bold text-foreground count-text">0+</div>
-                <div className="mt-2 text-xs md:text-sm font-body text-muted-foreground uppercase tracking-wider">Projects</div>
-              </div>
-              <div className="impact-col flex-1 translate-y-[100vh] text-center w-full lg:w-1/5 shrink-0" data-end="17" data-suffix="+">
-                <div className="font-heading text-3xl md:text-4xl font-bold text-foreground count-text">0+</div>
-                <div className="mt-2 text-xs md:text-sm font-body text-muted-foreground uppercase tracking-wider">Research Partners</div>
-              </div>
-              <div className="impact-col flex-1 translate-y-[100vh] text-center w-full lg:w-1/5 shrink-0" data-end="5" data-suffix="">
-                <div className="font-heading text-3xl md:text-4xl font-bold text-foreground count-text">0</div>
-                <div className="mt-2 text-xs md:text-sm font-body text-muted-foreground uppercase tracking-wider">Grant Funded</div>
-              </div>
-              <div className="impact-col flex-1 translate-y-[100vh] text-center w-full lg:w-1/5 shrink-0" data-end="300" data-suffix=" sq.m">
-                <div className="font-heading text-3xl md:text-4xl font-bold text-foreground count-text">0 sq.m</div>
-                <div className="mt-2 text-xs md:text-sm font-body text-muted-foreground uppercase tracking-wider">Analytical Lab Facility</div>
-              </div>
-              <div className="impact-col flex-1 translate-y-[100vh] text-center w-full lg:w-1/5 shrink-0" data-end="9951" data-suffix=" sq.m">
-                <div className="font-heading text-3xl md:text-4xl font-bold text-foreground count-text">0 sq.m</div>
-                <div className="mt-2 text-xs md:text-sm font-body text-muted-foreground uppercase tracking-wider">R&D Center Facility</div>
-              </div>
-            </div>
-
+        {/* 5-segment background with content perfectly pinned inside */}
+        <div className="absolute inset-0 flex z-0">
+          <div className="w-1/5 h-full bg-white translate-y-full section-segment relative">
+             <div className="absolute inset-x-0 top-[140px] md:top-[160px] text-center px-1 md:px-4 impact-col" data-end="12" data-suffix="+">
+                <div className="font-heading text-lg md:text-4xl font-bold text-foreground count-text">0+</div>
+                <div className="mt-1 md:mt-2 text-[8px] md:text-xs font-body text-muted-foreground uppercase tracking-wider leading-tight">Projects</div>
+             </div>
+          </div>
+          <div className="w-1/5 h-full bg-white translate-y-full section-segment relative">
+             <div className="absolute inset-x-0 top-[140px] md:top-[160px] text-center px-1 md:px-4 impact-col" data-end="17" data-suffix="+">
+                <div className="font-heading text-lg md:text-4xl font-bold text-foreground count-text">0+</div>
+                <div className="mt-1 md:mt-2 text-[8px] md:text-xs font-body text-muted-foreground uppercase tracking-wider leading-tight">Research Partners</div>
+             </div>
+          </div>
+          <div className="w-1/5 h-full bg-white translate-y-full section-segment relative">
+             <div className="absolute inset-x-0 top-[140px] md:top-[160px] text-center px-1 md:px-4 impact-col" data-end="5" data-suffix="">
+                <div className="font-heading text-lg md:text-4xl font-bold text-foreground count-text">0</div>
+                <div className="mt-1 md:mt-2 text-[8px] md:text-xs font-body text-muted-foreground uppercase tracking-wider leading-tight">Grant Funded</div>
+             </div>
+          </div>
+          <div className="w-1/5 h-full bg-white translate-y-full section-segment relative">
+             <div className="absolute inset-x-0 top-[140px] md:top-[160px] text-center px-1 md:px-4 impact-col" data-end="300" data-suffix=" sq.m">
+                <div className="font-heading text-lg md:text-4xl font-bold text-foreground count-text">0 sq.m</div>
+                <div className="mt-1 md:mt-2 text-[8px] md:text-xs font-body text-muted-foreground uppercase tracking-wider leading-tight">Analytical Lab</div>
+             </div>
+          </div>
+          <div className="w-1/5 h-full bg-white translate-y-full section-segment relative">
+             <div className="absolute inset-x-0 top-[140px] md:top-[160px] text-center px-1 md:px-4 impact-col" data-end="9951" data-suffix=" sq.m">
+                <div className="font-heading text-lg md:text-4xl font-bold text-foreground count-text">0 sq.m</div>
+                <div className="mt-1 md:mt-2 text-[8px] md:text-xs font-body text-muted-foreground uppercase tracking-wider leading-tight">R&D Center</div>
+             </div>
           </div>
         </div>
       </section>
