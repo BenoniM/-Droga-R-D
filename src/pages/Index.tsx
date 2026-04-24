@@ -203,29 +203,43 @@ const Index = () => {
       // The middle segment starts immediately and takes the full scroll distance.
       // The outer segments start later but catch up so they all arrive together.
       tl.to(getSegs([2]), { y: 0, duration: 1, ease: "none" }, 0)
-        .to(getSegs([1, 3]), { y: 0, duration: 0.75, ease: "none" }, 0.25)
-        .to(getSegs([0, 4]), { y: 0, duration: 0.5, ease: "none" }, 0.5)
-        .to(".impact-content", { autoAlpha: 1, duration: 0.3 }, 0.7);
+        .to(getSegs([1, 3]), { y: 0, duration: 0.65, ease: "none" }, 0.35)
+        .to(getSegs([0, 4]), { y: 0, duration: 0.3, ease: "none" }, 0.7)
+        .to(".impact-content", { autoAlpha: 1, duration: 0.15 }, 0.85);
     }
 
     // Featured Projects 5-Segment Reveal
     const projectSegments = gsap.utils.toArray<HTMLElement>('.project-segment');
     if (projectSegments.length === 5) {
-      const getProjSegs = (indices: number[]) => indices.map(i => projectSegments[i]);
-      
+      const getProjSegs = (indices: number[]) => indices.map(i => projectSegments[i]);    
       const tl = gsap.timeline({
         scrollTrigger: {
           trigger: ".featured-projects-section",
           start: "top 95%",
           end: "+=700",
-          scrub: 1.8,
+          scrub: 0.8,
         }
       });
 
-      tl.to(getProjSegs([2]), { y: 0, duration: 0.6, ease: "power3.out" })
-        .to(getProjSegs([1, 3]), { y: 0, duration: 0.6, ease: "power3.out" }, "-=0.4")
-        .to(getProjSegs([0, 4]), { y: 0, duration: 0.6, ease: "power3.out" }, "-=0.4")
-        .to(".projects-content", { autoAlpha: 1, duration: 0.4 }, "-=0.2");
+      tl.to(getProjSegs([2]), { 
+          y: 0, 
+          duration: 0.3, // Reduced from 0.5
+          ease: "power4.out" 
+        })
+        .to(getProjSegs([1, 3]), { 
+          y: 0, 
+          duration: 0.4, 
+          ease: "power3.out" 
+        }, "-=0.15") // Adjusted overlap to follow the faster middle piece
+        .to(getProjSegs([0, 4]), { 
+          y: 0, 
+          duration: 0.3, 
+          ease: "power3.out" 
+        }, "-=0.3")
+        .to(".projects-content", { 
+          autoAlpha: 1, 
+          duration: 0.15 
+        }, "-=0.1");
     }
 
     // Facility Parallax (using safe yPercent to ensure image bounds are never breached)
@@ -242,6 +256,33 @@ const Index = () => {
         }
       }
     );
+
+    // Freeze the entire main content (Featured Projects + Facility) when Facility hits bottom
+    ScrollTrigger.create({
+      trigger: ".main-content-wrapper",
+      start: "bottom bottom",
+      pin: true,
+      pinSpacing: false, // Allows News section to scroll OVER the frozen page!
+    });
+
+    // Latest News 3-Segment Reveal
+    const newsSegments = gsap.utils.toArray<HTMLElement>('.news-segment');
+    if (newsSegments.length === 3) {
+      const getNewsSegs = (indices: number[]) => indices.map(i => newsSegments[i]);
+      
+      const tl = gsap.timeline({
+        scrollTrigger: {
+          trigger: ".latest-news-section",
+          start: "top bottom", // Starts as soon as it begins scrolling over the frozen page
+          end: "+=800",
+          scrub: 1.5,
+        }
+      });
+
+      tl.to(getNewsSegs([1]), { y: 0, duration: 1, ease: "none" }, 0)
+        .to(getNewsSegs([0, 2]), { y: 0, duration: 0.5, ease: "none" }, 0.5)
+        .to(".news-content", { autoAlpha: 1, duration: 0.15 }, 0.85);
+    }
 
     // Pillar Cards Reveal
     gsap.utils.toArray<HTMLElement>('.pillar-card').forEach((card, i) => {
@@ -373,7 +414,7 @@ const Index = () => {
       </section>
 
       {/* Wrapping the rest of the page to perfectly cover the pinned hero */}
-      <div className="relative z-20 bg-white">
+      <div className="relative z-20 bg-white main-content-wrapper">
         {/* Our Core Research Pillars - Fully responsive timeline */}
         <section className="section-padding">
         <div className="container-grid">
@@ -646,10 +687,22 @@ const Index = () => {
           </SectionReveal>
         </div>
       </section>
-
+      </div> {/* End main-content-wrapper */}
+      
+      <div className="relative z-30">
       {/* Latest News */}
-      <section className="section-padding">
-        <div className="container-grid">
+      <section className="relative z-20 min-h-screen section-padding latest-news-section overflow-hidden">
+        {/* Solid grey for anything below the 100vh overlap to prevent white gaps! */}
+        <div className="absolute inset-x-0 bottom-0 top-[100vh] bg-white z-0"></div>
+
+        {/* 3-segment wipe over the frozen 100vh page */}
+        <div className="absolute inset-x-0 top-0 h-[100vh] flex z-0">
+          <div className="w-1/3 h-full bg-white translate-y-full news-segment"></div>
+          <div className="w-1/3 h-full bg-white translate-y-full news-segment"></div>
+          <div className="w-1/3 h-full bg-white translate-y-full news-segment"></div>
+        </div>
+
+        <div className="container-grid relative z-10 news-content invisible">
           <div className="flex items-end justify-between">
             <SectionReveal>
               <span className="text-sm md:text-base font-bold uppercase tracking-[0.2em] text-muted-foreground">Stay Updated</span>
@@ -683,7 +736,7 @@ const Index = () => {
       </section>
 
       {/* CTA */}
-      <section className="section-padding bg-surface-subtle">
+      <section className="relative z-20 section-padding bg-white">
         <div className="container-grid text-center">
           <SectionReveal>
             <h2 className="font-heading text-3xl md:text-5xl font-bold tracking-tight text-foreground">
