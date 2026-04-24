@@ -165,17 +165,48 @@ const Index = () => {
   const containerRef = useRef<HTMLDivElement>(null);
 
   useGSAP(() => {
-    // Hero Parallax
+    // Hero Section Pinning (allows next section to scroll over it)
+    ScrollTrigger.create({
+      trigger: ".hero-section",
+      start: "top top",
+      end: "+=200%", // Keep it pinned long enough for subsequent sections to cover it
+      pin: true,
+      pinSpacing: false,
+    });
+
+    // Hero Parallax (using scale instead of y to prevent black gaps at the top)
     gsap.to(".hero-img", {
-      y: 300,
+      scale: 1.15,
       ease: "none",
       scrollTrigger: {
         trigger: ".hero-section",
         start: "top top",
-        end: "bottom top",
+        end: "+=100%",
         scrub: true,
       }
     });
+
+    // Research Impact 5-Segment Reveal
+    const segments = gsap.utils.toArray<HTMLElement>('.section-segment');
+    if (segments.length === 5) {
+      const getSegs = (indices: number[]) => indices.map(i => segments[i]);
+      
+      const tl = gsap.timeline({
+        scrollTrigger: {
+          trigger: ".research-impact-section",
+          start: "top bottom", // Start when section enters
+          end: "top 15%",   // End when section is near top
+          scrub: 0.8,       // Extremely smooth, fluid scrubbing tied directly to scroll
+        }
+      });
+
+      // The middle segment starts immediately and takes the full scroll distance.
+      // The outer segments start later but catch up so they all arrive together.
+      tl.to(getSegs([2]), { y: 0, duration: 1, ease: "none" }, 0)
+        .to(getSegs([1, 3]), { y: 0, duration: 0.75, ease: "none" }, 0.25)
+        .to(getSegs([0, 4]), { y: 0, duration: 0.5, ease: "none" }, 0.5)
+        .to(".impact-content", { autoAlpha: 1, duration: 0.3 }, 0.7);
+    }
 
     // Facility Parallax
     gsap.to(".facility-parallax-img", {
@@ -237,7 +268,7 @@ const Index = () => {
       <Navbar />
 
       {/* Hero Slideshow */}
-      <section className="relative h-screen flex items-center overflow-hidden hero-section">
+      <section className="relative h-screen flex items-center overflow-hidden hero-section z-10">
         <div className="absolute inset-0 bg-black">
           {heroSlides.map((s, idx) => (
             <div
@@ -291,8 +322,17 @@ const Index = () => {
       </section>
 
       {/* Research Impact Stats */}
-      <section className="section-padding bg-surface-subtle">
-        <div className="container-grid">
+      <section className="relative z-20 section-padding research-impact-section overflow-hidden">
+        {/* 5-segment background */}
+        <div className="absolute inset-0 flex z-0">
+          <div className="w-1/5 h-full bg-white translate-y-full section-segment"></div>
+          <div className="w-1/5 h-full bg-white translate-y-full section-segment"></div>
+          <div className="w-1/5 h-full bg-white translate-y-full section-segment"></div>
+          <div className="w-1/5 h-full bg-white translate-y-full section-segment"></div>
+          <div className="w-1/5 h-full bg-white translate-y-full section-segment"></div>
+        </div>
+
+        <div className="container-grid relative z-10 impact-content invisible">
           <SectionReveal>
             <span className="text-sm md:text-base font-bold uppercase tracking-[0.2em] text-muted-foreground">Research Impact</span>
             <h2 className="font-heading text-4xl md:text-5xl font-semibold tracking-tight mt-4 text-foreground text-center">
@@ -309,8 +349,10 @@ const Index = () => {
         </div>
       </section>
 
-      {/* Our Core Research Pillars - Fully responsive timeline */}
-      <section className="section-padding">
+      {/* Wrapping the rest of the page to perfectly cover the pinned hero */}
+      <div className="relative z-20 bg-white">
+        {/* Our Core Research Pillars - Fully responsive timeline */}
+        <section className="section-padding">
         <div className="container-grid">
           <SectionReveal>
             <span className="text-sm md:text-base font-bold uppercase tracking-[0.2em] text-muted-foreground">
@@ -630,6 +672,7 @@ const Index = () => {
         </div>
       </section>
 
+      </div>
       <Footer /> 
     </div>
   );
