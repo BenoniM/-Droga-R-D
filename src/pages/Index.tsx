@@ -16,7 +16,7 @@ import labImg from "@/assets/lab-research.jpg";
 import facilityImg from "@/assets/facility.jpg";
 import moleculesImg from "@/assets/molecules.jpg";
 import plantsImg from "@/assets/herbal8.jpg";
-import pillarBgImage from "@/assets/pillar/pexels-pixabay-256318-Photoroom.png";
+import pillarVideo from "@/assets/pillar/4909887-hd_1080_1920_30fps.mp4";
 
 import heroImg1 from "@/assets/Hero/pexels-jess-vide-9259992.jpg";
 import heroImg2 from "@/assets/Hero/pexels-mart-production-8450360.jpg";
@@ -589,14 +589,23 @@ const Index = () => {
       <div className="relative z-20 bg-white main-content-wrapper">
         {/* Our Core Research Pillars - Glassmorphism Grid */}
         <section className="relative section-padding overflow-hidden bg-background">
-          {/* Flower Background Image */}
+          {/* Background Video */}
           <div className="absolute inset-0 flex items-center justify-center pointer-events-none z-0 overflow-hidden">
-            <img src={pillarBgImage} alt="Pillar Background" className="w-full max-w-[800px] object-contain opacity-90 transition-transform duration-700 hover:scale-105" />
+            <div className="w-[90%] md:w-[45%] lg:w-[23%] h-[550px] relative rounded-2xl overflow-hidden opacity-90">
+              <video 
+                src={pillarVideo} 
+                autoPlay 
+                loop 
+                muted 
+                playsInline
+                className="w-full h-full object-cover"
+              />
+            </div>
           </div>
 
-          <div className="container-grid relative z-10">
+          <div className="w-full max-w-[96%] mx-auto px-4 relative z-10">
             <SectionReveal>
-              <span className="text-sm md:text-base font-bold uppercase tracking-[0.2em] text-muted-foreground">
+              <span className="block text-center text-sm md:text-base font-bold uppercase tracking-[0.2em] text-muted-foreground">
                 In‑Depth Capabilities
               </span>
               <h2 className="font-heading text-4xl md:text-5xl font-semibold tracking-tight mt-4 text-foreground text-center">
@@ -612,7 +621,7 @@ const Index = () => {
                 return (
                   <div
                     key={pillar.title}
-                    className="pillar-card invisible group relative h-[450px] rounded-2xl overflow-hidden border border-white/20 bg-white/60 backdrop-blur-xl shadow-[0_8px_30px_rgb(0,0,0,0.04)] transition-all duration-500 hover:shadow-[0_20px_40px_rgb(0,0,0,0.08)] hover:-translate-y-2 flex flex-col items-center p-8 cursor-pointer"
+                    className="pillar-card invisible group relative h-[550px] rounded-xl overflow-hidden border border-black bg-white/50 backdrop-blur-lg shadow-[0_8px_30px_rgb(0,0,0,0.04)] transition-all duration-500 hover:shadow-[0_20px_40px_rgb(0,0,0,0.08)] hover:-translate-y-2 flex flex-col items-center p-8 cursor-pointer"
                   >
                     {/* Default State: Title & Icon */}
                     <div className="w-full text-center transition-transform duration-500 group-hover:-translate-y-4">
@@ -622,7 +631,7 @@ const Index = () => {
                     </div>
                     
                     <div className="flex-1 flex items-center justify-center transition-all duration-500 group-hover:scale-75 group-hover:-translate-y-8 group-hover:opacity-20">
-                      <pillar.icon className="w-20 h-20 lg:w-24 lg:h-24 text-black" strokeWidth={1} />
+                      <pillar.icon className="w-20 h-20 lg:w-24 lg:h-24 text-[#FFF200]" strokeWidth={1} />
                     </div>
 
                     {/* Default Summary Text at the bottom */}
