@@ -197,6 +197,7 @@ const Index = () => {
   const [currentSlide, setCurrentSlide] = useState(0);
   const [prevSlide, setPrevSlide] = useState(heroSlidesData.length - 1);
   const [displayIndex, setDisplayIndex] = useState(0);
+  const [activePillar, setActivePillar] = useState<number | null>(null);
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -332,8 +333,8 @@ const Index = () => {
       });
 
       tl.fromTo(video, { y: 600 }, { y: 0, duration: 1, ease: "power2.out" })
-        .fromTo([wrappers[1], wrappers[2]], { y: 600 }, { y: 0, duration: 1, ease: "power2.out" }, "+=0.5") // Wait for 0.5 units of scroll before center pillars
-        .fromTo([wrappers[0], wrappers[3]], { y: 600 }, { y: 0, duration: 1, ease: "power2.out" }, "-=0.5");
+        .fromTo([wrappers[1], wrappers[2]], { y: 600 }, { y: 35, duration: 1, ease: "power2.out" }, "+=0.1") // Wait for 0.5 units of scroll before center pillars
+        .fromTo([wrappers[0], wrappers[3]], { y: 600 }, { y: 35, duration: 1, ease: "power2.out" }, "-=0.1");
     }
 
     // Featured Projects 5-Segment Reveal
@@ -609,36 +610,64 @@ const Index = () => {
               </SectionReveal>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mt-16 perspective-1000 pillar-card-container">
-              {pillarCards.map((pillar) => {
+            <div className="flex flex-col md:flex-row md:flex-wrap lg:flex-nowrap gap-6 mt-16 perspective-1000 pillar-card-container">
+              {pillarCards.map((pillar, index) => {
+                const isActive = activePillar === index;
+                const isCompressed = activePillar !== null && !isActive;
+
                 return (
-                  <div key={pillar.title} className="pillar-wrapper">
+                  <div 
+                    key={pillar.title} 
+                    className={`pillar-wrapper duration-700 ease-[cubic-bezier(0.16,1,0.3,1)] w-full md:w-[calc(50%-0.75rem)] lg:w-auto lg:min-w-0 ${isActive ? 'pillar-flex-active' : isCompressed ? 'pillar-flex-compressed' : 'pillar-flex-default'}`}
+                    style={{ transitionProperty: 'flex, width' }}
+                  >
                     <div
-                      className="pillar-card group relative h-[550px] rounded-[0.3rem] overflow-hidden border border-[#DBDBDB] bg-white/50 backdrop-blur-lg shadow-[0_8px_30px_rgb(0,0,0,0.04)] transition-all duration-500 hover:shadow-[0_20px_40px_rgb(0,0,0,0.08)] hover:-translate-y-2 flex flex-col items-center p-8 cursor-pointer"
+                      className={`pillar-card relative h-[550px] rounded-[0.3rem] overflow-hidden border border-[#DBDBDB] bg-white/50 backdrop-blur-lg shadow-[0_8px_30px_rgb(0,0,0,0.04)] transition-all duration-700 flex flex-col items-center p-8 ${isActive ? 'shadow-[0_20px_40px_rgb(0,0,0,0.08)] -translate-y-2' : ''}`}
                     >
                       {/* Default State: Title & Icon */}
-                      <div className="w-full text-center transition-transform duration-500 group-hover:-translate-y-4">
-                        <h3 className="font-heading text-xl lg:text-2xl font-bold text-black leading-tight h-16 flex items-center justify-center">
+                      <div className={`w-full text-center transition-all duration-700 ${isActive ? '-translate-y-4' : ''} ${isCompressed ? 'opacity-0 scale-75 pointer-events-none' : 'opacity-100 scale-100'}`}>
+                        <h3 className="font-heading text-xl lg:text-2xl font-bold text-black leading-tight h-16 flex items-center justify-center whitespace-pre-line">
                           {pillar.title}
                         </h3>
                       </div>
 
-                      <div className="flex-1 flex items-center justify-center transition-all duration-500 group-hover:scale-75 group-hover:-translate-y-8 group-hover:opacity-20">
+                      <div className={`absolute inset-0 flex items-center justify-center transition-all duration-700 ${isActive ? 'scale-75 -translate-y-8 opacity-20' : ''} ${isCompressed ? 'opacity-0 scale-50 pointer-events-none' : 'opacity-100'}`}>
                         <pillar.icon className="w-20 h-20 lg:w-24 lg:h-24 text-[#FFF200]" strokeWidth={1} />
                       </div>
 
+                      {/* Compressed State: Vertical Title */}
+                      <div className={`absolute inset-0 flex items-center justify-center transition-all duration-700 pointer-events-none ${isCompressed ? 'opacity-100 delay-200' : 'opacity-0'}`}>
+                        <h3 className="font-heading text-2xl font-bold text-black tracking-widest whitespace-nowrap -rotate-90">
+                          {pillar.title}
+                        </h3>
+                      </div>
+
                       {/* Default Summary Text at the bottom */}
-                      <div className="absolute bottom-8 left-8 right-8 text-center transition-all duration-500 group-hover:opacity-0 group-hover:translate-y-4">
+                      <div className={`absolute bottom-20 left-8 right-8 text-center transition-all duration-700 ${isActive || isCompressed ? 'opacity-0 translate-y-4 pointer-events-none' : 'opacity-100 translate-y-0'}`}>
                         <p className="text-sm text-black/70 font-body">
                           {pillar.summary}
                         </p>
                       </div>
 
-                      {/* Hover State: Details slide up */}
-                      <div className="absolute inset-x-0 bottom-0 translate-y-full opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all duration-500 ease-in-out bg-white/95 backdrop-blur-2xl p-6 h-[75%] border-t border-white/30 overflow-y-auto custom-scrollbar">
-                        <div className="space-y-4">
+                      {/* Button to show detail */}
+                      <div className={`absolute bottom-6 left-0 right-0 flex justify-center transition-all duration-700 z-10 ${isCompressed ? 'opacity-0 pointer-events-none' : 'opacity-100'}`}>
+                        <Button 
+                          variant="outline" 
+                          className="rounded-full border-black/20 text-xs text-black uppercase tracking-wider bg-white/50 backdrop-blur hover:bg-[#FFF200] hover:text-black hover:border-[#FFF200] transition-colors"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            setActivePillar(isActive ? null : index);
+                          }}
+                        >
+                          {isActive ? "Close Details" : "Touch for details"}
+                        </Button>
+                      </div>
+
+                      {/* Details slide up */}
+                      <div className={`absolute inset-x-0 bottom-0 transition-all duration-700 ease-in-out bg-white/95 backdrop-blur-2xl p-6 h-[75%] border-t border-white/30 overflow-y-auto custom-scrollbar ${isActive ? 'translate-y-0 opacity-100 pointer-events-auto' : 'translate-y-full opacity-0 pointer-events-none'}`}>
+                        <div className={`grid ${isActive ? 'grid-cols-1 md:grid-cols-2 gap-6' : 'grid-cols-1 space-y-4'}`}>
                           {pillar.details.map((detail, i) => (
-                            <div key={i}>
+                            <div key={i} className="mb-4 md:mb-0">
                               <h4 className="font-heading text-sm font-bold text-black mb-2 uppercase tracking-wide border-b border-black/10 pb-1">
                                 {detail.heading}
                               </h4>
