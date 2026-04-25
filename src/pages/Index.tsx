@@ -316,6 +316,26 @@ const Index = () => {
         .to(".impact-header", { autoAlpha: 1, duration: 0.15 }, 0.80);
     }
 
+    // Pillar Section Scroll Flow
+    const wrappers = gsap.utils.toArray<HTMLElement>('.pillar-wrapper');
+    const videos = gsap.utils.toArray<HTMLElement>('.pillar-video');
+    const video = videos[0];
+
+    if (wrappers.length === 4 && video) {
+      const tl = gsap.timeline({
+        scrollTrigger: {
+          trigger: ".pillars-pin-target",
+          start: "top 60%",
+          end: "bottom 90%",
+          scrub: true,
+        }
+      });
+
+      tl.fromTo(video, { y: 600 }, { y: 0, duration: 1, ease: "power2.out" })
+        .fromTo([wrappers[1], wrappers[2]], { y: 600 }, { y: 0, duration: 1, ease: "power2.out" }, "+=0.5") // Wait for 0.5 units of scroll before center pillars
+        .fromTo([wrappers[0], wrappers[3]], { y: 600 }, { y: 0, duration: 1, ease: "power2.out" }, "-=0.5");
+    }
+
     // Featured Projects 5-Segment Reveal
     const projectSegments = gsap.utils.toArray<HTMLElement>('.project-segment');
     if (projectSegments.length === 5) {
@@ -393,35 +413,6 @@ const Index = () => {
         .to([...getNewsSegs([0, 2]), ...getNewsCols([0, 2])], { y: 0, duration: 0.5, ease: "none" }, 0.5);
     }
 
-    // Pillar Cards Reveal (Center first, then edges)
-    const cards = gsap.utils.toArray<HTMLElement>('.pillar-card');
-    if (cards.length === 4) {
-      ScrollTrigger.create({
-        trigger: ".pillar-card-container",
-        start: "top 80%",
-        once: true,
-        onEnter: () => {
-          gsap.fromTo([cards[1], cards[2]], 
-            { autoAlpha: 0, y: 60 },
-            { autoAlpha: 1, y: 0, duration: 0.8, ease: "power3.out", stagger: 0.1 }
-          );
-          gsap.fromTo([cards[0], cards[3]], 
-            { autoAlpha: 0, y: 60 },
-            { autoAlpha: 1, y: 0, duration: 0.8, delay: 0.2, ease: "power3.out", stagger: 0.1 }
-          );
-        }
-      });
-    } else {
-      cards.forEach((card, i) => {
-        gsap.fromTo(card,
-          { autoAlpha: 0, y: 30 },
-          {
-            autoAlpha: 1, y: 0, duration: 0.7, delay: i * 0.1, ease: "power2.out",
-            scrollTrigger: { trigger: card, start: "top 85%", once: true }
-          }
-        );
-      });
-    }
 
     // Projects Reveal
     gsap.utils.toArray<HTMLElement>('.project-card').forEach((card) => {
@@ -444,7 +435,7 @@ const Index = () => {
         }
       );
     });
-  }, { scope: containerRef });
+  }, { scope: containerRef, dependencies: [] });
 
   return (
     <div className="min-h-screen bg-background" ref={containerRef}>
@@ -588,77 +579,80 @@ const Index = () => {
       {/* Wrapping the rest of the page to perfectly cover the pinned hero */}
       <div className="relative z-20 bg-white main-content-wrapper">
         {/* Our Core Research Pillars - Glassmorphism Grid */}
-        <section className="relative section-padding overflow-hidden bg-background">
-          {/* Background Video */}
-          <div className="absolute inset-0 flex items-center justify-center pointer-events-none z-0 overflow-hidden">
-            <div className="w-[90%] md:w-[45%] lg:w-[23%] h-[550px] relative rounded-2xl overflow-hidden opacity-90">
-              <video 
-                src={pillarVideo} 
-                autoPlay 
-                loop 
-                muted 
-                playsInline
-                className="w-full h-full object-cover"
-              />
+        <section className="relative overflow-hidden bg-background pillars-section">
+          <div className="section-padding relative w-full h-full pillars-pin-target">
+            {/* Background Video */}
+            <div className="absolute inset-x-0 top-0 mt-4 md:mt-8 flex justify-center pointer-events-none z-0 overflow-hidden">
+              <div className="w-[90%] md:w-[45%] lg:w-[23%] h-[550px] relative rounded-[0.3rem] border border-black overflow-hidden opacity-90 pillar-video">
+                <video
+                  src={pillarVideo}
+                  autoPlay
+                  loop
+                  muted
+                  playsInline
+                  className="w-full h-full object-cover"
+                />
+              </div>
             </div>
-          </div>
 
-          <div className="w-full max-w-[96%] mx-auto px-4 relative z-10">
-            <SectionReveal>
-              <span className="block text-center text-sm md:text-base font-bold uppercase tracking-[0.2em] text-muted-foreground">
-                In‑Depth Capabilities
-              </span>
-              <h2 className="font-heading text-4xl md:text-5xl font-semibold tracking-tight mt-4 text-foreground text-center">
-                Our Core Research Pillars
-              </h2>
-              <p className="mt-4 text-lg text-muted-foreground max-w-2xl mx-auto text-center">
-                End‑to‑end services spanning bioequivalence, drug discovery, nutraceuticals, and cosmetic science.
-              </p>
-            </SectionReveal>
+            <div className="w-full max-w-[96%] mx-auto px-4 relative z-10 mix-blend-difference">
+              <SectionReveal>
+                <span className="block text-center text-sm md:text-base font-bold uppercase tracking-[0.2em] text-white">
+                  In‑Depth Capabilities
+                </span>
+                <h2 className="font-heading text-4xl md:text-5xl font-semibold tracking-tight mt-4 text-white text-center">
+                  Our Core Research Pillars
+                </h2>
+                <p className="mt-4 text-lg text-white max-w-2xl mx-auto text-center">
+                  End‑to‑end services spanning bioequivalence, drug discovery, nutraceuticals, and cosmetic science.
+                </p>
+              </SectionReveal>
+            </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mt-16 perspective-1000 pillar-card-container">
               {pillarCards.map((pillar) => {
                 return (
-                  <div
-                    key={pillar.title}
-                    className="pillar-card invisible group relative h-[550px] rounded-xl overflow-hidden border border-black bg-white/50 backdrop-blur-lg shadow-[0_8px_30px_rgb(0,0,0,0.04)] transition-all duration-500 hover:shadow-[0_20px_40px_rgb(0,0,0,0.08)] hover:-translate-y-2 flex flex-col items-center p-8 cursor-pointer"
-                  >
-                    {/* Default State: Title & Icon */}
-                    <div className="w-full text-center transition-transform duration-500 group-hover:-translate-y-4">
-                      <h3 className="font-heading text-xl lg:text-2xl font-bold text-black leading-tight h-16 flex items-center justify-center">
-                        {pillar.title}
-                      </h3>
-                    </div>
-                    
-                    <div className="flex-1 flex items-center justify-center transition-all duration-500 group-hover:scale-75 group-hover:-translate-y-8 group-hover:opacity-20">
-                      <pillar.icon className="w-20 h-20 lg:w-24 lg:h-24 text-[#FFF200]" strokeWidth={1} />
-                    </div>
+                  <div key={pillar.title} className="pillar-wrapper">
+                    <div
+                      className="pillar-card group relative h-[550px] rounded-[0.3rem] overflow-hidden border border-[#DBDBDB] bg-white/50 backdrop-blur-lg shadow-[0_8px_30px_rgb(0,0,0,0.04)] transition-all duration-500 hover:shadow-[0_20px_40px_rgb(0,0,0,0.08)] hover:-translate-y-2 flex flex-col items-center p-8 cursor-pointer"
+                    >
+                      {/* Default State: Title & Icon */}
+                      <div className="w-full text-center transition-transform duration-500 group-hover:-translate-y-4">
+                        <h3 className="font-heading text-xl lg:text-2xl font-bold text-black leading-tight h-16 flex items-center justify-center">
+                          {pillar.title}
+                        </h3>
+                      </div>
 
-                    {/* Default Summary Text at the bottom */}
-                    <div className="absolute bottom-8 left-8 right-8 text-center transition-all duration-500 group-hover:opacity-0 group-hover:translate-y-4">
-                      <p className="text-sm text-black/70 font-body">
-                        {pillar.summary}
-                      </p>
-                    </div>
+                      <div className="flex-1 flex items-center justify-center transition-all duration-500 group-hover:scale-75 group-hover:-translate-y-8 group-hover:opacity-20">
+                        <pillar.icon className="w-20 h-20 lg:w-24 lg:h-24 text-[#FFF200]" strokeWidth={1} />
+                      </div>
 
-                    {/* Hover State: Details slide up */}
-                    <div className="absolute inset-x-0 bottom-0 translate-y-full opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all duration-500 ease-in-out bg-white/95 backdrop-blur-2xl p-6 h-[75%] border-t border-white/30 overflow-y-auto custom-scrollbar">
-                      <div className="space-y-4">
-                        {pillar.details.map((detail, i) => (
-                          <div key={i}>
-                            <h4 className="font-heading text-sm font-bold text-black mb-2 uppercase tracking-wide border-b border-black/10 pb-1">
-                              {detail.heading}
-                            </h4>
-                            <ul className="space-y-1.5">
-                              {detail.items.map((item, j) => (
-                                <li key={j} className="flex items-start gap-2 text-xs text-black/80 font-medium">
-                                  <span className="text-highlight font-bold mt-0.5">•</span>
-                                  <span>{item}</span>
-                                </li>
-                              ))}
-                            </ul>
-                          </div>
-                        ))}
+                      {/* Default Summary Text at the bottom */}
+                      <div className="absolute bottom-8 left-8 right-8 text-center transition-all duration-500 group-hover:opacity-0 group-hover:translate-y-4">
+                        <p className="text-sm text-black/70 font-body">
+                          {pillar.summary}
+                        </p>
+                      </div>
+
+                      {/* Hover State: Details slide up */}
+                      <div className="absolute inset-x-0 bottom-0 translate-y-full opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all duration-500 ease-in-out bg-white/95 backdrop-blur-2xl p-6 h-[75%] border-t border-white/30 overflow-y-auto custom-scrollbar">
+                        <div className="space-y-4">
+                          {pillar.details.map((detail, i) => (
+                            <div key={i}>
+                              <h4 className="font-heading text-sm font-bold text-black mb-2 uppercase tracking-wide border-b border-black/10 pb-1">
+                                {detail.heading}
+                              </h4>
+                              <ul className="space-y-1.5">
+                                {detail.items.map((item, j) => (
+                                  <li key={j} className="flex items-start gap-2 text-xs text-black/80 font-medium">
+                                    <span className="text-highlight font-bold mt-0.5">•</span>
+                                    <span>{item}</span>
+                                  </li>
+                                ))}
+                              </ul>
+                            </div>
+                          ))}
+                        </div>
                       </div>
                     </div>
                   </div>
