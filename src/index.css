@@ -135,4 +135,19 @@
       flex: 2 1 0% !important;
     }
   }
+
+  .custom-scrollbar::-webkit-scrollbar {
+    width: 16px !important;
+  }
+  .custom-scrollbar::-webkit-scrollbar-track {
+    background: transparent !important;
+  }
+  .custom-scrollbar::-webkit-scrollbar-thumb {
+    background: #000000 !important;
+    border-radius: 20px !important;
+  }
+  .custom-scrollbar {
+    scrollbar-width: auto !important;
+    scrollbar-color: #000000 transparent !important;
+  }
 }

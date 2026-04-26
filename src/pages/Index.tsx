@@ -5,7 +5,7 @@ import { useGSAP } from "@gsap/react";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import {
   ArrowRight, FlaskConical, Microscope, Brain, HeartPulse, Leaf, Newspaper,
-  Dna, Beaker, Zap, Activity, Pill, Apple, Droplet, ChevronDown
+  Dna, Beaker, Zap, Activity, Pill, Apple, Droplet, ChevronDown, X
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import SectionReveal from "@/components/SectionReveal";
@@ -18,9 +18,14 @@ import moleculesImg from "@/assets/molecules.jpg";
 import plantsImg from "@/assets/herbal8.jpg";
 import pillarVideo from "@/assets/pillar/4909887-hd_1080_1920_30fps.mp4";
 
+import project1Img from "@/assets/Project/droga-manufacture.png";
+import project2Img from "@/assets/Project/Droga Oil Manufacturing Plant.jpg";
+import project3Img from "@/assets/Project/Soap Manufacturing.jpg";
+import project4Img from "@/assets/Project/Rosmary Manufacturing Plant.jpg";
+
 import heroImg1 from "@/assets/Hero/pexels-jess-vide-9259992.jpg";
 import heroImg2 from "@/assets/Hero/pexels-mart-production-8450360.jpg";
-import heroImg3 from "@/assets/Hero/pexels-mikhail-nilov-8851633.jpg";
+import heroImg3 from "@/assets/Hero/habesha_scientist_2.png";
 import heroImg4 from "@/assets/Hero/habesha_scientist.png";
 import heroImg5 from "@/assets/Hero/pexels-yaroslav-shuraev-8514588.jpg";
 
@@ -190,6 +195,96 @@ const newsItems = [
   { title: "Medicinal Plant Nursery Established", date: "December 2025", excerpt: "Butajira nursery to cultivate indigenous medicinal plant species.", image: plantsImg },
 ];
 
+// Featured Projects Detail Data
+const featuredProjectsData = [
+  {
+    id: 1,
+    title: "Project I. Droga Research and Development Center",
+    image: project2Img,
+    description: "Situated on 9,951 sq.m of land in Kilinto Industrial Park, our state-of-the-art center is designed to advance research, development, and quality testing for the pharmaceutical, academic, research, cosmetic, and food & beverage industries.",
+    sections: [
+      {
+        heading: "Our Aim",
+        content: "The center is dedicated to supporting local innovation and reducing dependence on imported APIs, excipients, formulations, and other raw materials by leveraging the country's indigenous knowledge and natural resources.",
+      },
+      {
+        heading: "Our Facilities",
+        content: "The center will house:",
+        list: [
+          "Research Laboratories for drug discovery, food & nutrition, and cosmetic product development",
+          "Bioequivalence Study Units to support preclinical and clinical evaluation",
+          "Quality Control Testing Units for reliable and regulatory-compliant analysis",
+          "Formulation and Development Units for scaling innovations from concept to market-ready products"
+        ],
+        footer: "With these integrated facilities, the center aims to be a hub of scientific excellence, innovation, and self-reliance in pharmaceuticals, nutraceuticals, cosmetics, and functional foods."
+      }
+    ],
+    imageFirst: false, // Right image by default
+  },
+  {
+    id: 2,
+    title: "Project II. Droga Oil Manufacturing Plant",
+    image: project1Img,
+    description: "A 1,000 sq.m processing facility is being established to harness the health promoting potential of fixed and volatile oils. The facility is designed to process these natural oils at scale, ensuring high-quality standards suitable for both local markets and export.",
+    sections: [
+      {
+        heading: "Purpose and Capacity",
+        list: [
+          "Can process 792.064 ton per annum",
+          "Processing of fixed and volatile oils with recognized health benefits",
+          "Support for local and international distribution of natural health products",
+          "Integration with the R&D wing to ensure quality, safety, and efficacy from raw material to finished product"
+        ],
+        footer: "This facility aligns with our mission to leverage indigenous resources, create value-added products, and contribute to both public health and economic growth."
+      }
+    ],
+    imageFirst: true, // Left image
+  },
+  {
+    id: 3,
+    title: "Project III. Droga Soap Manufacturing Plant",
+    image: project3Img,
+    description: "The Droga Soap and Cosmetics Manufacturing Plant is an upcoming initiative designed to strengthen local production of 100% natural skincare solutions. The facility will serve as a hub for innovation in natural cosmetics, reducing reliance on imports while addressing common skin concerns with effective, botanically infused products.",
+    paragraphs: [
+      "One branch of the initiative, the Droga Soap Manufacturing Plant, will occupy 200 m² and focus on producing two distinct soap varieties which are crafted from natural ingredients and are enriched with beneficial botanicals.",
+      "With an annual production capacity of 51,840 pieces of each type, the project aims to supply for the local demand and promote healthier skin through sustainable, natural formulations. By combining modern manufacturing with traditional herbal wisdom, the Droga Soap Plant will contribute to community well-being, job creation, and the growth of Ethiopia's personal care industry."
+    ],
+    imageFirst: false,
+  },
+  {
+    id: 4,
+    title: "Project IV. Butajira Rosmary Manufacturing Plant",
+    image: project4Img,
+    description: "The Butajira Rosemary Processing Plant aims to improve the livelihood of farmers in Meskan Woreda, Eastern Gurage Zone, through sustainable rosemary cultivation and market integration. The initiative covers 20 hectares of investment land and 40 hectares of partner farms, engaging 160 local farmers in modern rosemary production supported by training, technology transfer, and cooperative formation.",
+    paragraphs: [
+      "With a total investment of ETB 77.24 million, the project focuses on producing high-quality rosemary for essential oil extraction used in pharmaceutical, cosmetic, and food industries. It combines scientific cultivation practices with irrigation technology to yield over 20,000 quintals of rosemary twice a year, ensuring consistent supply and export potential."
+    ],
+    footer: "Beyond its economic impact, the project promotes environmental sustainability, job creation (11 permanent and 60 temporary positions), and community empowerment. By linking farmers to formal markets and improving production standards, Droga Pharma PLC is positioning Meskan Woreda as a center of excellence for essential oil-bearing crops and contributing to Ethiopia's growing natural product industry.",
+    imageFirst: true,
+  }
+];
+
+const RevealText = ({ text, className = "" }: { text: string, className?: string }) => {
+  const words = text.split(" ");
+  return (
+    <span className={`inline-flex flex-wrap justify-center gap-x-3 gap-y-5 ${className}`}>
+      {words.map((word, i) => (
+        <span key={i} className="relative inline-block">
+          <span className="relative z-0 opacity-0 text-reveal-word-inner">{word}</span>
+          <span
+            className="absolute -inset-y-2 -inset-x-[0.25rem] z-10 project-word-cover transform-gpu"
+            style={{
+              background: '#000000ff',
+              borderRadius: '8px',
+              willChange: 'transform, opacity',
+            }}
+          />
+        </span>
+      ))}
+    </span>
+  );
+};
+
 const Index = () => {
   const containerRef = useRef<HTMLDivElement>(null);
   const textRef = useRef<HTMLDivElement>(null);
@@ -198,6 +293,7 @@ const Index = () => {
   const [prevSlide, setPrevSlide] = useState(heroSlidesData.length - 1);
   const [displayIndex, setDisplayIndex] = useState(0);
   const [activePillar, setActivePillar] = useState<number | null>(null);
+  const [activeProjectDetail, setActiveProjectDetail] = useState<number | null>(null);
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -208,6 +304,17 @@ const Index = () => {
     }, 4500);
     return () => clearInterval(interval);
   }, []);
+
+  // Close project details on scroll
+  useEffect(() => {
+    const handleScroll = () => {
+      if (activeProjectDetail !== null) {
+        setActiveProjectDetail(null);
+      }
+    };
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, [activeProjectDetail]);
 
   // Yellow Box Reveal Animation
   useEffect(() => {
@@ -371,11 +478,52 @@ const Index = () => {
         }, "-=0.1");
     }
 
+    // Collect ALL covers across the entire projects section for a single section-level reset
+    const allProjectCovers: HTMLElement[] = [];
+
+    // Helper: trigger fall for a set of covers
+    const triggerFall = (coversArr: HTMLElement[]) => {
+      coversArr.forEach((cover, i) => {
+        const direction = Math.random() > 0.5 ? 1 : -1;
+        const delay = i * 0.10 + Math.random() * 0.06;
+        const fallDistance = window.innerHeight * 1.2;
+        const rotAngle = direction * (15 + Math.random() * 25);
+        const driftX = direction * (20 + Math.random() * 60);
+
+        gsap.to(cover, {
+          y: fallDistance,
+          x: driftX,
+          rotation: rotAngle,
+          opacity: 0,
+          duration: 0.8 + Math.random() * 0.4,
+          delay: delay,
+          ease: "power2.in",
+        });
+      });
+    };
+
+    // Main Projects heading reveal — physics-based tumble
+    gsap.utils.toArray<HTMLElement>('.projects-content').forEach((content) => {
+      gsap.set(content.querySelectorAll('.text-reveal-word-inner'), { opacity: 1 });
+
+      const mainHeadingCovers = gsap.utils.toArray<HTMLElement>(content.querySelectorAll('h2 .project-word-cover'));
+      if (mainHeadingCovers.length > 0) {
+        gsap.set(mainHeadingCovers, { rotation: 0, x: 0, y: 0, opacity: 1 });
+        allProjectCovers.push(...mainHeadingCovers);
+
+        ScrollTrigger.create({
+          trigger: content,
+          start: "top 30%",
+          onEnter: () => triggerFall(mainHeadingCovers),
+        });
+      }
+    });
+
     // Facility Parallax (using safe yPercent to ensure image bounds are never breached)
     gsap.fromTo(".facility-parallax-img",
-      { yPercent: -10 },
+      { yPercent: -18 },
       {
-        yPercent: 10,
+        yPercent: 18,
         ease: "none",
         scrollTrigger: {
           trigger: ".facility-parallax-section",
@@ -415,16 +563,35 @@ const Index = () => {
     }
 
 
-    // Projects Reveal
+    // Projects Reveal — physics-based tumble for each project card title
     gsap.utils.toArray<HTMLElement>('.project-card').forEach((card) => {
-      gsap.fromTo(card,
-        { autoAlpha: 0, y: 40 },
-        {
-          autoAlpha: 1, y: 0, duration: 0.8, ease: "power2.out",
-          scrollTrigger: { trigger: card, start: "top 85%", once: true }
-        }
-      );
+      gsap.set(card.querySelectorAll('.text-reveal-word-inner'), { opacity: 1 });
+      const covers = gsap.utils.toArray<HTMLElement>(card.querySelectorAll('.project-word-cover'));
+      const titleElement = card.querySelector('.font-heading');
+      if (covers.length > 0 && titleElement) {
+        gsap.set(covers, { rotation: 0, x: 0, y: 0, opacity: 1 });
+        allProjectCovers.push(...covers);
+
+        ScrollTrigger.create({
+          trigger: titleElement,
+          start: "top 50%",
+          onEnter: () => triggerFall(covers),
+        });
+      }
     });
+
+    // Section-level reset: when leaving the ENTIRE projects section, reset all boxes
+    if (allProjectCovers.length > 0) {
+      ScrollTrigger.create({
+        trigger: ".featured-projects-section",
+        start: "top bottom",
+        end: "bottom top",
+        onLeaveBack: () => {
+          gsap.killTweensOf(allProjectCovers);
+          gsap.set(allProjectCovers, { rotation: 0, x: 0, y: 0, opacity: 1 });
+        },
+      });
+    }
 
     // News Reveal
     gsap.utils.toArray<HTMLElement>('.news-card').forEach((card, i) => {
@@ -435,6 +602,26 @@ const Index = () => {
           scrollTrigger: { trigger: card, start: "top 90%", once: true }
         }
       );
+    });
+
+    // Project Images Parallax
+    gsap.utils.toArray<HTMLElement>('.project-img-container').forEach((container) => {
+      const wrapper = container.querySelector('.project-parallax-wrapper');
+      if (wrapper) {
+        gsap.fromTo(wrapper,
+          { yPercent: -18 },
+          {
+            yPercent: 18,
+            ease: "none",
+            scrollTrigger: {
+              trigger: container,
+              start: "top bottom",
+              end: "bottom top",
+              scrub: true,
+            }
+          }
+        );
+      }
     });
   }, { scope: containerRef, dependencies: [] });
 
@@ -455,14 +642,14 @@ const Index = () => {
               <div className="reveal-block absolute inset-0 bg-black z-10" style={{ transformOrigin: 'bottom', transform: 'scaleY(0)' }}></div>
 
               {/* Invisible spacers to make container width the longest of current or previous */}
-              <span className="block text-xs md:text-sm font-black uppercase tracking-[0.1em] col-start-1 row-start-1 opacity-0 pointer-events-none whitespace-nowrap">
+              <span className="block text-xs md:text-lg font-black uppercase tracking-[0.1em] col-start-1 row-start-1 opacity-0 pointer-events-none whitespace-nowrap">
                 {heroSlidesData[currentSlide].subtitle}
               </span>
-              <span className="block text-xs md:text-sm font-black uppercase tracking-[0.1em] col-start-1 row-start-1 opacity-0 pointer-events-none whitespace-nowrap">
+              <span className="block text-xs md:text-lg font-black uppercase tracking-[0.1em] col-start-1 row-start-1 opacity-0 pointer-events-none whitespace-nowrap">
                 {heroSlidesData[prevSlide].subtitle}
               </span>
 
-              <span className="block text-xs md:text-sm font-black uppercase tracking-[0.1em] text-black col-start-1 row-start-1 z-0 whitespace-nowrap">
+              <span className="block text-xs md:text-lg font-black uppercase tracking-[0.1em] text-black col-start-1 row-start-1 z-0 whitespace-nowrap">
                 {heroSlidesData[displayIndex].subtitle}
               </span>
             </div>
@@ -616,8 +803,8 @@ const Index = () => {
                 const isCompressed = activePillar !== null && !isActive;
 
                 return (
-                  <div 
-                    key={pillar.title} 
+                  <div
+                    key={pillar.title}
                     className={`pillar-wrapper duration-700 ease-[cubic-bezier(0.16,1,0.3,1)] w-full md:w-[calc(50%-0.75rem)] lg:w-auto lg:min-w-0 ${isActive ? 'pillar-flex-active' : isCompressed ? 'pillar-flex-compressed' : 'pillar-flex-default'}`}
                     style={{ transitionProperty: 'flex, width' }}
                   >
@@ -651,8 +838,8 @@ const Index = () => {
 
                       {/* Button to show detail */}
                       <div className={`absolute bottom-6 left-0 right-0 flex justify-center transition-all duration-700 z-10 ${isCompressed ? 'opacity-0 pointer-events-none' : 'opacity-100'}`}>
-                        <Button 
-                          variant="outline" 
+                        <Button
+                          variant="outline"
                           className="rounded-full border-black/20 text-xs text-black uppercase tracking-wider bg-white/50 backdrop-blur hover:bg-[#FFF200] hover:text-black hover:border-[#FFF200] transition-colors"
                           onClick={(e) => {
                             e.stopPropagation();
@@ -704,160 +891,114 @@ const Index = () => {
 
           <div className="container-grid relative z-10 projects-content invisible">
             <SectionReveal>
-              <span className="text-sm md:text-base font-bold uppercase tracking-[0.2em] text-black">Featured</span>
-              <h2 className="font-heading text-4xl md:text-5xl font-semibold tracking-tight mt-4 text-black text-center">
-                Projects
+              <span className="block text-center w-full text-sm md:text-base font-bold uppercase tracking-[0.2em] text-black">Featured</span>
+              <h2 className="font-heading text-4xl md:text-5xl font-semibold tracking-tight mt-4 text-black text-center flex justify-center">
+                <RevealText text="Projects" />
               </h2>
               <p className="mt-6 text-lg text-muted-foreground max-w-4xl mx-auto text-center leading-relaxed">
                 Our projects focus on the expansion and scale up of inhouse pharmaceutical and herbal product developments, as well as the expansion of research & development laboratories, ensuring a seamless transition from research to commercial manufacturing while maintaining quality and regulatory compliance.
               </p>
             </SectionReveal>
 
-            <div className="mt-20 space-y-24 md:space-y-32">
-              {/* Project 1 */}
-              <div
-                className="grid grid-cols-1 lg:grid-cols-2 gap-10 items-center project-card invisible"
-              >
-                <div className="order-2 lg:order-1 space-y-6">
-                  <h3 className="font-heading text-3xl md:text-4xl font-bold text-foreground">
-                    Project 1. Droga Research and Development Center
-                  </h3>
-                  <p className="text-lg text-muted-foreground leading-relaxed">
-                    Situated on 9,951 sq.m of land in Kilinto Industrial Park, our state-of-the-art center is designed to advance research, development, and quality testing for the pharmaceutical, academic, research, cosmetic, and food & beverage industries.
-                  </p>
-                  <div>
-                    <h4 className="font-heading text-xl font-bold text-foreground mb-2">Our Aim</h4>
-                    <p className="text-base text-muted-foreground leading-relaxed">
-                      The center is dedicated to supporting local innovation and reducing dependence on imported APIs, excipients, formulations, and other raw materials by leveraging the country's indigenous knowledge and natural resources.
-                    </p>
-                  </div>
-                  <div>
-                    <h4 className="font-heading text-xl font-bold text-foreground mb-2">Our Facilities</h4>
-                    <p className="text-base text-muted-foreground mb-3">The center will house:</p>
-                    <ul className="space-y-2">
-                      <li className="flex items-start gap-3">
-                        <div className="w-1.5 h-1.5 rounded-full bg-highlight mt-2 flex-shrink-0" />
-                        <span className="text-base text-muted-foreground">Research Laboratories for drug discovery, food & nutrition, and cosmetic product development</span>
-                      </li>
-                      <li className="flex items-start gap-3">
-                        <div className="w-1.5 h-1.5 rounded-full bg-highlight mt-2 flex-shrink-0" />
-                        <span className="text-base text-muted-foreground">Bioequivalence Study Units to support preclinical and clinical evaluation</span>
-                      </li>
-                      <li className="flex items-start gap-3">
-                        <div className="w-1.5 h-1.5 rounded-full bg-highlight mt-2 flex-shrink-0" />
-                        <span className="text-base text-muted-foreground">Quality Control Testing Units for reliable and regulatory-compliant analysis</span>
-                      </li>
-                      <li className="flex items-start gap-3">
-                        <div className="w-1.5 h-1.5 rounded-full bg-highlight mt-2 flex-shrink-0" />
-                        <span className="text-base text-muted-foreground">Formulation and Development Units for scaling innovations from concept to market-ready products</span>
-                      </li>
-                    </ul>
-                    <p className="mt-4 text-base text-muted-foreground leading-relaxed italic border-l-4 border-highlight pl-4">
-                      With these integrated facilities, the center aims to be a hub of scientific excellence, innovation, and self-reliance in pharmaceuticals, nutraceuticals, cosmetics, and functional foods.
-                    </p>
-                  </div>
-                </div>
-                <div className="order-1 lg:order-2 rounded-2xl overflow-hidden shadow-2xl relative aspect-[4/3] group">
-                  <img src={facilityImg} alt="Droga Research and Development Center" className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" />
-                  <div className="absolute inset-0 bg-black/10 group-hover:bg-transparent transition-colors duration-500" />
-                </div>
-              </div>
+            <div className="mt-20 space-y-24 md:space-y-32 relative">
+              {featuredProjectsData.map((project, index) => {
+                const isActive = activeProjectDetail === index;
 
-              {/* Project II */}
-              <div
-                className="grid grid-cols-1 lg:grid-cols-2 gap-10 items-center project-card invisible"
-              >
-                <div className="rounded-2xl overflow-hidden shadow-2xl relative aspect-[4/3] group">
-                  <img src="https://images.unsplash.com/photo-1532187863486-abf9dbad1b69?auto=format&fit=crop&q=80&w=1200" alt="Droga Oil Manufacturing Plant" className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" />
-                  <div className="absolute inset-0 bg-black/10 group-hover:bg-transparent transition-colors duration-500" />
-                </div>
-                <div className="space-y-6">
-                  <h3 className="font-heading text-3xl md:text-4xl font-bold text-foreground">
-                    Project II. Droga Oil Manufacturing Plant
-                  </h3>
-                  <p className="text-lg text-muted-foreground leading-relaxed">
-                    A 1,000 sq.m processing facility is being established to harness the health promoting potential of fixed and volatile oils. The facility is designed to process these natural oils at scale, ensuring high-quality standards suitable for both local markets and export.
-                  </p>
-                  <div>
-                    <h4 className="font-heading text-xl font-bold text-foreground mb-3">Purpose and Capacity</h4>
-                    <ul className="space-y-3">
-                      <li className="flex items-start gap-3">
-                        <div className="w-1.5 h-1.5 rounded-full bg-highlight mt-2 flex-shrink-0" />
-                        <span className="text-base text-muted-foreground">Can process 792.064 ton per annum</span>
-                      </li>
-                      <li className="flex items-start gap-3">
-                        <div className="w-1.5 h-1.5 rounded-full bg-highlight mt-2 flex-shrink-0" />
-                        <span className="text-base text-muted-foreground">Processing of fixed and volatile oils with recognized health benefits</span>
-                      </li>
-                      <li className="flex items-start gap-3">
-                        <div className="w-1.5 h-1.5 rounded-full bg-highlight mt-2 flex-shrink-0" />
-                        <span className="text-base text-muted-foreground">Support for local and international distribution of natural health products</span>
-                      </li>
-                      <li className="flex items-start gap-3">
-                        <div className="w-1.5 h-1.5 rounded-full bg-highlight mt-2 flex-shrink-0" />
-                        <span className="text-base text-muted-foreground">Integration with the R&D wing to ensure quality, safety, and efficacy from raw material to finished product</span>
-                      </li>
-                    </ul>
-                    <p className="mt-5 text-base text-muted-foreground leading-relaxed italic border-l-4 border-highlight pl-4">
-                      This facility aligns with our mission to leverage indigenous resources, create value-added products, and contribute to both public health and economic growth.
-                    </p>
+                return (
+                  <div key={project.id} className="grid grid-cols-1 lg:grid-cols-2 gap-10 items-center project-card relative">
+                    {/* Content Column */}
+                    <div className={`space-y-6 flex flex-col justify-center items-center text-center px-4 lg:px-12 ${project.imageFirst ? 'order-2' : 'order-2 lg:order-1'}`}>
+                      <h3 className="font-heading text-2xl md:text-3xl lg:text-4xl font-bold text-foreground leading-relaxed text-center flex justify-center">
+                        <RevealText text={project.title} />
+                      </h3>
+                      <div>
+                        <Button
+                          onClick={() => setActiveProjectDetail(isActive ? null : index)}
+                          size="lg"
+                          className="mt-4 px-8 py-6 text-sm font-bold uppercase bg-white text-black tracking-widest hover:bg-black hover:text-white transition-all duration-300"
+                        >
+                          Learn More
+                        </Button>
+                      </div>
+                    </div>
+
+                    {/* Image Column */}
+                    <div className={`order-1 ${project.imageFirst ? '' : 'lg:order-2'} rounded-[0.2rem] overflow-hidden shadow-2xl relative aspect-[4/3] group project-img-container`}>
+                      <div className="w-full h-[160%] absolute -top-[30%] project-parallax-wrapper">
+                        <img src={project.image} alt={project.title} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" />
+                      </div>
+                      <div className="absolute inset-0 bg-black/10 group-hover:bg-transparent transition-colors duration-500 pointer-events-none" />
+                    </div>
+
+                    {/* Overlay Details Box */}
+                    <div
+                      className={`absolute top-0 lg:top-8 bottom-0 lg:-bottom-8 z-20 
+                                  bg-white shadow-[0_20px_60px_-15px_rgba(0,0,0,0.3)] rounded-xl border border-black/5 overflow-hidden
+                                  transition-transform duration-700 ease-[cubic-bezier(0.16,1,0.3,1)]
+                                  ${project.imageFirst ? 'left-0 lg:left-[35%] right-0 lg:-right-8' : 'left-0 lg:-left-8 right-0 lg:right-[35%]'}
+                                  ${isActive ? 'translate-x-0 pointer-events-auto' : `pointer-events-none ${project.imageFirst ? 'translate-x-[150%]' : '-translate-x-[150%]'}`}`}
+                    >
+                      <div className="absolute top-6 right-6 z-30">
+                        <button
+                          onClick={() => setActiveProjectDetail(null)}
+                          className="p-3 bg-black/5 hover:bg-[#FFF200] rounded-full transition-colors group"
+                        >
+                          <X className="w-6 h-6 text-black group-hover:scale-110 transition-transform" />
+                        </button>
+                      </div>
+                      <div className="p-8 md:p-16 h-full overflow-y-auto custom-scrollbar relative z-20 bg-white">
+                        <h4 className="font-heading text-3xl md:text-4xl font-bold text-black mb-10 pb-6 border-b border-black/10 pr-12 leading-tight">
+                          {project.title}
+                        </h4>
+                        <div className="space-y-8 font-body">
+                          {project.description && (
+                            <p className="text-lg text-black/80 leading-loose">{project.description}</p>
+                          )}
+                          {project.paragraphs?.map((p, i) => (
+                            <p key={i} className="text-lg text-black/80 leading-loose">{p}</p>
+                          ))}
+                          {project.sections?.map((sec, i) => (
+                            <div key={i} className="pt-2">
+                              <h5 className="font-heading text-2xl font-bold text-black mb-4">{sec.heading}</h5>
+                              {sec.content && <p className="text-lg text-black/80 leading-loose mb-4">{sec.content}</p>}
+                              {sec.list && (
+                                <ul className="space-y-4 mb-4">
+                                  {sec.list.map((item, j) => (
+                                    <li key={j} className="flex items-start gap-4">
+                                      <div className="w-2 h-2 rounded-full bg-[#FFF200] mt-2.5 flex-shrink-0" />
+                                      <span className="text-lg text-black/80 leading-relaxed">{item}</span>
+                                    </li>
+                                  ))}
+                                </ul>
+                              )}
+                              {sec.footer && (
+                                <div className="mt-6 p-6 bg-muted/50 rounded-lg border-l-4 border-[#FFF200]">
+                                  <p className="text-lg text-black/90 leading-relaxed italic">
+                                    {sec.footer}
+                                  </p>
+                                </div>
+                              )}
+                            </div>
+                          ))}
+                          {project.footer && (
+                            <div className="mt-10 p-6 bg-muted/50 rounded-lg border-l-4 border-[#FFF200]">
+                              <p className="text-lg text-black/90 leading-relaxed italic">
+                                {project.footer}
+                              </p>
+                            </div>
+                          )}
+                        </div>
+                      </div>
+                    </div>
                   </div>
-                </div>
-              </div>
-
-              {/* Project III */}
-              <div
-                className="grid grid-cols-1 lg:grid-cols-2 gap-10 items-center project-card invisible"
-              >
-                <div className="order-2 lg:order-1 space-y-6">
-                  <h3 className="font-heading text-3xl md:text-4xl font-bold text-foreground">
-                    Project III. Droga Soap Manufacturing Plant
-                  </h3>
-                  <p className="text-lg text-muted-foreground leading-relaxed">
-                    The Droga Soap and Cosmetics Manufacturing Plant is an upcoming initiative designed to strengthen local production of 100% natural skincare solutions. The facility will serve as a hub for innovation in natural cosmetics, reducing reliance on imports while addressing common skin concerns with effective, botanically infused products.
-                  </p>
-                  <p className="text-base text-muted-foreground leading-relaxed">
-                    One branch of the initiative, the Droga Soap Manufacturing Plant, will occupy 200 m² and focus on producing two distinct soap varieties which are crafted from natural ingredients and are enriched with beneficial botanicals.
-                  </p>
-                  <p className="text-base text-muted-foreground leading-relaxed">
-                    With an annual production capacity of 51,840 pieces of each type, the project aims to supply for the local demand and promote healthier skin through sustainable, natural formulations. By combining modern manufacturing with traditional herbal wisdom, the Droga Soap Plant will contribute to community well-being, job creation, and the growth of Ethiopia's personal care industry.
-                  </p>
-                </div>
-                <div className="order-1 lg:order-2 rounded-2xl overflow-hidden shadow-2xl relative aspect-[4/3] group">
-                  <img src="https://images.unsplash.com/photo-1600857062241-98e5dba7f214?auto=format&fit=crop&q=80&w=1200" alt="Droga Soap Manufacturing Plant" className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" />
-                  <div className="absolute inset-0 bg-black/10 group-hover:bg-transparent transition-colors duration-500" />
-                </div>
-              </div>
-
-              {/* Project IV */}
-              <div
-                className="grid grid-cols-1 lg:grid-cols-2 gap-10 items-center project-card invisible"
-              >
-                <div className="rounded-2xl overflow-hidden shadow-2xl relative aspect-[4/3] group">
-                  <img src="https://images.unsplash.com/photo-1595826978160-c32f8319f395?auto=format&fit=crop&q=80&w=1200" alt="Butajira Rosemary Manufacturing Plant" className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" />
-                  <div className="absolute inset-0 bg-black/10 group-hover:bg-transparent transition-colors duration-500" />
-                </div>
-                <div className="space-y-6">
-                  <h3 className="font-heading text-3xl md:text-4xl font-bold text-foreground">
-                    Project IV. Butajira Rosmary Manufacturing Plant
-                  </h3>
-                  <p className="text-lg text-muted-foreground leading-relaxed">
-                    The Butajira Rosemary Processing Plant aims to improve the livelihood of farmers in Meskan Woreda, Eastern Gurage Zone, through sustainable rosemary cultivation and market integration. The initiative covers 20 hectares of investment land and 40 hectares of partner farms, engaging 160 local farmers in modern rosemary production supported by training, technology transfer, and cooperative formation.
-                  </p>
-                  <p className="text-base text-muted-foreground leading-relaxed">
-                    With a total investment of ETB 77.24 million, the project focuses on producing high-quality rosemary for essential oil extraction used in pharmaceutical, cosmetic, and food industries. It combines scientific cultivation practices with irrigation technology to yield over 20,000 quintals of rosemary twice a year, ensuring consistent supply and export potential.
-                  </p>
-                  <p className="text-base text-muted-foreground leading-relaxed italic border-l-4 border-highlight pl-4">
-                    Beyond its economic impact, the project promotes environmental sustainability, job creation (11 permanent and 60 temporary positions), and community empowerment. By linking farmers to formal markets and improving production standards, Droga Pharma PLC is positioning Meskan Woreda as a center of excellence for essential oil-bearing crops and contributing to Ethiopia's growing natural product industry.
-                  </p>
-                </div>
-              </div>
+                );
+              })}
             </div>
 
             <div
-              className="mt-16 text-center project-card invisible"
+              className="mt-16 text-center"
             >
-              <Button variant="hero" size="lg" asChild className="bg-black text-white hover:bg-black/90">
+              <Button variant="hero" size="lg" asChild className="bg-black text-white hover:bg-white hover:text-black">
                 <Link to="/droga-science/projects">View All Projects <ArrowRight className="w-4 h-4 ml-2" /></Link>
               </Button>
             </div>
@@ -869,7 +1010,7 @@ const Index = () => {
           <img
             src={facilityImg}
             alt="Research facility"
-            className="w-full h-[130%] object-cover absolute -top-[15%] facility-parallax-img"
+            className="w-full h-[160%] object-cover absolute -top-[30%] facility-parallax-img"
           />
           <div className="absolute inset-0 bg-black/50 flex items-center justify-center">
             <SectionReveal className="text-center max-w-2xl px-6">
@@ -902,7 +1043,7 @@ const Index = () => {
 
           {/* 100vh Window that clips the content while translated down */}
           <div className="absolute inset-x-0 top-0 h-[100vh] overflow-hidden pointer-events-none z-10">
-            <div className="container-grid h-full pt-[15vh] md:pt-[20vh] pb-[5vh] md:pb-[10vh] flex gap-4 md:gap-6 pointer-events-auto">
+            <div className="w-[94%] mx-auto h-full pt-[15vh] md:pt-[20vh] pb-[5vh] md:pb-[10vh] flex gap-6 md:gap-10 pointer-events-auto">
 
               {/* Left Column */}
               <div className="flex-1 flex flex-col justify-between translate-y-[100vh] news-content-col h-full">
