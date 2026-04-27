@@ -923,7 +923,7 @@ const Index = () => {
                     </div>
 
                     {/* Image Column */}
-                    <div className={`order-1 ${project.imageFirst ? '' : 'lg:order-2'} rounded-[0.2rem] overflow-hidden shadow-2xl relative aspect-[4/3] group project-img-container`}>
+                    <div className={`order-1 ${project.imageFirst ? '' : 'lg:order-2'} rounded-[0.2rem] overflow-hidden relative aspect-[4/3] group project-img-container`}>
                       <div className="w-full h-[160%] absolute -top-[30%] project-parallax-wrapper">
                         <img src={project.image} alt={project.title} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" />
                       </div>

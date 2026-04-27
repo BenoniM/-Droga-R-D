@@ -132,7 +132,7 @@ const Navbar = () => {
                 <img
                   src={logo}
                   alt="Logo"
-                  className="w-10 h-10 object-contain"
+                  className="w-10 h-10 object-contain relative left-12"
                   onError={() => setImageError(true)}
                 />
               ) : (
