@@ -78,22 +78,7 @@ const textVariants = {
   }),
 };
 
-const imageVariants = {
-  enter: (dir: number) => ({
-    x: dir > 0 ? "100%" : "-100%",
-    opacity: 0,
-  }),
-  center: {
-    x: 0,
-    opacity: 1,
-    transition: { duration: 0.6, ease: EASE },
-  },
-  exit: (dir: number) => ({
-    x: dir > 0 ? "-30%" : "30%",
-    opacity: 0,
-    transition: { duration: 0.5, ease: "easeIn" as const },
-  }),
-};
+const imageVariants = {};
 
 const News = () => {
   const [current, setCurrent] = useState(0);
@@ -123,9 +108,11 @@ const News = () => {
     return () => clearInterval(timer);
   }, [next, paused]);
 
+  const prevIndex = (current - 1 + newsArticles.length) % newsArticles.length;
   const nextIndex = (current + 1) % newsArticles.length;
   const article = newsArticles[current];
   const nextArticle = newsArticles[nextIndex];
+  const prevArticle = newsArticles[prevIndex];
 
   return (
     <div className="min-h-screen bg-background flex flex-col">
@@ -136,43 +123,45 @@ const News = () => {
         <div className="h-[calc(100vh-5rem)] flex flex-col lg:flex-row">
           {/* ── Left: Text Content ── */}
           <div className="relative flex flex-col justify-between px-8 md:px-14 py-12 lg:py-16 w-full lg:w-[38%] shrink-0 overflow-hidden">
-            <AnimatePresence mode="wait" custom={direction}>
-              <motion.div
-                key={current}
-                custom={direction}
-                variants={textVariants}
-                initial="enter"
-                animate="center"
-                exit="exit"
-                className="flex flex-col justify-center h-full"
-              >
-                {/* Category */}
-                <span className="text-xs font-bold uppercase tracking-[0.25em] text-foreground/50 mb-4">
-                  {article.category}
-                </span>
+            <div className="flex flex-col justify-center h-full">
+              <AnimatePresence mode="wait" custom={direction}>
+                <motion.div
+                  key={current}
+                  custom={direction}
+                  variants={textVariants}
+                  initial="enter"
+                  animate="center"
+                  exit="exit"
+                  className="flex flex-col"
+                >
+                  {/* Category */}
+                  <span className="text-xs font-bold uppercase tracking-[0.25em] text-foreground/50 mb-4">
+                    {article.category}
+                  </span>
 
-                {/* Title */}
-                <h1 className="font-heading text-3xl md:text-4xl xl:text-5xl font-bold tracking-tight text-foreground leading-[1.1]">
-                  {article.title}
-                </h1>
+                  {/* Title */}
+                  <h1 className="font-heading text-3xl md:text-4xl xl:text-5xl font-bold tracking-tight text-foreground leading-[1.1]">
+                    {article.title}
+                  </h1>
 
-                {/* Excerpt */}
-                <p className="mt-5 text-sm md:text-base text-foreground/60 leading-relaxed max-w-sm font-body">
-                  {article.excerpt}
-                </p>
+                  {/* Excerpt */}
+                  <p className="mt-5 text-sm md:text-base text-foreground/60 leading-relaxed max-w-sm font-body">
+                    {article.excerpt}
+                  </p>
 
-                {/* Date */}
-                <span className="mt-4 text-xs text-foreground/40 font-medium tracking-wide">
-                  {article.date}
-                </span>
+                  {/* Date */}
+                  <span className="mt-4 text-xs text-foreground/40 font-medium tracking-wide">
+                    {article.date}
+                  </span>
+                </motion.div>
+              </AnimatePresence>
 
-                {/* CTA */}
-                <button className="mt-8 self-start inline-flex items-center gap-2 bg-foreground text-background text-sm font-bold px-6 py-3 rounded-sm hover:bg-foreground/80 transition-colors duration-300 group">
-                  Read More
-                  <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform duration-300" />
-                </button>
-              </motion.div>
-            </AnimatePresence>
+              {/* CTA - Outside AnimatePresence to stay intact */}
+              <button className="mt-8 self-start inline-flex items-center gap-2 bg-foreground text-background text-sm font-bold px-6 py-3 rounded-sm hover:bg-foreground/80 transition-colors duration-300 group">
+                Read More
+                <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform duration-300" />
+              </button>
+            </div>
 
             {/* Slide counter */}
             <div className="mt-auto pt-8 flex items-center gap-3">
@@ -195,58 +184,66 @@ const News = () => {
           </div>
 
           {/* ── Right: Images ── */}
-          <div className="relative flex-1 flex items-center gap-4 px-4 lg:px-8 overflow-hidden">
-            {/* Current image */}
-            <div className="relative flex-[2] h-[55vh] lg:h-[75%] overflow-hidden rounded-2xl shadow-xl">
-              <AnimatePresence mode="wait" custom={direction}>
-                <motion.img
-                  key={current}
-                  src={article.image}
-                  alt={article.title}
-                  custom={direction}
-                  variants={imageVariants}
-                  initial="enter"
-                  animate="center"
-                  exit="exit"
-                  className="absolute inset-0 w-full h-full object-cover"
-                />
-              </AnimatePresence>
-            </div>
+          <div className="relative flex-1 flex items-center px-4 lg:px-8">
+            <div className="relative w-full h-[55vh] lg:h-[80%] flex items-center" style={{ perspective: "1000px" }}>
+              {/* Big Main (Current Article) */}
+              <div className="relative w-[72%] h-full pr-4 lg:pr-8">
+                <AnimatePresence mode="popLayout" initial={false}>
+                  <motion.div
+                    key={article.title}
+                    layoutId={`card-${article.title}`}
+                    className="absolute inset-0 right-4 lg:right-8 overflow-hidden rounded-3xl"
+                    style={{ 
+                      zIndex: 9999,
+                      transformStyle: "preserve-3d",
+                      transform: "translateZ(10px)"
+                    }}
+                    initial={{ opacity: 1 }}
+                    animate={{ opacity: 1 }}
+                    exit={{ 
+                      opacity: 0,
+                      zIndex: 0,
+                      transform: "translateZ(0px)",
+                      transition: { duration: 0.3 }
+                    }}
+                    transition={{
+                      layout: { type: "spring", stiffness: 200, damping: 25 }
+                    }}
+                  >
+                    <img
+                      src={article.image}
+                      alt={article.title}
+                      className="absolute inset-0 w-full h-full object-cover shadow-2xl"
+                    />
+                  </motion.div>
+                </AnimatePresence>
+              </div>
 
-            {/* Next card peek — entire card animates as one unit */}
-            <div className="relative flex-[0.85] h-[45vh] lg:h-[60%]">
-              <AnimatePresence mode="wait" custom={direction}>
+              {/* Small Peek (Next Article) */}
+              <div className="relative w-[28%] h-[60%]" style={{ zIndex: 10000 }}>
                 <motion.div
-                  key={nextIndex}
-                  custom={direction}
-                  variants={imageVariants}
-                  initial="enter"
-                  animate="center"
-                  exit="exit"
+                  key={nextArticle.title}
+                  layoutId={`card-${nextArticle.title}`}
                   onClick={() => handleManualNav(next)}
-                  className="absolute inset-0 overflow-hidden rounded-2xl shadow-md cursor-pointer opacity-70 hover:opacity-90 transition-opacity duration-300"
+                  className="absolute inset-0 overflow-hidden rounded-2xl cursor-pointer group"
+                  style={{ 
+                    zIndex: 10000,
+                    transformStyle: "preserve-3d",
+                    transform: "translateZ(20px)"
+                  }}
                 >
-                  {/* Image */}
                   <img
                     src={nextArticle.image}
                     alt={nextArticle.title}
-                    className="absolute inset-0 w-full h-full object-cover"
+                    className="absolute inset-0 w-full h-full object-cover shadow-lg"
                   />
-                  {/* Overlay */}
-                  <div className="absolute inset-0 bg-black/40 flex flex-col justify-end p-4">
-                    <span className="text-[10px] font-bold uppercase tracking-widest text-white/70">
-                      {nextArticle.category}
-                    </span>
-                    <p className="text-white text-xs font-semibold mt-1 line-clamp-2 leading-snug">
-                      {nextArticle.title}
-                    </p>
-                    <span className="text-[10px] text-white/50 mt-1 block">
-                      {nextArticle.date}
-                    </span>
+                  <div className="absolute inset-0 bg-black/20 flex flex-col justify-end p-4">
+                    <p className="text-white text-[10px] font-bold uppercase tracking-widest opacity-70">Next</p>
                   </div>
                 </motion.div>
-              </AnimatePresence>
+              </div>
             </div>
+          </div>
 
             {/* Prev / Next arrows — bottom right */}
             <div className="absolute bottom-6 right-6 flex gap-2 z-10">
@@ -264,7 +261,6 @@ const News = () => {
               >
                 <ChevronRight className="w-5 h-5" />
               </button>
-            </div>
           </div>
         </div>
       </section>
