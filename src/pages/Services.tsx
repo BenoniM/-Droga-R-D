@@ -1,17 +1,37 @@
-import { Suspense, lazy } from "react";
-import { motion } from "framer-motion";
-import { 
-  FlaskConical, Lightbulb, Cpu, BarChart3, Microscope, Users, ArrowRight, 
+import { useRef, useState, useCallback } from "react";
+import gsap from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
+import { Draggable } from "gsap/Draggable";
+import { useGSAP } from "@gsap/react";
+import {
+  FlaskConical, Microscope, ArrowRight,
   CheckCircle, Beaker, ClipboardCheck, Gauge, ShieldCheck, Clock, Building2,
-  Droplets, Ruler, Weight, Thermometer, Scale, Wind
+  BarChart3, Activity, Waves, Timer, Scale, Droplets, Flame, Settings,
+  ChevronLeft, ChevronRight
 } from "lucide-react";
+import { Link } from "react-router-dom";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import SectionReveal from "@/components/SectionReveal";
+import { Button } from "@/components/ui/button";
+
 import facilityImg from "@/assets/facility.jpg";
 import labImg from "@/assets/lab-research.jpg";
+import logoImg from "@/assets/logo.png";
 
-// Main service cards - updated to match the lab's offerings
+import shimadzuLogo from "@/assets/Partners/Shimadzu.png";
+import electroLabLogo from "@/assets/Partners/Electrolab.png";
+import lotusLogo from "@/assets/Partners/Lotus.png";
+import emiLogo from "@/assets/Partners/EMI.png";
+import tekLogo from "@/assets/Partners/Tek.png";
+import dbuLogo from "@/assets/Partners/Debre Berhan.png";
+import aauLogo from "@/assets/Partners/AAU.jpg";
+import emaLogo from "@/assets/Partners/EMA.png";
+import breezeLogo from "@/assets/Partners/Breeze.png";
+
+gsap.registerPlugin(ScrollTrigger, Draggable);
+
+// Main service cards
 const services = [
   {
     icon: BarChart3,
@@ -46,17 +66,19 @@ const services = [
 ];
 
 // Instrumentation list
-const instruments = [
-  "High Performance Liquid Chromatography (HPLC)",
-  "UV-Visible Spectrophotometers",
-  "Fourier-Transform Infrared Spectrometer (FTIR)",
-  "Dissolution and Disintegration Test Apparatus",
-  "Analytical Balances and Precision Weighing Systems",
-  "pH Meters",
-  "Viscometers",
-  "Hot Air Ovens and Water Baths",
-  "Laboratory Scale Sample Processing Equipment",
+const baseInstruments = [
+  { name: "High Performance Liquid Chromatography (HPLC)", icon: Activity },
+  { name: "UV-Visible Spectrophotometers", icon: Waves },
+  { name: "Fourier-Transform Infrared Spectrometer (FTIR)", icon: Microscope },
+  { name: "Dissolution and Disintegration Test Apparatus", icon: Timer },
+  { name: "Analytical Balances and Precision Weighing Systems", icon: Scale },
+  { name: "pH Meters", icon: Droplets },
+  { name: "Viscometers", icon: Beaker },
+  { name: "Hot Air Ovens and Water Baths", icon: Flame },
+  { name: "Laboratory Scale Sample Processing Equipment", icon: Settings },
 ];
+
+const instruments = baseInstruments;
 
 // Quality commitment points
 const qualityPoints = [
@@ -69,337 +91,674 @@ const qualityPoints = [
 
 // Why choose us
 const whyChooseUs = [
-  { icon: Building2, title: "Segregated QC Facilities", desc: "Dedicated and controlled QC areas ensure secure, unbiased, and reliable testing." },
-  { icon: CheckCircle, title: "Accuracy & Reliability", desc: "Analytical processes designed to deliver precise, consistent, and reproducible results." },
-  { icon: ClipboardCheck, title: "Regulatory-Ready Reports", desc: "Comprehensive documentation prepared to meet applicable regulatory and compliance requirements." },
-  { icon: Clock, title: "Fast Turnaround Times", desc: "Efficient workflows and skilled teams enable timely analysis without compromising quality." },
-  { icon: Microscope, title: "Advanced Infrastructure", desc: "Modern, well-maintained laboratory equipment supports high-quality research and testing outcomes." },
+  {
+    icon: Building2,
+    title: "Segregated QC Facilities",
+    desc: "Dedicated and controlled QC areas ensure secure, unbiased, and reliable testing.",
+    img: "https://images.pexels.com/photos/18471462/pexels-photo-18471462.jpeg"
+  },
+  {
+    icon: CheckCircle,
+    title: "Accuracy & Reliability",
+    desc: "Analytical processes designed to deliver precise, consistent, and reproducible results.",
+    img: "https://images.unsplash.com/photo-1554475901-4538ddfbccc2?w=900&q=80"
+  },
+  {
+    icon: ClipboardCheck,
+    title: "Regulatory-Ready Reports",
+    desc: "Comprehensive documentation prepared to meet applicable regulatory and compliance requirements.",
+    img: "https://images.unsplash.com/photo-1450101499163-c8848c66ca85?w=900&q=80"
+  },
+  {
+    icon: Clock,
+    title: "Fast Turnaround Times",
+    desc: "Efficient workflows and skilled teams enable timely analysis without compromising quality.",
+    img: "https://images.pexels.com/photos/1178684/pexels-photo-1178684.jpeg"
+  },
+  {
+    icon: Microscope,
+    title: "Advanced Infrastructure",
+    desc: "Modern, well-maintained laboratory equipment supports high-quality research and testing outcomes.",
+    img: "https://images.pexels.com/photos/8940470/pexels-photo-8940470.jpeg"
+  },
 ];
 
-// Client types
-const clientTypes = [
-  "Pharmaceutical Manufacturing Companies",
-  "Research and Academic Institutions",
-  "Regulatory Bodies",
-  "Contract QC Service Seekers",
+const partners = [
+  { name: "Shimadzu", logo: shimadzuLogo, description: "Leading global provider of analytical and measuring instruments." },
+  { name: "Electro Lab", logo: electroLabLogo, description: "Advanced pharmaceutical testing equipment and calibration." },
+  { name: "Lotus", logo: lotusLogo, description: "Strategic partner in high-quality raw material sourcing." },
+  { name: "Ethiopian Meteorology Institute", logo: emiLogo, description: "Collaborating on environmental data for agricultural research." },
+  { name: "Tek Calibration and Services Center", logo: tekLogo, description: "Ensuring precision and compliance of all laboratory equipment." },
+  { name: "Debere Berhan University", logo: dbuLogo, description: "Academic partner for joint botanical and pharmaceutical research." },
+  { name: "Breeze Pharmaceutical Technologies PLC", logo: breezeLogo, description: "Technology partner for modern formulation techniques." },
+  { name: "Addis Ababa University", logo: aauLogo, description: "Fostering academic excellence and collaborative clinical studies." },
+  { name: "EMA cons & Trading", logo: emaLogo, description: "Consulting and trading partner for regulatory compliance." },
 ];
 
-const containerVariants = {
-  hidden: { opacity: 0 },
-  visible: { opacity: 1, transition: { staggerChildren: 0.1, delayChildren: 0.2 } }
-};
+const HexagonalPartnersGrid = () => {
+  const [activePartner, setActivePartner] = useState<number | null>(null);
 
-const itemVariants = {
-  hidden: { opacity: 0, y: 30 },
-  visible: { opacity: 1, y: 0, transition: { duration: 0.6, ease: "easeOut" } }
+  const togglePartner = (index: number) => {
+    setActivePartner(activePartner === index ? null : index);
+  };
+
+  return (
+    <div className="w-full max-w-6xl mx-auto py-12">
+      <div className="flex flex-wrap justify-center items-center px-4">
+        {partners.map((partner, index) => {
+          const isActive = activePartner === index;
+
+          return (
+            <div
+              key={index}
+              className={`relative w-[140px] h-[160px] md:w-[160px] md:h-[184px] transition-all duration-300 ${isActive ? 'z-40' : 'z-10'}`}
+              style={{
+                margin: '-1rem 0.5rem', // Interlocking honeycomb negative margins
+              }}
+            >
+              {/* The expanded container uses absolute positioning to overlay without moving siblings */}
+              <div
+                onClick={() => togglePartner(index)}
+                className={`absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 cursor-pointer transition-all duration-500 ease-[cubic-bezier(0.34,1.56,0.64,1)] ${isActive
+                  ? 'w-[300px] h-[345px] md:w-[360px] md:h-[415px]'
+                  : 'w-[140px] h-[160px] md:w-[160px] md:h-[184px]'
+                  }`}
+                style={{
+                  filter: isActive
+                    ? "drop-shadow(0 25px 35px rgba(0,0,0,0.02)) drop-shadow(0 10px 10px rgba(0,0,0,0.15))"
+                    : "drop-shadow(0 10px 15px rgba(0,0,0,0.1)) drop-shadow(0 4px 6px rgba(0,0,0,0.05))"
+                }}
+              >
+                <div
+                  className={`w-full h-full group flex flex-col items-center justify-center transition-colors duration-300 relative ${partner.name.toLowerCase().includes('breeze')
+                    ? (isActive ? 'bg-black pt-2 pb-2 px-6 md:pt-4 md:pb-4 md:px-10' : 'bg-black p-0 hover:brightness-125')
+                    : (isActive ? 'bg-white pt-2 pb-2 px-6 md:pt-4 md:pb-4 md:px-10' : 'bg-white hover:bg-gray-50 p-0')
+                    }`}
+                  style={{ clipPath: 'polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%)' }}
+                >
+                  <div className={`flex items-center justify-center shrink-0 transition-all duration-500 ${isActive ? 'w-20 h-20 md:w-28 md:h-28 mb-4' : 'w-[70%] h-[70%]'}`}>
+                    {partner.logo ? (
+                      <img
+                        src={partner.logo}
+                        alt={partner.name}
+                        className={`max-h-full max-w-full object-contain filter transition-all duration-300 ${isActive || partner.name.toLowerCase().includes('breeze') ? 'grayscale-0' : 'grayscale group-hover:grayscale-0'}`}
+                      />
+                    ) : (
+                      <span className={`font-heading text-sm md:text-base font-bold text-center px-4 transition-colors duration-300 ${partner.name.toLowerCase().includes('breeze') ? 'text-white' : 'text-muted-foreground group-hover:text-black'}`}>{partner.name}</span>
+                    )}
+                  </div>
+
+                  {/* We only render the text if active so it doesn't try to cram into the small hexagon */}
+                  <div
+                    className={`flex-1 text-center flex flex-col justify-start w-full transition-all duration-500 overflow-hidden ${isActive ? 'opacity-100 max-h-[200px]' : 'opacity-0 max-h-0'}`}
+                  >
+                    <h4 className={`font-heading text-lg md:text-xl font-bold mb-1 line-clamp-2 mt-1 ${partner.name.toLowerCase().includes('breeze') ? 'text-white' : 'text-black'}`}>{partner.name}</h4>
+                    <p className={`text-xs md:text-sm leading-tight line-clamp-4 px-2 ${partner.name.toLowerCase().includes('breeze') ? 'text-white/80' : 'text-black/70'}`}>{partner.description}</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          );
+        })}
+      </div>
+    </div>
+  );
 };
 
 const Services = () => {
+  const pageRef = useRef<HTMLDivElement>(null);
+  const [activeIndex, setActiveIndex] = useState(0);
+
+  useGSAP(() => {
+    // Hero Animation
+    gsap.fromTo('.hero-content',
+      { opacity: 0, y: 30 },
+      { opacity: 1, y: 0, duration: 0.8, ease: 'power2.out' }
+    );
+
+    // Staggered Cards (Services, Instruments, Why Choose Us, Clients)
+    gsap.utils.toArray<HTMLElement>('.stagger-container').forEach(container => {
+      const cards = container.querySelectorAll('.stagger-item');
+      gsap.fromTo(cards,
+        { opacity: 0, y: 30 },
+        {
+          opacity: 1, y: 0, duration: 0.6, ease: 'power2.out', stagger: 0.1,
+          scrollTrigger: {
+            trigger: container,
+            start: "top 85%",
+            once: true
+          }
+        }
+      );
+    });
+
+    // Simple Fade/Slide Up Items (Quality points)
+    gsap.utils.toArray<HTMLElement>('.fade-up-item').forEach((item, index) => {
+      gsap.fromTo(item,
+        { opacity: 0, x: -10 },
+        {
+          opacity: 1, x: 0, duration: 0.5, delay: index * 0.1, ease: 'power2.out',
+          scrollTrigger: {
+            trigger: item,
+            start: "top 90%",
+            once: true
+          }
+        }
+      );
+    });
+
+    // Parallax on facility info boxes (About style)
+    gsap.utils.toArray<HTMLElement>('.facility-info-box').forEach((box) => {
+      gsap.fromTo(box, { y: 100 }, {
+        y: -100, ease: "none",
+        scrollTrigger: {
+          trigger: box.parentElement,
+          start: "top bottom",
+          end: "bottom top",
+          scrub: 1
+        }
+      });
+    });
+
+    // Parallax on images
+    gsap.utils.toArray<HTMLElement>('.svc-parallax-img').forEach((img) => {
+      gsap.fromTo(img, { yPercent: -15 }, {
+        yPercent: 15, ease: "none",
+        scrollTrigger: {
+          trigger: img.parentElement,
+          start: "top bottom",
+          end: "bottom top",
+          scrub: true
+        }
+      });
+    });
+
+    // Horizontal yellow line grow animations
+    gsap.utils.toArray<HTMLElement>('.section-line').forEach((line) => {
+      gsap.fromTo(line, { scaleX: 0 }, {
+        scaleX: 1, duration: 1, ease: "power2.out",
+        scrollTrigger: { trigger: line, start: "top 85%", once: true }
+      });
+    });
+
+    // Large number fade-in
+    gsap.utils.toArray<HTMLElement>('.section-number').forEach((el) => {
+      gsap.fromTo(el, { opacity: 0, x: -30 }, {
+        opacity: 0.04, x: 0, duration: 1, ease: 'power2.out',
+        scrollTrigger: { trigger: el, start: "top 85%", once: true }
+      });
+    });
+
+    // Horizontal Draggable Carousel for Instruments (Infinite Loop)
+    const instContainer = pageRef.current?.querySelector('.inst-scroll-container') as HTMLElement;
+    const cards = gsap.utils.toArray<HTMLElement>('.inst-card');
+
+    if (instContainer && cards.length > 0) {
+      const singleSetWidth = instContainer.scrollWidth / 3;
+      gsap.set(cards, { transformOrigin: "center center" });
+
+      // Start in the middle set
+      gsap.set(instContainer, { x: -singleSetWidth });
+
+      const updateCardsEffects = () => {
+        const viewportCenter = window.innerWidth / 2;
+        cards.forEach(card => {
+          const rect = card.getBoundingClientRect();
+          const cardCenter = rect.left + rect.width / 2;
+          const distFromCenter = Math.abs(viewportCenter - cardCenter);
+          const maxDist = window.innerWidth / 2;
+          const normalizedDist = Math.min(distFromCenter / maxDist, 1);
+
+          const scale = 1 - (normalizedDist * 0.15);
+          const opacity = 1 - (normalizedDist * 0.8);
+          const borderOpacity = 1 - (normalizedDist * 0.9);
+          const cardBlur = normalizedDist * 4;
+
+          gsap.set(card, {
+            scale: scale,
+            opacity: opacity,
+            borderColor: `rgba(255, 255, 255, ${borderOpacity * 0.5})`,
+            boxShadow: `0 ${8 - (normalizedDist * 8)}px ${30 - (normalizedDist * 20)}px rgba(0,0,0,${0.1 * (1 - normalizedDist)})`,
+            filter: `blur(${cardBlur}px)`
+          });
+        });
+
+        // Infinite Loop Teleportation Logic
+        const currentX = gsap.getProperty(instContainer, "x") as number;
+        if (currentX <= -singleSetWidth * 2) {
+          gsap.set(instContainer, { x: currentX + singleSetWidth });
+        } else if (currentX >= 0) {
+          gsap.set(instContainer, { x: currentX - singleSetWidth });
+        }
+      };
+
+      // Initial call
+      updateCardsEffects();
+
+      Draggable.create(instContainer, {
+        type: "x",
+        inertia: false, // Standard Draggable
+        edgeResistance: 0,
+        dragResistance: 0,
+        throwResistance: 0,
+        minimumMovement: 0,
+        cursor: "grab",
+        activeCursor: "grabbing",
+        onDrag: updateCardsEffects,
+        onThrowUpdate: updateCardsEffects,
+        onRelease: function () {
+          const velocity = this.getVelocity("x");
+          const momentumMultiplier = Math.abs(velocity) > 500 ? 0.5 : 0.3; // More momentum for faster flicks
+          const momentum = velocity * momentumMultiplier;
+          const currentX = gsap.getProperty(instContainer, "x") as number;
+
+          gsap.to(instContainer, {
+            x: currentX + momentum,
+            duration: 1.2, // Longer, smoother deceleration
+            ease: "power4.out",
+            onUpdate: updateCardsEffects
+          });
+        }
+      });
+
+      // Navigation Buttons Logic
+      const moveCarousel = (direction: 'next' | 'prev') => {
+        const currentX = gsap.getProperty(instContainer, "x") as number;
+        const cardWidth = cards[0].offsetWidth + 24; // Width + gap
+        const moveAmount = direction === 'next' ? -cardWidth : cardWidth;
+
+        gsap.to(instContainer, {
+          x: currentX + moveAmount,
+          duration: 0.8,
+          ease: "power3.out",
+          onUpdate: updateCardsEffects
+        });
+      };
+
+      const prevBtn = pageRef.current?.querySelector('.carousel-prev');
+      const nextBtn = pageRef.current?.querySelector('.carousel-next');
+      prevBtn?.addEventListener('click', () => moveCarousel('prev'));
+      nextBtn?.addEventListener('click', () => moveCarousel('next'));
+    }
+
+    ScrollTrigger.refresh();
+  }, { scope: pageRef });
+
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen bg-background" ref={pageRef}>
       <Navbar />
 
       {/* Hero Section - Left aligned */}
       <section className="pt-32 pb-20 px-6 bg-highlight relative overflow-hidden">
         <div className="container-grid">
-          <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8 }}
-            className="max-w-3xl text-left"
-          >
+          <div className="max-w-3xl text-left hero-content opacity-0">
             <span className="text-sm md:text-base font-bold uppercase tracking-[0.3em] text-foreground/60">Our Services</span>
             <h1 className="font-heading text-5xl md:text-7xl font-bold tracking-tighter text-foreground mt-4">
-              Droga Analytical (QC) Testing Laboratory
+              Droga Bioanalytical & Analytical Laboratory
             </h1>
             <p className="mt-6 text-xl text-foreground/70 max-w-2xl font-body leading-relaxed">
-              Comprehensive analytical testing services under Phase I – delivering accuracy, compliance, and speed for pharmaceutical, academic, and regulatory clients.
+              Aimed at providing bioequivalence (BE) studies, pharmacokinetic studies and a comprehensive analytical testing services in compliance with national and international guidelines.
             </p>
-          </motion.div>
-        </div>
-      </section>
-
-      {/* Services Grid - Phase I Testing Categories */}
-      <section className="section-padding">
-        <div className="container-grid">
-          <SectionReveal>
-            <span className="text-sm md:text-base font-bold uppercase tracking-[0.2em] text-muted-foreground">Phase I Services</span>
-            <h2 className="font-heading text-3xl md:text-4xl font-semibold tracking-tight mt-4 text-foreground">Analytical Testing Services</h2>
-            <p className="mt-4 text-lg text-muted-foreground max-w-2xl">
-              The Droga Bioanalytical & Analytical Laboratory (DBAL) delivers specialized testing for raw materials and finished products.
-            </p>
-          </SectionReveal>
-          <motion.div
-            className="mt-12 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"
-            variants={containerVariants}
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true }}
-          >
-            {services.map((service, i) => (
-              <motion.div
-                key={service.title}
-                variants={itemVariants}
-                whileHover={{ y: -8, transition: { duration: 0.3 } }}
-                className="group p-8 bg-card card-shadow hover:bg-highlight border-l-4 border-highlight hover:border-foreground transition-all duration-300 rounded-sm cursor-pointer"
-              >
-                <service.icon className="w-10 h-10 text-highlight group-hover:text-foreground mb-4 transition-colors duration-300" strokeWidth={1.5} />
-                <h3 className="font-heading text-xl font-bold text-foreground">{service.title}</h3>
-                <p className="mt-3 text-base font-body text-muted-foreground group-hover:text-foreground/70 leading-relaxed transition-colors duration-300">{service.desc}</p>
-              </motion.div>
-            ))}
-          </motion.div>
-        </div>
-      </section>
-
-      {/* Detailed Test Types - Raw Material & Finished Product with hover bg */}
-      <section className="section-padding bg-surface-subtle">
-        <div className="container-grid">
-          <SectionReveal>
-            <span className="text-sm md:text-base font-bold uppercase tracking-[0.2em] text-muted-foreground">Test Parameters</span>
-            <h2 className="font-heading text-3xl md:text-4xl font-semibold tracking-tight mt-4 text-foreground">Type of Tests in Phase I</h2>
-          </SectionReveal>
-          <div className="mt-12 grid grid-cols-1 lg:grid-cols-2 gap-8">
-            {/* Raw Material Testing - with hover */}
-            <motion.div
-              initial={{ opacity: 0, x: -20 }}
-              whileInView={{ opacity: 1, x: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.5 }}
-              whileHover={{ y: -4 }}
-              className="group bg-card p-6 rounded-sm border-t-4 border-highlight hover:bg-highlight transition-all duration-300 shadow-sm cursor-pointer"
-            >
-              <h3 className="font-heading text-2xl font-bold text-foreground group-hover:text-foreground transition-colors duration-300 mb-4">Raw Material Testing</h3>
-              <ul className="space-y-3">
-                {["Identification of APIs", "Assay of APIs", "Excipient Analysis", "Moisture Content Determination (LOD)"].map((item) => (
-                  <li key={item} className="flex items-center gap-3 text-base text-muted-foreground group-hover:text-foreground/70 transition-colors duration-300">
-                    <CheckCircle className="w-5 h-5 text-highlight group-hover:text-foreground transition-colors duration-300" />
-                    <span>{item}</span>
-                  </li>
-                ))}
-              </ul>
-            </motion.div>
-            {/* Finished Product Testing - with hover */}
-            <motion.div
-              initial={{ opacity: 0, x: 20 }}
-              whileInView={{ opacity: 1, x: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.5, delay: 0.1 }}
-              whileHover={{ y: -4 }}
-              className="group bg-card p-6 rounded-sm border-t-4 border-highlight hover:bg-highlight transition-all duration-300 shadow-sm cursor-pointer"
-            >
-              <h3 className="font-heading text-2xl font-bold text-foreground group-hover:text-foreground transition-colors duration-300 mb-4">Finished Product Testing</h3>
-              <div className="grid grid-cols-2 gap-3">
-                {["Assay", "Identification", "Content Uniformity", "Dissolution", "Disintegration", "Hardness", "Friability", "pH Measurement"].map((item) => (
-                  <div key={item} className="flex items-center gap-2 text-base text-muted-foreground group-hover:text-foreground/70 transition-colors duration-300">
-                    <CheckCircle className="w-4 h-4 text-highlight group-hover:text-foreground transition-colors duration-300 flex-shrink-0" />
-                    <span className="text-base">{item}</span>
-                  </div>
-                ))}
-              </div>
-            </motion.div>
           </div>
         </div>
       </section>
 
-      {/* Instrumentation - Our Analytical Capabilities */}
-      <section className="section-padding">
-        <div className="container-grid">
+      {/* 01 Analytical Testing Services Grid */}
+      <section className="section-padding relative overflow-hidden bg-white">
+        <div className="container-grid relative">
+          <div className="absolute -left-4 top-0 font-heading text-[10rem] md:text-[14rem] font-black text-black/[0.04] leading-none select-none pointer-events-none section-number">01</div>
           <SectionReveal>
-            <span className="text-sm md:text-base font-bold uppercase tracking-[0.2em] text-muted-foreground">Advanced Instrumentation</span>
-            <h2 className="font-heading text-3xl md:text-4xl font-semibold tracking-tight mt-4 text-foreground">Our Analytical Capabilities</h2>
-            <p className="mt-4 text-lg text-muted-foreground max-w-2xl">
-              Our laboratory is equipped with qualified and calibrated instruments to support accurate research, development, and quality evaluation activities.
+            <div className="flex items-center gap-4 mb-2">
+              <span className="text-sm md:text-base font-bold uppercase tracking-[0.2em] text-muted-foreground">Phase I Services</span>
+            </div>
+            <h2 className="font-heading text-4xl md:text-5xl font-bold tracking-tight mt-4 text-foreground leading-tight">Analytical Testing Services</h2>
+            <p className="mt-6 text-lg text-muted-foreground max-w-2xl leading-relaxed">
+              Droga bioanalytical & analytical laboratory in phase I offers diversified quality control testing.
             </p>
           </SectionReveal>
-          <motion.div
-            className="mt-12 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4"
-            variants={containerVariants}
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true }}
-          >
-            {instruments.map((inst, i) => (
-              <motion.div
-                key={inst}
-                variants={itemVariants}
-                whileHover={{ scale: 1.02, x: 4 }}
-                className="group flex items-center gap-3 p-4 bg-surface-subtle rounded-sm hover:bg-highlight transition-colors duration-300 cursor-pointer"
+
+          <div className="mt-16 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 stagger-container">
+            {services.map((service) => (
+              <div
+                key={service.title}
+                className="stagger-item opacity-0 group p-8 bg-card shadow-sm border border-black/5 hover:bg-highlight hover:shadow-xl transition-all duration-300 rounded-sm cursor-pointer hover:-translate-y-2"
               >
-                <Beaker className="w-5 h-5 text-highlight group-hover:text-black transition-colors duration-300" />
-                <span className="font-body text-base text-foreground group-hover:text-black transition-colors duration-300">{inst}</span>
-              </motion.div>
+                <div className="w-14 h-14 bg-surface-subtle group-hover:bg-white/50 rounded-full flex items-center justify-center mb-6 transition-colors duration-300">
+                  <service.icon className="w-6 h-6 text-foreground" strokeWidth={1.5} />
+                </div>
+                <h3 className="font-heading text-xl font-bold text-foreground mb-3">{service.title}</h3>
+                <p className="text-base font-body text-muted-foreground group-hover:text-foreground/80 leading-relaxed transition-colors duration-300">{service.desc}</p>
+              </div>
             ))}
-          </motion.div>
-          <p className="mt-6 text-center text-muted-foreground text-base italic">
-            All instruments are maintained, calibrated, and operated in accordance with established standard operating procedures (SOPs) to ensure data accuracy, reliability, and reproducibility.
-          </p>
+          </div>
         </div>
       </section>
 
-      {/* Quality & Compliance - with hover on QA card */}
-      <section className="section-padding bg-surface-subtle">
-        <div className="container-grid">
+      {/* 02 Test Parameters - Overlapping layout style */}
+      <section className="section-padding relative overflow-hidden bg-surface-subtle">
+        <div className="container-grid relative">
+          <div className="absolute -left-4 top-0 font-heading text-[10rem] md:text-[14rem] font-black text-black/[0.04] leading-none select-none pointer-events-none section-number">02</div>
           <SectionReveal>
-            <span className="text-sm md:text-base font-bold uppercase tracking-[0.2em] text-muted-foreground">Quality Commitment</span>
-            <h2 className="font-heading text-3xl md:text-4xl font-semibold tracking-tight mt-4 text-foreground">Quality & Compliance</h2>
-            <p className="mt-4 text-lg text-muted-foreground max-w-2xl">
+            <div className="flex items-center gap-4 mb-2">
+              <span className="text-sm md:text-base font-bold uppercase tracking-[0.2em] text-muted-foreground">Test Parameters</span>
+            </div>
+            <h2 className="font-heading text-4xl md:text-5xl font-bold tracking-tight mt-4 text-foreground leading-tight">Type of Tests in Phase I</h2>
+          </SectionReveal>
+
+          <div className="mt-20 space-y-32">
+            {/* Raw Material Testing */}
+            <div className="relative pt-16 lg:pt-24 mb-32">
+              <div className="flex flex-col lg:flex-row relative items-start lg:items-center">
+                {/* Dark Top Title */}
+                <div className="absolute -top-8 left-0 lg:left-[5%] z-20 bg-black px-6 py-4 md:px-10 md:py-6 shadow-md w-auto max-w-[90%]">
+                  <h3 className="text-white font-heading text-lg md:text-2xl font-bold tracking-widest uppercase m-0">
+                    Raw Material Testing
+                  </h3>
+                </div>
+
+                {/* Image Container */}
+                <div className="w-full lg:w-[70%] h-[400px] relative overflow-hidden mt-12 lg:mt-0 rounded-sm">
+                  <img src={labImg} alt="Raw Material Testing" className="w-full h-[130%] -top-[15%] absolute object-cover svc-parallax-img" />
+                </div>
+
+                {/* Content Box */}
+                <div className="w-[90%] mx-auto lg:w-[45%] lg:absolute lg:right-0 lg:top-1/2 lg:-translate-y-1/2 z-10 bg-[#FFF200] p-8 md:p-12 shadow-xl -mt-16 lg:mt-0 relative facility-info-box">
+                  <SectionReveal delay={0.2}>
+                    <h4 className="font-heading text-2xl md:text-3xl font-black text-black mb-6 uppercase leading-tight tracking-tight">
+                      Ensuring Quality at the Source
+                    </h4>
+                    <ul className="space-y-4">
+                      {["Identification of APIs", "Assay of APIs", "Excipient Analysis", "Moisture Content Determination (LOD)"].map((item) => (
+                        <li key={item} className="flex items-center gap-3 text-base text-black/80 font-medium">
+                          <CheckCircle className="w-5 h-5 text-black" />
+                          <span>{item}</span>
+                        </li>
+                      ))}
+                    </ul>
+                  </SectionReveal>
+                </div>
+              </div>
+            </div>
+
+            {/* Finished Product Testing */}
+            <div className="relative pt-16 lg:pt-24 mb-16">
+              <div className="flex flex-col lg:flex-row relative items-start lg:items-center justify-end">
+                {/* Dark Top Title */}
+                <div className="absolute -top-8 right-0 lg:right-[5%] z-20 bg-black px-6 py-4 md:px-10 md:py-6 shadow-md w-auto max-w-[90%] text-right">
+                  <h3 className="text-white font-heading text-lg md:text-2xl font-bold tracking-widest uppercase m-0">
+                    Finished Product Testing
+                  </h3>
+                </div>
+
+                {/* Content Box */}
+                <div className="w-[90%] mx-auto lg:w-[45%] lg:absolute lg:left-0 lg:top-1/2 lg:-translate-y-1/2 z-10 bg-white p-8 md:p-12 shadow-xl border border-black/5 -mt-16 lg:mt-0 relative order-2 lg:order-1 facility-info-box">
+                  <SectionReveal delay={0.2}>
+                    <h4 className="font-heading text-2xl md:text-3xl font-black text-black mb-6 uppercase leading-tight tracking-tight">
+                      Comprehensive Validation
+                    </h4>
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                      {["Assay", "Identification", "Content Uniformity", "Dissolution", "Disintegration", "Hardness", "Friability", "pH Measurement"].map((item) => (
+                        <div key={item} className="flex items-center gap-2 text-base text-black/80 font-medium">
+                          <CheckCircle className="w-4 h-4 text-[#FFF200] flex-shrink-0" />
+                          <span>{item}</span>
+                        </div>
+                      ))}
+                    </div>
+                  </SectionReveal>
+                </div>
+
+                {/* Image Container */}
+                <div className="w-full lg:w-[70%] h-[400px] relative overflow-hidden mt-12 lg:mt-0 order-1 lg:order-2 rounded-sm">
+                  <img src={facilityImg} alt="Finished Product Testing" className="w-full h-[130%] -top-[15%] absolute object-cover svc-parallax-img" />
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* 03 Instrumentation - Our Analytical Capabilities */}
+      <section className="relative overflow-hidden bg-surface-subtle min-h-[80vh] flex flex-col justify-center py-24">
+        {/* Blurred background logo */}
+        <div className="absolute inset-0 flex items-center justify-center opacity-[0.15] z-0 pointer-events-none">
+          <img src={logoImg} alt="Droga Logo" className="w-[500px] h-[500px] object-contain filter blur-[10px]" />
+        </div>
+
+        <div className="container-grid relative w-full mb-12 z-10">
+          <div className="absolute -left-4 top-0 font-heading text-[10rem] md:text-[14rem] font-black text-black/[0.04] leading-none select-none pointer-events-none section-number">03</div>
+          <SectionReveal>
+            <div className="flex items-center gap-4 mb-2">
+              <span className="text-sm md:text-base font-bold uppercase tracking-[0.2em] text-muted-foreground">Advanced Instrumentation</span>
+            </div>
+            <h2 className="font-heading text-4xl md:text-5xl font-bold tracking-tight mt-4 text-foreground leading-tight">Our Analytical Capabilities</h2>
+          </SectionReveal>
+        </div>
+
+        {/* Horizontal Drag Wrapper */}
+        <div className="relative w-full h-[400px] flex items-center overflow-hidden z-10 select-none">
+
+
+          <div className="flex flex-nowrap gap-6 px-[calc(50vw-140px)] md:px-[calc(50vw-175px)] w-max inst-scroll-container items-center h-full py-8 cursor-grab active:cursor-grabbing">
+            {[...instruments, ...instruments, ...instruments].map((inst, index) => (
+              <div
+                key={`${inst.name}-${index}`}
+                className="inst-card w-[280px] md:w-[380px] h-[160px] md:h-[300px] flex-shrink-0 flex flex-col items-center justify-center gap-4 p-6 bg-white/20 backdrop-blur-2xl border border-transparent rounded-2xl will-change-transform"
+              >
+                <div className="w-36 h-36 bg-white/80 rounded-full flex items-center justify-center flex-shrink-0 shadow-sm">
+                  <inst.icon className="w-16 h-16 text-black" />
+                </div>
+                <span className="font-body text-base md:text-lg text-black font-semibold text-center leading-snug">{inst.name}</span>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        <div className="container-grid w-full mt-12 z-10 relative">
+          <SectionReveal delay={0.2}>
+            <div className="flex items-center justify-center gap-6 lg:gap-12">
+              {/* Left Button (Prev) */}
+              <button className="carousel-prev w-16 h-16 flex items-center justify-center rounded-full bg-[#FFF200] text-black hover:scale-110 transition-all duration-300 shadow-xl border-none flex-shrink-0">
+                <ChevronLeft className="w-8 h-8" />
+              </button>
+
+              {/* Center Info Box */}
+              <div className="max-w-3xl p-8 bg-white border-l-4 border-highlight rounded-r-md shadow-sm">
+                <p className="text-foreground/80 text-base italic font-medium leading-relaxed text-center md:text-left">
+                  All instruments are maintained, calibrated, and operated in accordance with established standard operating procedures (SOPs) to ensure data accuracy, reliability, and reproducibility.
+                </p>
+              </div>
+
+              {/* Right Button (Next) */}
+              <button className="carousel-next w-16 h-16 flex items-center justify-center rounded-full bg-[#FFF200] text-black hover:scale-110 transition-all duration-300 shadow-xl border-none flex-shrink-0">
+                <ChevronRight className="w-8 h-8" />
+              </button>
+            </div>
+          </SectionReveal>
+        </div>
+      </section>
+
+      {/* 04 Quality & Compliance */}
+      <section className="section-padding relative overflow-hidden bg-surface-subtle">
+        <div className="container-grid relative">
+          <div className="absolute -left-4 top-0 font-heading text-[10rem] md:text-[14rem] font-black text-black/[0.04] leading-none select-none pointer-events-none section-number">04</div>
+          <SectionReveal>
+            <div className="flex items-center gap-4 mb-2">
+              <span className="text-sm md:text-base font-bold uppercase tracking-[0.2em] text-muted-foreground">Quality Commitment</span>
+            </div>
+            <h2 className="font-heading text-4xl md:text-5xl font-bold tracking-tight mt-4 text-foreground leading-tight">Quality & Compliance</h2>
+            <p className="mt-6 text-lg text-muted-foreground max-w-2xl leading-relaxed">
               Quality and compliance are integral to all our research, development, and testing activities. We maintain the highest standards of scientific integrity and regulatory adherence.
             </p>
           </SectionReveal>
-          <div className="mt-12 grid grid-cols-1 md:grid-cols-2 gap-8">
+
+          <div className="mt-16 grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16">
             {/* Regulatory and Quality Framework */}
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              className="space-y-4"
-            >
-              <h3 className="font-heading text-xl font-bold text-foreground">Regulatory and Quality Framework</h3>
-              <ul className="space-y-3">
+            <div className="space-y-8">
+              <SectionReveal delay={0.1}>
+                <h3 className="font-heading text-3xl font-bold text-foreground">Regulatory and Quality Framework</h3>
+              </SectionReveal>
+              <ul className="space-y-6">
                 {qualityPoints.map((point, idx) => (
-                  <motion.li
-                    key={idx}
-                    initial={{ opacity: 0, x: -10 }}
-                    whileInView={{ opacity: 1, x: 0 }}
-                    transition={{ delay: idx * 0.1 }}
-                    className="group flex items-start gap-3 cursor-pointer"
-                  >
-                    <ShieldCheck className="w-5 h-5 text-highlight group-hover:text-black mt-0.5 flex-shrink-0 transition-colors duration-300" />
-                    <span className="text-base text-muted-foreground group-hover:text-black/80 transition-colors duration-300">{point}</span>
-                  </motion.li>
+                  <li key={idx} className="fade-up-item opacity-0 group flex items-start gap-4">
+                    <ShieldCheck className="w-6 h-6 text-highlight group-hover:text-foreground mt-0.5 flex-shrink-0 transition-colors duration-300" />
+                    <span className="text-lg text-muted-foreground group-hover:text-foreground transition-colors duration-300 leading-relaxed font-medium">{point}</span>
+                  </li>
                 ))}
               </ul>
-            </motion.div>
-            {/* Quality Assurance card with hover bg */}
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ delay: 0.2 }}
-              whileHover={{ y: -4 }}
-              className="group bg-card p-6 rounded-sm border-l-4 border-highlight hover:bg-highlight transition-all duration-300 cursor-pointer"
-            >
-              <h3 className="font-heading text-xl font-bold text-foreground group-hover:text-foreground transition-colors duration-300 mb-3">Quality Assurance & Review Process</h3>
-              <p className="text-base text-muted-foreground group-hover:text-foreground/70 leading-relaxed transition-colors duration-300">
-                All analyses and evaluations are conducted by trained and authorized professionals following approved standard operating procedures. Test results are independently reviewed and approved by the Quality Assurance (QA) team prior to final release, ensuring accuracy, compliance, and consistency.
-              </p>
-            </motion.div>
+            </div>
+
+            {/* Quality Assurance card */}
+            <div className="relative">
+              <SectionReveal delay={0.3}>
+                <div className="bg-card p-10 rounded-sm shadow-xl border border-black/5 hover:border-highlight transition-all duration-300 h-full relative overflow-hidden group">
+                  <div className="absolute top-0 left-0 w-1.5 h-full bg-highlight group-hover:w-full transition-all duration-500 z-0 opacity-10 group-hover:opacity-100" />
+                  <div className="relative z-10">
+                    <div className="w-16 h-16 bg-highlight rounded-full flex items-center justify-center mb-8">
+                      <ClipboardCheck className="w-8 h-8 text-black" />
+                    </div>
+                    <h3 className="font-heading text-2xl md:text-3xl font-bold text-foreground mb-6">Quality Assurance & Review Process</h3>
+                    <p className="text-lg text-muted-foreground leading-relaxed group-hover:text-black/80 transition-colors duration-300">
+                      All analyses and evaluations are conducted by trained and authorized professionals following approved standard operating procedures. Test results are independently reviewed and approved by the Quality Assurance (QA) team prior to final release, ensuring accuracy, compliance, and consistency.
+                    </p>
+                  </div>
+                </div>
+              </SectionReveal>
+            </div>
           </div>
         </div>
       </section>
 
-      {/* Why Choose Us - Cards */}
-      <section className="section-padding">
-        <div className="container-grid">
-          <SectionReveal>
-            <span className="text-sm md:text-base font-bold uppercase tracking-[0.2em] text-muted-foreground">Why Droga R&D</span>
-            <h2 className="font-heading text-3xl md:text-4xl font-semibold tracking-tight mt-4 text-foreground">Why Choose Us</h2>
-          </SectionReveal>
-          <motion.div
-            className="mt-12 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"
-            variants={containerVariants}
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true }}
-          >
-            {whyChooseUs.map((item, i) => (
-              <motion.div
-                key={item.title}
-                variants={itemVariants}
-                whileHover={{ y: -6 }}
-                className="group p-6 bg-card card-shadow rounded-sm hover:bg-highlight transition-all duration-300 cursor-pointer"
-              >
-                <item.icon className="w-8 h-8 text-highlight group-hover:text-foreground mb-4" />
-                <h3 className="font-heading font-bold text-lg text-foreground">{item.title}</h3>
-                <p className="mt-2 text-base text-muted-foreground group-hover:text-foreground/70">{item.desc}</p>
-              </motion.div>
-            ))}
-          </motion.div>
-        </div>
-      </section>
-
-      {/* Parallax facility banner */}
-      <section className="relative h-[50vh] overflow-hidden">
-        <motion.img
-          src={facilityImg}
+      {/* Parallax Break */}
+      <section className="relative h-[40vh] md:h-[50vh] overflow-hidden">
+        <img
+          src={labImg}
           alt="Research facility"
-          className="w-full h-[130%] object-cover absolute -top-[15%]"
-          initial={{ y: 0 }}
-          whileInView={{ y: -40 }}
-          viewport={{ once: true }}
-          transition={{ duration: 1.5 }}
+          className="w-full h-[140%] object-cover absolute -top-[20%] svc-parallax-img"
         />
-        <div className="absolute inset-0 bg-foreground/60 flex items-center justify-center">
+        <div className="absolute inset-0 bg-black/70 flex items-center justify-center">
           <SectionReveal className="text-center max-w-2xl px-6">
-            <h2 className="font-heading text-3xl md:text-4xl font-bold text-surface-dark-foreground tracking-tight">
+            <h2 className="font-heading text-3xl md:text-5xl font-bold text-white tracking-tight">
               Trusted by Industry Leaders
             </h2>
-            <p className="mt-4 text-surface-dark-foreground/70 font-body text-lg">
+            <div className="w-24 h-1 bg-[#FFF200] mx-auto mt-8 section-line origin-center" />
+            <p className="mt-8 text-white/80 font-body text-lg md:text-xl leading-relaxed">
               We provide specialized research, analytical, and quality testing services to a diverse range of clients.
             </p>
           </SectionReveal>
         </div>
       </section>
 
-      {/* Clients Section */}
-      <section className="section-padding bg-surface-subtle">
-        <div className="container-grid text-center">
+      {/* 05 Why Choose Us - Split layout */}
+      <section className="relative overflow-hidden bg-white h-screen">
+        <div className="h-full flex flex-col lg:flex-row">
+          {/* LEFT — list of points (Anchored to top to prevent bumpy re-centering) */}
+          <div className="w-full lg:w-[45%] h-full flex flex-col justify-start pt-[12vh] px-8 md:px-16 lg:px-20 pb-12 relative z-10 bg-white">
+            {/* Section label */}
+            <div className="flex items-center gap-4 mb-8">
+              <span className="text-xs font-bold uppercase tracking-[0.25em] text-muted-foreground">Why Droga R&D</span>
+            </div>
+            <h2 className="font-heading text-4xl md:text-5xl font-bold tracking-tight text-foreground leading-tight mb-10">
+              Why Choose Us
+            </h2>
+
+            {/* Items */}
+            <ul className="space-y-0 divide-y divide-black/8 border-t border-black/8">
+              {whyChooseUs.map((item, i) => (
+                <li
+                  key={item.title}
+                  className="group cursor-pointer py-6 transition-all duration-300"
+                  onMouseEnter={() => setActiveIndex(i)}
+                >
+                  <div className="flex items-start gap-5">
+                    {/* Number */}
+                    <span className={`font-heading text-sm font-bold tabular-nums transition-all duration-300 mt-1.5 flex-shrink-0 ${activeIndex === i ? "text-foreground" : "text-muted-foreground/40"}`}>
+                      0{i + 1}
+                    </span>
+
+                    <div className="flex-1">
+                      {/* Title */}
+                      <h3 className={`font-heading text-xl md:text-2xl font-bold tracking-tight transition-all duration-300 ${activeIndex === i ? "text-foreground" : "text-foreground/50"}`}>
+                        {item.title}
+                      </h3>
+
+                      {/* Description — expands on active */}
+                      <div className={`overflow-hidden transition-all duration-500 ease-in-out ${activeIndex === i ? "max-h-32 opacity-100 mt-4" : "max-h-0 opacity-0"}`}>
+                        <p className="text-base text-muted-foreground leading-relaxed max-w-md">{item.desc}</p>
+                      </div>
+                    </div>
+
+                    {/* Active indicator bar */}
+                    <div className={`w-2 self-stretch flex-shrink-0 transition-all duration-300 ${activeIndex === i ? "bg-[#FFF200]" : "bg-transparent"}`} />
+                  </div>
+                </li>
+              ))}
+            </ul>
+          </div>
+
+          {/* RIGHT — stacked image slider */}
+          <div className="hidden lg:flex w-full lg:w-[55%] h-full relative items-center justify-end bg-surface-subtle">
+            {/* Extremely Wide Yellow accent pillar — right edge */}
+            <div className="absolute top-0 right-0 w-[36rem] h-full bg-[#FFF200] z-20" />
+
+            {/* Image container — stuck to right, reduced height */}
+            <div className="relative w-[92%] h-[75%] shadow-2xl overflow-hidden z-30 rounded-l-md bg-black">
+              {whyChooseUs.map((item, i) => (
+                <div
+                  key={item.title}
+                  className="absolute inset-0 transition-transform duration-700 ease-in-out will-change-transform"
+                  style={{
+                    transform: i <= activeIndex ? "translateX(0%)" : "translateX(100%)",
+                    zIndex: i + 1,
+                  }}
+                >
+                  <img src={item.img} alt={item.title} className="w-full h-full object-cover" />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent" />
+
+                  {/* Caption */}
+                  <div className={`absolute bottom-8 left-8 right-8 z-20 transition-all duration-700 ${activeIndex === i ? "translate-y-0 opacity-100 delay-300" : "translate-y-4 opacity-0"}`}>
+                    <p className="font-heading text-white text-2xl font-bold leading-snug">{item.title}</p>
+                    <div className="w-12 h-1 bg-[#FFF200] mt-3" />
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* 06 Partners Section */}
+      <section className="section-padding bg-surface-subtle relative overflow-hidden">
+        <div className="container-grid text-center relative">
+          <div className="absolute left-1/2 -translate-x-1/2 top-0 font-heading text-[10rem] md:text-[14rem] font-black text-black/[0.04] leading-none select-none pointer-events-none section-number">06</div>
           <SectionReveal>
-            <span className="text-sm md:text-base font-bold uppercase tracking-[0.2em] text-muted-foreground">Our Clients</span>
-            <h2 className="font-heading text-3xl md:text-4xl font-semibold tracking-tight mt-4 text-foreground">Who We Serve</h2>
-            <p className="mt-4 text-lg text-muted-foreground max-w-2xl mx-auto">
-              We partner with organizations that demand precision, compliance, and reliability.
+            <div className="flex items-center justify-center gap-4 mb-2">
+              <span className="text-sm md:text-base font-bold uppercase tracking-[0.2em] text-muted-foreground">Collaboration</span>
+            </div>
+            <h2 className="font-heading text-4xl md:text-5xl font-bold tracking-tight mt-4 text-foreground leading-tight">Our Partners</h2>
+            <p className="mt-6 text-lg text-muted-foreground max-w-2xl mx-auto leading-relaxed">
+              We collaborate with pharmaceutical companies, research institutes, academic organizations, and regulatory bodies.
             </p>
           </SectionReveal>
-          <div className="mt-12 flex flex-wrap justify-center gap-6">
-            {clientTypes.map((client, idx) => (
-              <motion.div
-                key={client}
-                initial={{ opacity: 0, scale: 0.9 }}
-                whileInView={{ opacity: 1, scale: 1 }}
-                viewport={{ once: true }}
-                transition={{ delay: idx * 0.1 }}
-                whileHover={{ scale: 1.05 }}
-                className="px-6 py-4 bg-card rounded-sm shadow-sm hover:bg-highlight transition-all duration-300 cursor-pointer"
-              >
-                <span className="font-heading text-base font-medium text-foreground">{client}</span>
-              </motion.div>
-            ))}
+
+          <div className="mt-12">
+            <HexagonalPartnersGrid />
           </div>
         </div>
       </section>
 
       {/* Final CTA */}
-      <section className="section-padding relative overflow-hidden">
-        <motion.div
-          className="absolute top-10 left-10 opacity-10"
-          animate={{ y: [0, -15, 0], rotate: [0, 180, 360] }}
-          transition={{ duration: 10, repeat: Infinity, ease: "easeInOut" }}
-        >
-          <FlaskConical className="w-24 h-24 text-foreground" strokeWidth={0.5} />
-        </motion.div>
-        <motion.div
-          className="absolute bottom-10 right-10 opacity-10"
-          animate={{ y: [0, 10, 0], rotate: [360, 180, 0] }}
-          transition={{ duration: 12, repeat: Infinity, ease: "easeInOut" }}
-        >
-          <Microscope className="w-20 h-20 text-foreground" strokeWidth={0.5} />
-        </motion.div>
+      <section className="section-padding relative overflow-hidden bg-white border-t border-black/10">
         <div className="container-grid text-center relative z-10">
           <SectionReveal>
-            <h2 className="font-heading text-3xl md:text-5xl font-bold tracking-tight text-foreground">Partner with Us</h2>
-            <p className="mt-4 text-lg text-muted-foreground max-w-xl mx-auto">
+            <h2 className="font-heading text-4xl md:text-5xl font-bold tracking-tight text-foreground">Partner with Us</h2>
+            <p className="mt-6 text-lg text-muted-foreground max-w-xl mx-auto leading-relaxed">
               Contact us to discuss your analytical testing, QC, or research collaboration needs.
             </p>
-            <motion.a
-              href="/contact"
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.97 }}
-              className="inline-flex mt-8 h-12 px-8 items-center text-sm font-heading font-bold tracking-wide bg-highlight text-foreground rounded-sm hover:bg-foreground hover:text-surface-dark-foreground transition-colors duration-300"
-            >
-              Get in Touch
-            </motion.a>
+            <div className="mt-10">
+              <Button size="lg" asChild className="bg-black text-white hover:bg-highlight hover:text-black transition-all duration-300 font-bold px-10 py-6 text-sm uppercase tracking-widest rounded-none">
+                <Link to="/contact">Get in Touch</Link>
+              </Button>
+            </div>
           </SectionReveal>
         </div>
       </section>

@@ -1,3 +1,4 @@
+import { useRef } from "react";
 import { Link } from "react-router-dom";
 import { Mail, Phone, MapPin } from "lucide-react";
 import logo from "@/assets/logo.png";
@@ -8,17 +9,20 @@ import { ScrollTrigger } from "gsap/ScrollTrigger";
 gsap.registerPlugin(ScrollTrigger);
 
 const Footer = () => {
+  const footerRef = useRef<HTMLElement>(null);
+
   useGSAP(() => {
-    const footerSegments = gsap.utils.toArray<HTMLElement>('.footer-segment');
+    const footerSegments = gsap.utils.toArray<HTMLElement>('.footer-segment', footerRef.current!);
     if (footerSegments.length === 5) {
       const getFooterSegs = (indices: number[]) => indices.map(i => footerSegments[i]);
       
       const tl = gsap.timeline({
         scrollTrigger: {
-          trigger: ".footer-section",
-          start: "top 90%", // Start animating when footer enters screen
-          end: "bottom 105%", // Finish slightly before actual bottom to guarantee perfect alignment
+          trigger: footerRef.current,
+          start: "top 95%", // More sensitive start
+          end: "bottom 105%",
           scrub: 0.8,
+          refreshPriority: -1, // Calculate after all other triggers (like pinning)
         }
       });
 
@@ -27,10 +31,10 @@ const Footer = () => {
         .to(getFooterSegs([0, 4]), { y: 0, duration: 0.3, ease: "none" }, 0.7)
         .to(".footer-content", { autoAlpha: 1, duration: 0.15 }, 0.85);
     }
-  }, []);
+  }, { scope: footerRef, dependencies: [] });
 
   return (
-    <footer className="relative bg-white text-foreground overflow-hidden footer-section">
+    <footer ref={footerRef} className="relative bg-white text-foreground overflow-hidden footer-section">
       {/* 5-segment background */}
       <div className="absolute inset-0 flex z-0">
         <div className="w-1/5 h-full bg-highlight translate-y-full footer-segment"></div>

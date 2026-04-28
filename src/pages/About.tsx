@@ -186,7 +186,7 @@ const HexagonalPartnersGrid = () => {
   };
 
   return (
-    <div className="w-full max-w-6xl mx-auto">
+    <div className="w-full max-w-6xl mx-auto py-12">
       <div className="flex flex-wrap justify-center items-center px-4">
         {partners.map((partner, index) => {
           const isActive = activePartner === index;
@@ -208,7 +208,7 @@ const HexagonalPartnersGrid = () => {
                   }`}
                 style={{
                   filter: isActive
-                    ? "drop-shadow(0 25px 35px rgba(0,0,0,0.25)) drop-shadow(0 10px 10px rgba(0,0,0,0.15))"
+                    ? "drop-shadow(0 25px 35px rgba(0,0,0,0.02)) drop-shadow(0 10px 10px rgba(0,0,0,0.15))"
                     : "drop-shadow(0 10px 15px rgba(0,0,0,0.1)) drop-shadow(0 4px 6px rgba(0,0,0,0.05))"
                 }}
               >
@@ -259,6 +259,19 @@ const About = () => {
       gsap.fromTo(img, { yPercent: -15 }, {
         yPercent: 15, ease: "none",
         scrollTrigger: { trigger: img.parentElement, start: "top bottom", end: "bottom top", scrub: true }
+      });
+    });
+
+    // Parallax on facility info boxes
+    gsap.utils.toArray<HTMLElement>('.facility-info-box').forEach((box) => {
+      gsap.fromTo(box, { y: 150 }, {
+        y: -150, ease: "none",
+        scrollTrigger: {
+          trigger: box.parentElement,
+          start: "top bottom",
+          end: "bottom top",
+          scrub: 1
+        }
       });
     });
 
@@ -363,9 +376,7 @@ const About = () => {
           <div className="absolute -left-4 top-0 font-heading text-[10rem] md:text-[14rem] font-black text-black/[0.04] leading-none select-none pointer-events-none section-number">01</div>
           <SectionReveal>
             <div className="flex items-center gap-4 mb-2">
-              <span className="text-sm font-bold uppercase tracking-[0.3em] text-muted-foreground">01</span>
-              <div className="w-12 h-px bg-[#FFF200] origin-left section-line" />
-              <span className="text-sm font-bold uppercase tracking-[0.2em] text-muted-foreground">Overview</span>
+              <span className="text-xl font-bold uppercase tracking-[0.2em] text-muted-foreground">Overview</span>
             </div>
             <h2 className="font-heading text-4xl md:text-5xl font-bold tracking-tight mt-4 text-foreground leading-tight">
               Droga Research and<br className="hidden md:block" /> Development Department
@@ -518,9 +529,7 @@ const About = () => {
           <div className="absolute -left-4 top-0 font-heading text-[10rem] md:text-[14rem] font-black text-black/[0.04] leading-none select-none pointer-events-none section-number">03</div>
           <SectionReveal>
             <div className="flex items-center gap-4 mb-2">
-              <span className="text-sm font-bold uppercase tracking-[0.3em] text-muted-foreground">03</span>
-              <div className="w-12 h-px bg-[#FFF200] origin-left section-line" />
-              <span className="text-sm font-bold uppercase tracking-[0.2em] text-muted-foreground">Infrastructure</span>
+              <span className="text-lg font-bold uppercase tracking-[0.2em] text-muted-foreground">Infrastructure</span>
             </div>
             <h2 className="font-heading text-4xl md:text-5xl font-bold tracking-tight mt-4 text-foreground leading-tight">Our Facilities</h2>
           </SectionReveal>
@@ -542,7 +551,7 @@ const About = () => {
                 </div>
 
                 {/* Content Box */}
-                <div className="w-[90%] mx-auto lg:w-[45%] lg:absolute lg:right-0 lg:top-1/2 lg:-translate-y-1/2 z-10 bg-[#FFF200] p-8 md:p-12 shadow-xl -mt-16 lg:mt-0 relative">
+                <div className="w-[90%] mx-auto lg:w-[45%] lg:absolute lg:right-0 lg:top-1/2 lg:-translate-y-1/2 z-10 bg-[#FFF200] p-8 md:p-12 shadow-xl -mt-16 lg:mt-0 relative facility-info-box">
                   <SectionReveal delay={0.2}>
                     <h4 className="font-heading text-2xl md:text-3xl font-black text-black mb-6 uppercase leading-tight tracking-tight">
                       Supporting Research & Development Excellence
@@ -576,7 +585,7 @@ const About = () => {
                 </div>
 
                 {/* Content Box */}
-                <div className="w-[90%] mx-auto lg:w-[45%] lg:absolute lg:left-0 lg:top-1/2 lg:-translate-y-1/2 z-10 bg-[#FFF200] p-8 md:p-12 shadow-xl -mt-16 lg:mt-0 relative order-2 lg:order-1">
+                <div className="w-[90%] mx-auto lg:w-[45%] lg:absolute lg:left-0 lg:top-1/2 lg:-translate-y-1/2 z-10 bg-[#FFF200] p-8 md:p-12 shadow-xl -mt-16 lg:mt-0 relative order-2 lg:order-1 facility-info-box">
                   <SectionReveal delay={0.2}>
                     <h4 className="font-heading text-2xl md:text-3xl font-black text-black mb-6 uppercase leading-tight tracking-tight">
                       From Discovery to Commercial Production
@@ -628,9 +637,7 @@ const About = () => {
 
           <SectionReveal className="text-center mb-16">
             <div className="flex items-center justify-center gap-4 mb-2">
-              <span className="text-sm font-bold uppercase tracking-[0.3em] text-black/60">04</span>
-              <div className="w-12 h-px bg-black origin-left section-line" />
-              <span className="text-sm font-bold uppercase tracking-[0.2em] text-black/60">Industrialization</span>
+              <span className="text-xl font-bold uppercase tracking-[0.2em] text-black">COMING SOON</span>
             </div>
             <h2 className="font-heading text-4xl md:text-5xl font-bold tracking-tight mt-4 text-black">Manufacturing & Conservation</h2>
           </SectionReveal>
