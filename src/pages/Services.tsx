@@ -1,4 +1,4 @@
-import { useRef, useState, useCallback } from "react";
+import { useRef, useState, useCallback, useEffect } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { Draggable } from "gsap/Draggable";
@@ -7,7 +7,7 @@ import {
   FlaskConical, Microscope, ArrowRight,
   CheckCircle, Beaker, ClipboardCheck, Gauge, ShieldCheck, Clock, Building2,
   BarChart3, Activity, Waves, Timer, Scale, Droplets, Flame, Settings,
-  ChevronLeft, ChevronRight
+  ChevronLeft, ChevronRight, Gavel, BookOpen, Database, Lock
 } from "lucide-react";
 import { Link } from "react-router-dom";
 import Navbar from "@/components/Navbar";
@@ -82,11 +82,11 @@ const instruments = baseInstruments;
 
 // Quality commitment points
 const qualityPoints = [
-  "EFDA regulatory compliance in all applicable research, development, and analytical activities",
-  "Conformity with recognized Pharmacopoeial standards and established quality guidelines",
-  "Equipment qualification and regular calibration to ensure accuracy, reliability, and reproducibility",
-  "Data integrity and full traceability, supported by controlled documentation and secure record management",
-  "Impartial and confidential testing, ensuring objectivity and protection of proprietary information",
+  { text: "EFDA regulatory compliance in all applicable research, development, and analytical activities", icon: Gavel },
+  { text: "Conformity with recognized Pharmacopoeial standards and established quality guidelines", icon: BookOpen },
+  { text: "Equipment qualification and regular calibration to ensure accuracy, reliability, and reproducibility", icon: Settings },
+  { text: "Data integrity and full traceability, supported by controlled documentation and secure record management", icon: Database },
+  { text: "Impartial and confidential testing, ensuring objectivity and protection of proprietary information", icon: Lock },
 ];
 
 // Why choose us
@@ -123,87 +123,7 @@ const whyChooseUs = [
   },
 ];
 
-const partners = [
-  { name: "Shimadzu", logo: shimadzuLogo, description: "Leading global provider of analytical and measuring instruments." },
-  { name: "Electro Lab", logo: electroLabLogo, description: "Advanced pharmaceutical testing equipment and calibration." },
-  { name: "Lotus", logo: lotusLogo, description: "Strategic partner in high-quality raw material sourcing." },
-  { name: "Ethiopian Meteorology Institute", logo: emiLogo, description: "Collaborating on environmental data for agricultural research." },
-  { name: "Tek Calibration and Services Center", logo: tekLogo, description: "Ensuring precision and compliance of all laboratory equipment." },
-  { name: "Debere Berhan University", logo: dbuLogo, description: "Academic partner for joint botanical and pharmaceutical research." },
-  { name: "Breeze Pharmaceutical Technologies PLC", logo: breezeLogo, description: "Technology partner for modern formulation techniques." },
-  { name: "Addis Ababa University", logo: aauLogo, description: "Fostering academic excellence and collaborative clinical studies." },
-  { name: "EMA cons & Trading", logo: emaLogo, description: "Consulting and trading partner for regulatory compliance." },
-];
 
-const HexagonalPartnersGrid = () => {
-  const [activePartner, setActivePartner] = useState<number | null>(null);
-
-  const togglePartner = (index: number) => {
-    setActivePartner(activePartner === index ? null : index);
-  };
-
-  return (
-    <div className="w-full max-w-6xl mx-auto py-12">
-      <div className="flex flex-wrap justify-center items-center px-4">
-        {partners.map((partner, index) => {
-          const isActive = activePartner === index;
-
-          return (
-            <div
-              key={index}
-              className={`relative w-[140px] h-[160px] md:w-[160px] md:h-[184px] transition-all duration-300 ${isActive ? 'z-40' : 'z-10'}`}
-              style={{
-                margin: '-1rem 0.5rem', // Interlocking honeycomb negative margins
-              }}
-            >
-              {/* The expanded container uses absolute positioning to overlay without moving siblings */}
-              <div
-                onClick={() => togglePartner(index)}
-                className={`absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 cursor-pointer transition-all duration-500 ease-[cubic-bezier(0.34,1.56,0.64,1)] ${isActive
-                  ? 'w-[300px] h-[345px] md:w-[360px] md:h-[415px]'
-                  : 'w-[140px] h-[160px] md:w-[160px] md:h-[184px]'
-                  }`}
-                style={{
-                  filter: isActive
-                    ? "drop-shadow(0 25px 35px rgba(0,0,0,0.02)) drop-shadow(0 10px 10px rgba(0,0,0,0.15))"
-                    : "drop-shadow(0 10px 15px rgba(0,0,0,0.1)) drop-shadow(0 4px 6px rgba(0,0,0,0.05))"
-                }}
-              >
-                <div
-                  className={`w-full h-full group flex flex-col items-center justify-center transition-colors duration-300 relative ${partner.name.toLowerCase().includes('breeze')
-                    ? (isActive ? 'bg-black pt-2 pb-2 px-6 md:pt-4 md:pb-4 md:px-10' : 'bg-black p-0 hover:brightness-125')
-                    : (isActive ? 'bg-white pt-2 pb-2 px-6 md:pt-4 md:pb-4 md:px-10' : 'bg-white hover:bg-gray-50 p-0')
-                    }`}
-                  style={{ clipPath: 'polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%)' }}
-                >
-                  <div className={`flex items-center justify-center shrink-0 transition-all duration-500 ${isActive ? 'w-20 h-20 md:w-28 md:h-28 mb-4' : 'w-[70%] h-[70%]'}`}>
-                    {partner.logo ? (
-                      <img
-                        src={partner.logo}
-                        alt={partner.name}
-                        className={`max-h-full max-w-full object-contain filter transition-all duration-300 ${isActive || partner.name.toLowerCase().includes('breeze') ? 'grayscale-0' : 'grayscale group-hover:grayscale-0'}`}
-                      />
-                    ) : (
-                      <span className={`font-heading text-sm md:text-base font-bold text-center px-4 transition-colors duration-300 ${partner.name.toLowerCase().includes('breeze') ? 'text-white' : 'text-muted-foreground group-hover:text-black'}`}>{partner.name}</span>
-                    )}
-                  </div>
-
-                  {/* We only render the text if active so it doesn't try to cram into the small hexagon */}
-                  <div
-                    className={`flex-1 text-center flex flex-col justify-start w-full transition-all duration-500 overflow-hidden ${isActive ? 'opacity-100 max-h-[200px]' : 'opacity-0 max-h-0'}`}
-                  >
-                    <h4 className={`font-heading text-lg md:text-xl font-bold mb-1 line-clamp-2 mt-1 ${partner.name.toLowerCase().includes('breeze') ? 'text-white' : 'text-black'}`}>{partner.name}</h4>
-                    <p className={`text-xs md:text-sm leading-tight line-clamp-4 px-2 ${partner.name.toLowerCase().includes('breeze') ? 'text-white/80' : 'text-black/70'}`}>{partner.description}</p>
-                  </div>
-                </div>
-              </div>
-            </div>
-          );
-        })}
-      </div>
-    </div>
-  );
-};
 
 const Services = () => {
   const pageRef = useRef<HTMLDivElement>(null);
@@ -600,8 +520,8 @@ const Services = () => {
               <ul className="space-y-6">
                 {qualityPoints.map((point, idx) => (
                   <li key={idx} className="fade-up-item opacity-0 group flex items-start gap-4">
-                    <ShieldCheck className="w-6 h-6 text-highlight group-hover:text-foreground mt-0.5 flex-shrink-0 transition-colors duration-300" />
-                    <span className="text-lg text-muted-foreground group-hover:text-foreground transition-colors duration-300 leading-relaxed font-medium">{point}</span>
+                    <point.icon className="w-6 h-6 text-highlight group-hover:text-foreground mt-0.5 flex-shrink-0 transition-colors duration-300" />
+                    <span className="text-lg text-muted-foreground group-hover:text-foreground transition-colors duration-300 leading-relaxed font-medium">{point.text}</span>
                   </li>
                 ))}
               </ul>
@@ -726,25 +646,7 @@ const Services = () => {
         </div>
       </section>
 
-      {/* 06 Partners Section */}
-      <section className="section-padding bg-surface-subtle relative overflow-hidden">
-        <div className="container-grid text-center relative">
-          <div className="absolute left-1/2 -translate-x-1/2 top-0 font-heading text-[10rem] md:text-[14rem] font-black text-black/[0.04] leading-none select-none pointer-events-none section-number">06</div>
-          <SectionReveal>
-            <div className="flex items-center justify-center gap-4 mb-2">
-              <span className="text-sm md:text-base font-bold uppercase tracking-[0.2em] text-muted-foreground">Collaboration</span>
-            </div>
-            <h2 className="font-heading text-4xl md:text-5xl font-bold tracking-tight mt-4 text-foreground leading-tight">Our Partners</h2>
-            <p className="mt-6 text-lg text-muted-foreground max-w-2xl mx-auto leading-relaxed">
-              We collaborate with pharmaceutical companies, research institutes, academic organizations, and regulatory bodies.
-            </p>
-          </SectionReveal>
 
-          <div className="mt-12">
-            <HexagonalPartnersGrid />
-          </div>
-        </div>
-      </section>
 
       {/* Final CTA */}
       <section className="section-padding relative overflow-hidden bg-white border-t border-black/10">

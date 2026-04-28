@@ -1,4 +1,4 @@
-import { useRef, useState } from "react";
+import { useRef, useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { Users, Target, Eye, FlaskConical, Droplets, Leaf, TestTube, ArrowRight } from "lucide-react";
 import { Link } from "react-router-dom";
@@ -35,12 +35,7 @@ import aauLogo from "@/assets/Partners/AAU.jpg";
 import emaLogo from "@/assets/Partners/EMA.png";
 import breezeLogo from "@/assets/Partners/Breeze.png";
 
-const leaders = [
-  { name: "Muluken Nigatu", role: "R&D Director", area: "Pharmaceutical Sciences" },
-  { name: "Fortuna Kidane", role: "Head of Drug Discovery", area: "Natural Products Chemistry" },
-  { name: "Dr. Yonas Tadesse", role: "Head of Bioequivalence", area: "Clinical Pharmacology" },
-  { name: "Dr. Helen Getachew", role: "Head of Food Sciences", area: "Nutritional Sciences" },
-];
+
 
 const timelineData = [
   { date: "2021", title: "Droga R&D Department Established", description: "Droga Research and Development (R&D) Department was established." },
@@ -180,13 +175,27 @@ const unitPillars = [
 
 const HexagonalPartnersGrid = () => {
   const [activePartner, setActivePartner] = useState<number | null>(null);
+  const gridRef = useRef<HTMLDivElement>(null);
 
   const togglePartner = (index: number) => {
     setActivePartner(activePartner === index ? null : index);
   };
 
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (gridRef.current && !gridRef.current.contains(event.target as Node)) {
+        setActivePartner(null);
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
+
   return (
-    <div className="w-full max-w-6xl mx-auto py-12">
+    <div className="w-full max-w-6xl mx-auto py-12" ref={gridRef}>
       <div className="flex flex-wrap justify-center items-center px-4">
         {partners.map((partner, index) => {
           const isActive = activePartner === index;
@@ -213,9 +222,7 @@ const HexagonalPartnersGrid = () => {
                 }}
               >
                 <div
-                  className={`w-full h-full group flex flex-col items-center justify-center transition-colors duration-300 relative ${partner.name.toLowerCase().includes('breeze')
-                      ? (isActive ? 'bg-black pt-2 pb-2 px-6 md:pt-4 md:pb-4 md:px-10' : 'bg-black p-0 hover:brightness-125')
-                      : (isActive ? 'bg-white pt-2 pb-2 px-6 md:pt-4 md:pb-4 md:px-10' : 'bg-white hover:bg-gray-50 p-0')
+                  className={`w-full h-full group flex flex-col items-center justify-center transition-colors duration-300 relative ${isActive ? 'bg-white pt-2 pb-2 px-6 md:pt-4 md:pb-4 md:px-10' : 'bg-white hover:bg-gray-50 p-0'
                     }`}
                   style={{ clipPath: 'polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%)' }}
                 >
@@ -224,10 +231,10 @@ const HexagonalPartnersGrid = () => {
                       <img
                         src={partner.logo}
                         alt={partner.name}
-                        className={`max-h-full max-w-full object-contain filter transition-all duration-300 ${isActive || partner.name.toLowerCase().includes('breeze') ? 'grayscale-0' : 'grayscale group-hover:grayscale-0'}`}
+                        className={`max-h-full max-w-full object-contain filter transition-all duration-300 ${isActive ? 'grayscale-0' : 'grayscale group-hover:grayscale-0'}`}
                       />
                     ) : (
-                      <span className={`font-heading text-sm md:text-base font-bold text-center px-4 transition-colors duration-300 ${partner.name.toLowerCase().includes('breeze') ? 'text-white' : 'text-muted-foreground group-hover:text-black'}`}>{partner.name}</span>
+                      <span className={`font-heading text-sm md:text-base font-bold text-center px-4 transition-colors duration-300 text-muted-foreground group-hover:text-black`}>{partner.name}</span>
                     )}
                   </div>
 
@@ -235,8 +242,8 @@ const HexagonalPartnersGrid = () => {
                   <div
                     className={`flex-1 text-center flex flex-col justify-start w-full transition-all duration-500 overflow-hidden ${isActive ? 'opacity-100 max-h-[200px]' : 'opacity-0 max-h-0'}`}
                   >
-                    <h4 className={`font-heading text-lg md:text-xl font-bold mb-1 line-clamp-2 mt-1 ${partner.name.toLowerCase().includes('breeze') ? 'text-white' : 'text-black'}`}>{partner.name}</h4>
-                    <p className={`text-xs md:text-sm leading-tight line-clamp-4 px-2 ${partner.name.toLowerCase().includes('breeze') ? 'text-white/80' : 'text-black/70'}`}>{partner.description}</p>
+                    <h4 className={`font-heading text-lg md:text-xl font-bold mb-1 line-clamp-2 mt-1 text-black`}>{partner.name}</h4>
+                    <p className={`text-xs md:text-sm leading-tight line-clamp-4 px-2 text-black/70`}>{partner.description}</p>
                   </div>
                 </div>
               </div>
@@ -784,41 +791,6 @@ const About = () => {
         <JourneySection timelineData={timelineData} />
       </div>
 
-      {/* Leadership */}
-      <section id="leadership" className="section-padding bg-surface-subtle relative overflow-hidden">
-        <div className="container-grid relative">
-          <SectionReveal>
-            <div className="flex items-center gap-4 mb-2">
-              <div className="w-12 h-px bg-[#FFF200] origin-left section-line" />
-              <span className="text-sm font-bold uppercase tracking-[0.2em] text-muted-foreground">Team</span>
-            </div>
-            <h2 className="font-heading text-4xl md:text-5xl font-bold tracking-tight mt-4 text-foreground">Leadership</h2>
-          </SectionReveal>
-          <motion.div
-            className="mt-12 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6"
-            variants={containerVariants}
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true }}
-          >
-            {leaders.map((leader) => (
-              <motion.div
-                key={leader.name}
-                variants={itemVariants}
-                whileHover={{ y: -6, transition: { duration: 0.3 } }}
-                className="group p-8 bg-card card-shadow hover:bg-highlight rounded-sm text-center transition-all duration-300 cursor-pointer border-t-2 border-transparent hover:border-[#FFF200]"
-              >
-                <div className="w-20 h-20 mx-auto bg-surface-subtle rounded-full flex items-center justify-center mb-4 group-hover:bg-black/5 transition-colors duration-300">
-                  <Users className="w-8 h-8 text-black" />
-                </div>
-                <h4 className="font-heading text-lg font-bold text-foreground">{leader.name}</h4>
-                <p className="text-sm md:text-base text-foreground/60 font-heading font-medium mt-1">{leader.role}</p>
-                <p className="text-sm text-muted-foreground group-hover:text-black/60 mt-2 transition-colors duration-300">{leader.area}</p>
-              </motion.div>
-            ))}
-          </motion.div>
-        </div>
-      </section>
 
       {/* Partners */}
       <section id="partners" className="section-padding relative overflow-hidden bg-gray-50/50">

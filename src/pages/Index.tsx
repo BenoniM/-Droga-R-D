@@ -199,7 +199,7 @@ const newsItems = [
 const featuredProjectsData = [
   {
     id: 1,
-    title: "Project I. Droga Research and Development Center",
+    title: "Project I: Droga Research and Development Center",
     image: project2Img,
     description: "Situated on 9,951 sq.m of land in Kilinto Industrial Park, our state-of-the-art center is designed to advance research, development, and quality testing for the pharmaceutical, academic, research, cosmetic, and food & beverage industries.",
     sections: [
@@ -223,7 +223,7 @@ const featuredProjectsData = [
   },
   {
     id: 2,
-    title: "Project II. Droga Oil Manufacturing Plant",
+    title: "Project II: Droga Oil Manufacturing Plant",
     image: project1Img,
     description: "A 1,000 sq.m processing facility is being established to harness the health promoting potential of fixed and volatile oils. The facility is designed to process these natural oils at scale, ensuring high-quality standards suitable for both local markets and export.",
     sections: [
@@ -242,7 +242,7 @@ const featuredProjectsData = [
   },
   {
     id: 3,
-    title: "Project III. Droga Soap Manufacturing Plant",
+    title: "Project III: Droga Soap Manufacturing Plant",
     image: project3Img,
     description: "The Droga Soap and Cosmetics Manufacturing Plant is an upcoming initiative designed to strengthen local production of 100% natural skincare solutions. The facility will serve as a hub for innovation in natural cosmetics, reducing reliance on imports while addressing common skin concerns with effective, botanically infused products.",
     paragraphs: [
@@ -253,7 +253,7 @@ const featuredProjectsData = [
   },
   {
     id: 4,
-    title: "Project IV. Butajira Rosmary Manufacturing Plant",
+    title: "Project IV: Butajira Rosmary Manufacturing Plant",
     image: project4Img,
     description: "The Butajira Rosemary Processing Plant aims to improve the livelihood of farmers in Meskan Woreda, Eastern Gurage Zone, through sustainable rosemary cultivation and market integration. The initiative covers 20 hectares of investment land and 40 hectares of partner farms, engaging 160 local farmers in modern rosemary production supported by training, technology transfer, and cooperative formation.",
     paragraphs: [
@@ -264,26 +264,38 @@ const featuredProjectsData = [
   }
 ];
 
-const RevealText = ({ text, className = "" }: { text: string, className?: string }) => {
+const RevealText = ({ text, className = "", showCovers = true }: { text: string, className?: string, showCovers?: boolean }) => {
   const words = text.split(" ");
+  // Identify if it's a project title (starts with "Project")
+  const isProjectTitle = words[0] === "Project";
+
   return (
-    <span className={`inline-flex flex-wrap justify-center gap-x-3 gap-y-5 ${className}`}>
-      {words.map((word, i) => (
-        <span key={i} className="relative inline-block">
-          <span className="relative z-0 opacity-0 text-reveal-word-inner">{word}</span>
-          <span
-            className="absolute -inset-y-2 -inset-x-[0.25rem] z-10 project-word-cover transform-gpu"
-            style={{
-              background: '#000000ff',
-              borderRadius: '8px',
-              willChange: 'transform, opacity',
-            }}
-          />
-        </span>
-      ))}
+    <span className={`inline-flex flex-wrap ${showCovers ? 'justify-center gap-x-3 gap-y-5' : 'gap-x-[0.3em] gap-y-[0.1em]'} ${className}`}>
+      {words.map((word, i) => {
+        // Bold the first two words if it's a project title ("Project X."), otherwise bold all if it's not a project title (like "Projects")
+        const isBold = !isProjectTitle || i < 2;
+
+        return (
+          <span key={i} className={`relative inline-block ${isBold ? 'font-bold' : 'font-light opacity-90'}`}>
+            <span className={`relative z-0 ${showCovers ? 'opacity-0 text-reveal-word-inner' : 'opacity-100'}`}>{word}</span>
+            {showCovers && (
+              <span
+                className="absolute -inset-y-2 -inset-x-[0.25rem] z-10 project-word-cover transform-gpu"
+                style={{
+                  background: '#000000ff',
+                  borderRadius: '8px',
+                  willChange: 'transform, opacity',
+                }}
+              />
+            )}
+          </span>
+        );
+      })}
     </span>
   );
 };
+
+
 
 const Index = () => {
   const containerRef = useRef<HTMLDivElement>(null);
@@ -892,7 +904,7 @@ const Index = () => {
           <div className="container-grid relative z-10 projects-content invisible">
             <SectionReveal>
               <span className="block text-center w-full text-sm md:text-base font-bold uppercase tracking-[0.2em] text-black">Featured</span>
-              <h2 className="font-heading text-4xl md:text-5xl font-semibold tracking-tight mt-4 text-black text-center flex justify-center">
+              <h2 className="font-heading text-4xl md:text-5xl font-normal tracking-tight mt-4 text-black text-center flex justify-center">
                 <RevealText text="Projects" />
               </h2>
               <p className="mt-6 text-lg text-muted-foreground max-w-4xl mx-auto text-center leading-relaxed">
@@ -908,7 +920,7 @@ const Index = () => {
                   <div key={project.id} className="grid grid-cols-1 lg:grid-cols-2 gap-10 items-center project-card relative">
                     {/* Content Column */}
                     <div className={`space-y-6 flex flex-col justify-center items-center text-center px-4 lg:px-12 ${project.imageFirst ? 'order-2' : 'order-2 lg:order-1'}`}>
-                      <h3 className="font-heading text-2xl md:text-3xl lg:text-4xl font-bold text-foreground leading-relaxed text-center flex justify-center">
+                      <h3 className="font-heading text-2xl md:text-3xl lg:text-4xl font-normal text-foreground leading-relaxed text-center flex justify-center">
                         <RevealText text={project.title} />
                       </h3>
                       <div>
@@ -947,8 +959,8 @@ const Index = () => {
                         </button>
                       </div>
                       <div className="p-8 md:p-16 h-full overflow-y-auto custom-scrollbar relative z-20 bg-white">
-                        <h4 className="font-heading text-3xl md:text-4xl font-bold text-black mb-10 pb-6 border-b border-black/10 pr-12 leading-tight">
-                          {project.title}
+                        <h4 className="font-heading text-3xl md:text-4xl font-normal text-black mb-10 pb-6 border-b border-black/10 pr-12 leading-tight">
+                          <RevealText text={project.title} showCovers={false} />
                         </h4>
                         <div className="space-y-8 font-body">
                           {project.description && (
