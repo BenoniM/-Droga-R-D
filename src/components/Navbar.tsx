@@ -369,7 +369,7 @@ const Navbar = () => {
           </nav>
 
           <div
-            className="pointer-events-auto h-full bg-white flex items-center px-6 lg:pr-16 flex-1 justify-end"
+            className="pointer-events-auto h-full bg-white flex items-center px-6 lg:pr-0 flex-1 justify-end"
             ref={(el) => { segmentRefs.current[6] = el; }}
           >
             <Link
