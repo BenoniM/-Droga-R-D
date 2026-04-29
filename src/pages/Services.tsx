@@ -1,8 +1,8 @@
 import { useRef, useState, useCallback, useEffect } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
-import { Draggable } from "gsap/Draggable";
 import { useGSAP } from "@gsap/react";
+import useEmblaCarousel from "embla-carousel-react";
 import {
   FlaskConical, Microscope, ArrowRight,
   CheckCircle, Beaker, ClipboardCheck, Gauge, ShieldCheck, Clock, Building2,
@@ -29,7 +29,7 @@ import aauLogo from "@/assets/Partners/AAU.jpg";
 import emaLogo from "@/assets/Partners/EMA.png";
 import breezeLogo from "@/assets/Partners/Breeze.png";
 
-gsap.registerPlugin(ScrollTrigger, Draggable);
+gsap.registerPlugin(ScrollTrigger);
 
 // Main service cards
 const services = [
@@ -67,15 +67,15 @@ const services = [
 
 // Instrumentation list
 const baseInstruments = [
-  { name: "High Performance Liquid Chromatography (HPLC)", icon: Activity },
-  { name: "UV-Visible Spectrophotometers", icon: Waves },
-  { name: "Fourier-Transform Infrared Spectrometer (FTIR)", icon: Microscope },
-  { name: "Dissolution and Disintegration Test Apparatus", icon: Timer },
-  { name: "Analytical Balances and Precision Weighing Systems", icon: Scale },
-  { name: "pH Meters", icon: Droplets },
-  { name: "Viscometers", icon: Beaker },
-  { name: "Hot Air Ovens and Water Baths", icon: Flame },
-  { name: "Laboratory Scale Sample Processing Equipment", icon: Settings },
+  { name: "High Performance Liquid Chromatography (HPLC)", icon: Activity, desc: "Separates, identifies, and quantifies active pharmaceutical ingredients and impurities with high precision and sensitivity." },
+  { name: "UV-Visible Spectrophotometers", icon: Waves, desc: "Measures absorbance and transmittance of compounds across UV and visible wavelengths for quantitative and qualitative analysis." },
+  { name: "Fourier-Transform Infrared Spectrometer (FTIR)", icon: Microscope, desc: "Identifies molecular structures and functional groups through characteristic infrared absorption patterns." },
+  { name: "Dissolution and Disintegration Test Apparatus", icon: Timer, desc: "Evaluates the rate and extent of drug release from solid dosage forms under controlled physiological conditions." },
+  { name: "Analytical Balances and Precision Weighing Systems", icon: Scale, desc: "Provides accurate mass measurements critical for formulation, assay preparation, and quality control testing." },
+  { name: "pH Meters", icon: Droplets, desc: "Measures hydrogen ion concentration in solutions to ensure formulations meet required acidity or alkalinity specifications." },
+  { name: "Viscometers", icon: Beaker, desc: "Determines the viscosity of liquid and semi-solid formulations to ensure consistency and optimal flow properties." },
+  { name: "Hot Air Ovens and Water Baths", icon: Flame, desc: "Supports thermal processing including drying, sterilization, and temperature-controlled reactions for sample preparation." },
+  { name: "Laboratory Scale Sample Processing Equipment", icon: Settings, desc: "Facilitates grinding, mixing, filtration, and other preparation steps essential for reproducible analytical results." },
 ];
 
 const instruments = baseInstruments;
@@ -128,6 +128,75 @@ const whyChooseUs = [
 const Services = () => {
   const pageRef = useRef<HTMLDivElement>(null);
   const [activeIndex, setActiveIndex] = useState(0);
+  const [focusedInst, setFocusedInst] = useState(0);
+
+  const [emblaRef, emblaApi] = useEmblaCarousel({ 
+    loop: true, 
+    align: 'center', 
+    startIndex: baseInstruments.length,
+    skipSnaps: false,
+    dragFree: false,
+  });
+
+  const updateCardsEffects = useCallback(() => {
+    if (!emblaApi) return;
+    const slideNodes = emblaApi.slideNodes();
+    const viewportCenter = window.innerWidth / 2;
+
+    slideNodes.forEach((slideNode) => {
+      const rect = slideNode.getBoundingClientRect();
+      const cardCenter = rect.left + rect.width / 2;
+      const distFromCenter = Math.abs(viewportCenter - cardCenter);
+      const maxDist = window.innerWidth / 2;
+      const normalizedDist = Math.min(distFromCenter / maxDist, 1);
+
+      const scale = 1 - (normalizedDist * 0.15);
+      const opacity = 1 - (normalizedDist * 0.8);
+      const borderOpacity = 1 - (normalizedDist * 0.9);
+      const cardBlur = normalizedDist * 4;
+
+      const innerNode = slideNode.querySelector('.inst-card-inner');
+      if (innerNode) {
+        gsap.set(innerNode, {
+          scale: scale,
+          opacity: opacity,
+          borderColor: `rgba(255, 255, 255, ${borderOpacity * 0.5})`,
+          boxShadow: `0 ${8 - (normalizedDist * 8)}px ${30 - (normalizedDist * 20)}px rgba(0,0,0,${0.1 * (1 - normalizedDist)})`,
+          filter: `blur(${cardBlur}px)`
+        });
+      }
+    });
+  }, [emblaApi]);
+
+  useEffect(() => {
+    if (!emblaApi) return;
+
+    updateCardsEffects();
+    emblaApi.on('scroll', updateCardsEffects);
+    emblaApi.on('reInit', updateCardsEffects);
+    
+    const onSelect = () => {
+      const selectedIndex = emblaApi.selectedScrollSnap();
+      setFocusedInst(selectedIndex % baseInstruments.length);
+    };
+    
+    emblaApi.on('select', onSelect);
+    onSelect();
+
+    return () => {
+      emblaApi.off('scroll', updateCardsEffects);
+      emblaApi.off('reInit', updateCardsEffects);
+      emblaApi.off('select', onSelect);
+    };
+  }, [emblaApi, updateCardsEffects]);
+
+  const scrollPrev = useCallback(() => {
+    if (emblaApi) emblaApi.scrollPrev();
+  }, [emblaApi]);
+
+  const scrollNext = useCallback(() => {
+    if (emblaApi) emblaApi.scrollNext();
+  }, [emblaApi]);
 
   useGSAP(() => {
     // Hero Animation
@@ -209,96 +278,10 @@ const Services = () => {
       });
     });
 
-    // Horizontal Draggable Carousel for Instruments (Infinite Loop)
-    const instContainer = pageRef.current?.querySelector('.inst-scroll-container') as HTMLElement;
-    const cards = gsap.utils.toArray<HTMLElement>('.inst-card');
-
-    if (instContainer && cards.length > 0) {
-      const singleSetWidth = instContainer.scrollWidth / 3;
+    // Cards initialization (transformOrigin)
+    const cards = gsap.utils.toArray<HTMLElement>('.inst-card-inner');
+    if (cards.length > 0) {
       gsap.set(cards, { transformOrigin: "center center" });
-
-      // Start in the middle set
-      gsap.set(instContainer, { x: -singleSetWidth });
-
-      const updateCardsEffects = () => {
-        const viewportCenter = window.innerWidth / 2;
-        cards.forEach(card => {
-          const rect = card.getBoundingClientRect();
-          const cardCenter = rect.left + rect.width / 2;
-          const distFromCenter = Math.abs(viewportCenter - cardCenter);
-          const maxDist = window.innerWidth / 2;
-          const normalizedDist = Math.min(distFromCenter / maxDist, 1);
-
-          const scale = 1 - (normalizedDist * 0.15);
-          const opacity = 1 - (normalizedDist * 0.8);
-          const borderOpacity = 1 - (normalizedDist * 0.9);
-          const cardBlur = normalizedDist * 4;
-
-          gsap.set(card, {
-            scale: scale,
-            opacity: opacity,
-            borderColor: `rgba(255, 255, 255, ${borderOpacity * 0.5})`,
-            boxShadow: `0 ${8 - (normalizedDist * 8)}px ${30 - (normalizedDist * 20)}px rgba(0,0,0,${0.1 * (1 - normalizedDist)})`,
-            filter: `blur(${cardBlur}px)`
-          });
-        });
-
-        // Infinite Loop Teleportation Logic
-        const currentX = gsap.getProperty(instContainer, "x") as number;
-        if (currentX <= -singleSetWidth * 2) {
-          gsap.set(instContainer, { x: currentX + singleSetWidth });
-        } else if (currentX >= 0) {
-          gsap.set(instContainer, { x: currentX - singleSetWidth });
-        }
-      };
-
-      // Initial call
-      updateCardsEffects();
-
-      Draggable.create(instContainer, {
-        type: "x",
-        inertia: false, // Standard Draggable
-        edgeResistance: 0,
-        dragResistance: 0,
-        throwResistance: 0,
-        minimumMovement: 0,
-        cursor: "grab",
-        activeCursor: "grabbing",
-        onDrag: updateCardsEffects,
-        onThrowUpdate: updateCardsEffects,
-        onRelease: function () {
-          const velocity = this.getVelocity("x");
-          const momentumMultiplier = Math.abs(velocity) > 500 ? 0.5 : 0.3; // More momentum for faster flicks
-          const momentum = velocity * momentumMultiplier;
-          const currentX = gsap.getProperty(instContainer, "x") as number;
-
-          gsap.to(instContainer, {
-            x: currentX + momentum,
-            duration: 1.2, // Longer, smoother deceleration
-            ease: "power4.out",
-            onUpdate: updateCardsEffects
-          });
-        }
-      });
-
-      // Navigation Buttons Logic
-      const moveCarousel = (direction: 'next' | 'prev') => {
-        const currentX = gsap.getProperty(instContainer, "x") as number;
-        const cardWidth = cards[0].offsetWidth + 24; // Width + gap
-        const moveAmount = direction === 'next' ? -cardWidth : cardWidth;
-
-        gsap.to(instContainer, {
-          x: currentX + moveAmount,
-          duration: 0.8,
-          ease: "power3.out",
-          onUpdate: updateCardsEffects
-        });
-      };
-
-      const prevBtn = pageRef.current?.querySelector('.carousel-prev');
-      const nextBtn = pageRef.current?.querySelector('.carousel-next');
-      prevBtn?.addEventListener('click', () => moveCarousel('prev'));
-      nextBtn?.addEventListener('click', () => moveCarousel('next'));
     }
 
     ScrollTrigger.refresh();
@@ -455,21 +438,23 @@ const Services = () => {
         </div>
 
         {/* Horizontal Drag Wrapper */}
-        <div className="relative w-full h-[400px] flex items-center overflow-hidden z-10 select-none">
-
-
-          <div className="flex flex-nowrap gap-6 px-[calc(50vw-140px)] md:px-[calc(50vw-175px)] w-max inst-scroll-container items-center h-full py-8 cursor-grab active:cursor-grabbing">
-            {[...instruments, ...instruments, ...instruments].map((inst, index) => (
-              <div
-                key={`${inst.name}-${index}`}
-                className="inst-card w-[280px] md:w-[380px] h-[160px] md:h-[300px] flex-shrink-0 flex flex-col items-center justify-center gap-4 p-6 bg-white/20 backdrop-blur-2xl border border-transparent rounded-2xl will-change-transform"
-              >
-                <div className="w-36 h-36 bg-white/80 rounded-full flex items-center justify-center flex-shrink-0 shadow-sm">
-                  <inst.icon className="w-16 h-16 text-black" />
+        <div className="relative w-full h-[400px] flex items-center z-10 select-none">
+          <div className="overflow-hidden w-full h-full" ref={emblaRef}>
+            <div className="flex items-center h-full py-8 cursor-grab active:cursor-grabbing">
+              {[...instruments, ...instruments, ...instruments].map((inst, index) => (
+                <div
+                  key={`${inst.name}-${index}`}
+                  className="inst-card flex-[0_0_280px] md:flex-[0_0_380px] mx-3 md:mx-4"
+                >
+                  <div className="inst-card-inner w-full h-[160px] md:h-[300px] flex flex-col items-center justify-center gap-4 p-6 bg-white/20 backdrop-blur-2xl border border-transparent rounded-2xl will-change-transform">
+                    <div className="w-36 h-36 bg-white/80 rounded-full flex items-center justify-center flex-shrink-0 shadow-sm">
+                      <inst.icon className="w-16 h-16 text-black" />
+                    </div>
+                    <span className="font-body text-base md:text-lg text-black font-semibold text-center leading-snug">{inst.name}</span>
+                  </div>
                 </div>
-                <span className="font-body text-base md:text-lg text-black font-semibold text-center leading-snug">{inst.name}</span>
-              </div>
-            ))}
+              ))}
+            </div>
           </div>
         </div>
 
@@ -477,19 +462,22 @@ const Services = () => {
           <SectionReveal delay={0.2}>
             <div className="flex items-center justify-center gap-6 lg:gap-12">
               {/* Left Button (Prev) */}
-              <button className="carousel-prev w-16 h-16 flex items-center justify-center rounded-full bg-[#FFF200] text-black hover:scale-110 transition-all duration-300 shadow-xl border-none flex-shrink-0">
+              <button onClick={scrollPrev} className="carousel-prev w-16 h-16 flex items-center justify-center rounded-full bg-[#FFF200] text-black hover:scale-110 transition-all duration-300 shadow-xl border-none flex-shrink-0">
                 <ChevronLeft className="w-8 h-8" />
               </button>
 
-              {/* Center Info Box */}
+              {/* Center Info Box — dynamic per focused instrument */}
               <div className="max-w-3xl p-8 bg-white border-l-4 border-highlight rounded-r-md shadow-sm">
-                <p className="text-foreground/80 text-base italic font-medium leading-relaxed text-center md:text-left">
-                  All instruments are maintained, calibrated, and operated in accordance with established standard operating procedures (SOPs) to ensure data accuracy, reliability, and reproducibility.
+                <h4 className="font-heading text-lg font-bold text-foreground mb-2 transition-all duration-300">
+                  {baseInstruments[focusedInst].name}
+                </h4>
+                <p className="text-foreground/80 text-base italic font-medium leading-relaxed text-center md:text-left transition-all duration-300">
+                  {baseInstruments[focusedInst].desc}
                 </p>
               </div>
 
               {/* Right Button (Next) */}
-              <button className="carousel-next w-16 h-16 flex items-center justify-center rounded-full bg-[#FFF200] text-black hover:scale-110 transition-all duration-300 shadow-xl border-none flex-shrink-0">
+              <button onClick={scrollNext} className="carousel-next w-16 h-16 flex items-center justify-center rounded-full bg-[#FFF200] text-black hover:scale-110 transition-all duration-300 shadow-xl border-none flex-shrink-0">
                 <ChevronRight className="w-8 h-8" />
               </button>
             </div>

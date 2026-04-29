@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, useCallback } from "react";
 import { Link } from "react-router-dom";
 import gsap from "gsap";
 import { useGSAP } from "@gsap/react";
@@ -11,6 +11,7 @@ import { Button } from "@/components/ui/button";
 import SectionReveal from "@/components/SectionReveal";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
+import HexagonalBackground from "@/components/HexagonalBackground";
 import heroImg from "@/assets/hero-science.jpg";
 import labImg from "@/assets/lab-research.jpg";
 import facilityImg from "@/assets/facility.jpg";
@@ -306,6 +307,74 @@ const Index = () => {
   const [displayIndex, setDisplayIndex] = useState(0);
   const [activePillar, setActivePillar] = useState<number | null>(null);
   const [activeProjectDetail, setActiveProjectDetail] = useState<number | null>(null);
+  const [hexActive, setHexActive] = useState(false);
+  const [hexSpots, setHexSpots] = useState<any[]>([]);
+
+  useEffect(() => {
+    // Randomize spots per segment on refresh
+    const generateSpots = () => {
+      const spots: any[] = [];
+      const numSpots = 8;
+      const minDistance = 0.35; // Min distance between cluster centers
+
+      // Query for restricted zones to avoid them entirely
+      const section = document.querySelector('.featured-projects-section');
+      const restrictedEls = section ? Array.from(section.querySelectorAll('.projects-content h2, .projects-content p, .projects-content button, .project-img-container')) : [];
+      const sectionRect = section?.getBoundingClientRect();
+
+      const forbiddenZones = sectionRect ? restrictedEls.map(el => {
+        const r = el.getBoundingClientRect();
+        return {
+          x: (r.left + r.width / 2 - sectionRect.left) / sectionRect.width,
+          y: (r.top + r.height / 2 - sectionRect.top) / sectionRect.height,
+          radiusX: (r.width / 2 + 100) / sectionRect.width, // Padding for avoidance
+          radiusY: (r.height / 2 + 100) / sectionRect.height
+        };
+      }) : [];
+
+      for (let attempts = 0; attempts < 100 && spots.length < numSpots; attempts++) {
+        const x = 0.05 + Math.random() * 0.9;
+        const y = 0.05 + Math.random() * 0.9;
+        
+        // 1. Check distance from other spots
+        let tooClose = false;
+        for (const spot of spots) {
+          if (Math.sqrt(Math.pow(spot.xFrac - x, 2) + Math.pow(spot.yFrac - y, 2)) < minDistance) {
+            tooClose = true;
+            break;
+          }
+        }
+        if (tooClose) continue;
+
+        // 2. Check avoidance zones (don't generate near text/images)
+        let inForbiddenZone = false;
+        for (const zone of forbiddenZones) {
+          const dx = Math.abs(x - zone.x);
+          const dy = Math.abs(y - zone.y);
+          if (dx < zone.radiusX && dy < zone.radiusY) {
+            inForbiddenZone = true;
+            break;
+          }
+        }
+        
+        if (!inForbiddenZone) {
+          spots.push({
+            xFrac: x,
+            yFrac: y,
+            radius: 3.5 + Math.random() * 2.0,
+            radiusY: 2.5 + Math.random() * 1.0,
+          });
+        }
+      }
+      return spots;
+    };
+
+    // Use a small timeout to ensure DOM is ready for getBoundingClientRect
+    const timer = setTimeout(() => {
+      setHexSpots(generateSpots());
+    }, 100);
+    return () => clearTimeout(timer);
+  }, []);
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -456,10 +525,10 @@ const Index = () => {
         .fromTo([wrappers[0], wrappers[3]], { y: 600 }, { y: 35, duration: 1, ease: "power2.out" }, "-=0.1");
     }
 
-    // Featured Projects 5-Segment Reveal
-    const projectSegments = gsap.utils.toArray<HTMLElement>('.project-segment');
-    if (projectSegments.length === 5) {
-      const getProjSegs = (indices: number[]) => indices.map(i => projectSegments[i]);
+    // Featured Projects 5-Segment Reveal (white covers slide away to reveal hex canvas)
+    const projectCovers = gsap.utils.toArray<HTMLElement>('.project-cover');
+    if (projectCovers.length === 5) {
+      const getCovers = (indices: number[]) => indices.map(i => projectCovers[i]);
       const tl = gsap.timeline({
         scrollTrigger: {
           trigger: ".featured-projects-section",
@@ -469,24 +538,26 @@ const Index = () => {
         }
       });
 
-      tl.to(getProjSegs([2]), {
-        y: 0,
-        duration: 0.3, // Reduced from 0.5
+      tl.to(getCovers([2]), {
+        yPercent: -100,
+        duration: 0.3,
         ease: "power4.out"
       })
-        .to(getProjSegs([1, 3]), {
-          y: 0,
+        .to(getCovers([1, 3]), {
+          yPercent: -100,
           duration: 0.4,
           ease: "power3.out"
-        }, "-=0.15") // Adjusted overlap to follow the faster middle piece
-        .to(getProjSegs([0, 4]), {
-          y: 0,
+        }, "-=0.15")
+        .to(getCovers([0, 4]), {
+          yPercent: -100,
           duration: 0.3,
           ease: "power3.out"
         }, "-=0.3")
-        .to(".projects-content", {
+        .to([".projects-content", ".hex-canvas-wrapper"], {
           autoAlpha: 1,
-          duration: 0.15
+          duration: 0.15,
+          onComplete: () => setHexActive(true),
+          onReverseComplete: () => setHexActive(false),
         }, "-=0.1");
     }
 
@@ -601,6 +672,7 @@ const Index = () => {
         onLeaveBack: () => {
           gsap.killTweensOf(allProjectCovers);
           gsap.set(allProjectCovers, { rotation: 0, x: 0, y: 0, opacity: 1 });
+          setHexActive(false);
         },
       });
     }
@@ -891,14 +963,25 @@ const Index = () => {
         </section>
 
         {/* Projects */}
-        <section className="relative section-padding overflow-hidden featured-projects-section">
-          {/* 5-segment background */}
-          <div className="absolute inset-0 flex z-0">
-            <div className="w-1/5 h-full bg-[#FFF200] translate-y-full project-segment"></div>
-            <div className="w-1/5 h-full bg-[#FFF200] translate-y-full project-segment"></div>
-            <div className="w-1/5 h-full bg-[#FFF200] translate-y-full project-segment"></div>
-            <div className="w-1/5 h-full bg-[#FFF200] translate-y-full project-segment"></div>
-            <div className="w-1/5 h-full bg-[#FFF200] translate-y-full project-segment"></div>
+        <section className="relative section-padding overflow-hidden featured-projects-section bg-[#FFF200]">
+          {/* Sparse hexagonal clusters */}
+          <div className="absolute inset-0 z-[2] pointer-events-none hex-canvas-wrapper invisible opacity-0">
+            <HexagonalBackground
+              active={hexActive}
+              flipCount={3}
+              flipInterval={2200}
+              hexSize={18}
+              gap={0}
+              spots={hexSpots}
+            />
+          </div>
+          {/* 5 white cover panels for reveal animation */}
+          <div className="absolute inset-0 flex z-[1]">
+            <div className="w-1/5 h-full bg-white project-cover" />
+            <div className="w-1/5 h-full bg-white project-cover" />
+            <div className="w-1/5 h-full bg-white project-cover" />
+            <div className="w-1/5 h-full bg-white project-cover" />
+            <div className="w-1/5 h-full bg-white project-cover" />
           </div>
 
           <div className="container-grid relative z-10 projects-content invisible">
@@ -907,7 +990,7 @@ const Index = () => {
               <h2 className="font-heading text-4xl md:text-5xl font-normal tracking-tight mt-4 text-black text-center flex justify-center">
                 <RevealText text="Projects" />
               </h2>
-              <p className="mt-6 text-lg text-muted-foreground max-w-4xl mx-auto text-center leading-relaxed">
+              <p className="mt-6 text-lg max-w-4xl mx-auto text-center leading-relaxed text-muted-foreground">
                 Our projects focus on the expansion and scale up of inhouse pharmaceutical and herbal product developments, as well as the expansion of research & development laboratories, ensuring a seamless transition from research to commercial manufacturing while maintaining quality and regulatory compliance.
               </p>
             </SectionReveal>

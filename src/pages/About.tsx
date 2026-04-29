@@ -10,6 +10,7 @@ import Footer from "@/components/Footer";
 import SectionReveal from "@/components/SectionReveal";
 import JourneySection from "@/components/JourneySection";
 import { Button } from "@/components/ui/button";
+import HexagonalBackground from "@/components/HexagonalBackground";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -258,6 +259,70 @@ const HexagonalPartnersGrid = () => {
 const About = () => {
   const pageRef = useRef<HTMLDivElement>(null);
   const [activeUnit, setActiveUnit] = useState<number | null>(null);
+  const [hexActive, setHexActive] = useState(false);
+  const [hexSpots, setHexSpots] = useState<any[]>([]);
+
+  useEffect(() => {
+    // Randomize spots for the manufacturing section
+    const generateSpots = () => {
+      const spots: any[] = [];
+      const numSpots = 4;
+      const minDistance = 0.30;
+
+      const section = document.querySelector('.mfg-section');
+      const restrictedEls = section ? Array.from(section.querySelectorAll('.mfg-content h2, .mfg-content h3, .mfg-content p, .mfg-content img')) : [];
+      const sectionRect = section?.getBoundingClientRect();
+
+      const forbiddenZones = sectionRect ? restrictedEls.map(el => {
+        const r = el.getBoundingClientRect();
+        return {
+          x: (r.left + r.width / 2 - sectionRect.left) / sectionRect.width,
+          y: (r.top + r.height / 2 - sectionRect.top) / sectionRect.height,
+          radiusX: (r.width / 2 + 80) / sectionRect.width, 
+          radiusY: (r.height / 2 + 80) / sectionRect.height
+        };
+      }) : [];
+
+      for (let attempts = 0; attempts < 200 && spots.length < numSpots; attempts++) {
+        const x = 0.05 + Math.random() * 0.9;
+        const y = 0.05 + Math.random() * 0.9;
+        
+        let tooClose = false;
+        for (const spot of spots) {
+          if (Math.sqrt(Math.pow(spot.xFrac - x, 2) + Math.pow(spot.yFrac - y, 2)) < minDistance) {
+            tooClose = true;
+            break;
+          }
+        }
+        if (tooClose) continue;
+
+        let inForbiddenZone = false;
+        for (const zone of forbiddenZones) {
+          const dx = Math.abs(x - zone.x);
+          const dy = Math.abs(y - zone.y);
+          if (dx < zone.radiusX && dy < zone.radiusY) {
+            inForbiddenZone = true;
+            break;
+          }
+        }
+        
+        if (!inForbiddenZone) {
+          spots.push({
+            xFrac: x,
+            yFrac: y,
+            radius: 3.5 + Math.random() * 2.0,
+            radiusY: 2.5 + Math.random() * 1.0,
+          });
+        }
+      }
+      return spots;
+    };
+
+    const timer = setTimeout(() => {
+      setHexSpots(generateSpots());
+    }, 100);
+    return () => clearTimeout(timer);
+  }, []);
 
   // GSAP scroll animations
   useGSAP(() => {
@@ -307,7 +372,12 @@ const About = () => {
       tl.to([mfgSegments[2]], { y: 0, duration: 0.4, ease: "power4.out" })
         .to([mfgSegments[1], mfgSegments[3]], { y: 0, duration: 0.4, ease: "power3.out" }, "-=0.2")
         .to([mfgSegments[0], mfgSegments[4]], { y: 0, duration: 0.3, ease: "power3.out" }, "-=0.2")
-        .to(".mfg-content", { autoAlpha: 1, duration: 0.15 }, "-=0.1")
+        .to([".mfg-content", ".mfg-hex-canvas-wrapper"], { 
+          autoAlpha: 1, 
+          duration: 0.15,
+          onComplete: () => setHexActive(true),
+          onReverseComplete: () => setHexActive(false),
+        }, "-=0.1")
         // Refresh ScrollTrigger after reveal so parallax calculates correct dimensions
         .call(() => ScrollTrigger.refresh(), [], "+=0.1");
     }
@@ -636,6 +706,17 @@ const About = () => {
 
       {/* 04 Manufacturing & Conservation — 5-segment reveal */}
       <section className="relative section-padding overflow-hidden mfg-section">
+        {/* Hexagonal Background for Coming Soon section */}
+        <div className="absolute inset-0 z-[1] pointer-events-none mfg-hex-canvas-wrapper invisible opacity-0">
+          <HexagonalBackground
+            active={hexActive}
+            flipCount={3}
+            flipInterval={2200}
+            hexSize={18}
+            gap={0}
+            spots={hexSpots}
+          />
+        </div>
         <div className="absolute inset-0 flex z-0">
           {[0, 1, 2, 3, 4].map(i => <div key={i} className="w-1/5 h-full bg-[#FFF200] translate-y-full mfg-segment" />)}
         </div>
