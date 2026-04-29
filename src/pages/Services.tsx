@@ -15,8 +15,8 @@ import Footer from "@/components/Footer";
 import SectionReveal from "@/components/SectionReveal";
 import { Button } from "@/components/ui/button";
 
-import facilityImg from "@/assets/facility.jpg";
-import labImg from "@/assets/lab-research.jpg";
+import facilityImg from "@/assets/Images/IMG_4514.jpg";
+import labImg from "@/assets/Images/IMG_4528.jpg";
 import logoImg from "@/assets/logo.png";
 
 import shimadzuLogo from "@/assets/Partners/Shimadzu.png";

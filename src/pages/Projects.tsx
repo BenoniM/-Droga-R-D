@@ -4,11 +4,11 @@ import { Dna, Pill, Users, Cpu, FlaskConical, Sprout } from "lucide-react";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import SectionReveal from "@/components/SectionReveal";
-import labImg from "@/assets/lab-research.jpg";
-import moleculesImg from "@/assets/molecules.jpg";
-import plantsImg from "@/assets/herbal8.jpg";
-import facilityImg from "@/assets/facility.jpg";
-import heroImg from "@/assets/hero-science.jpg";
+import labImg from "@/assets/Images/IMG_4528.jpg";
+import moleculesImg from "@/assets/Images/IMG_4543.jpg";
+import plantsImg from "@/assets/Images/IMG_4565.jpg";
+import facilityImg from "@/assets/Images/IMG_4514.jpg";
+import heroImg from "@/assets/Images/IMG_4582.jpg";
 
 const filters = ["All", "Biotechnology", "Medicine", "Public Health", "AI"];
 

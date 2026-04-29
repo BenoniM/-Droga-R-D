@@ -3,10 +3,10 @@ import { motion, AnimatePresence } from "framer-motion";
 import { ChevronLeft, ChevronRight, ArrowRight } from "lucide-react";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
-import labImg from "@/assets/lab-research.jpg";
-import facilityImg from "@/assets/facility.jpg";
-import plantsImg from "@/assets/herbal8.jpg";
-import heroImg from "@/assets/hero-science.jpg";
+import labImg from "@/assets/Images/IMG_4528.jpg";
+import facilityImg from "@/assets/Images/IMG_4514.jpg";
+import plantsImg from "@/assets/Images/IMG_4565.jpg";
+import heroImg from "@/assets/Images/IMG_4582.jpg";
 
 const newsArticles = [
   {

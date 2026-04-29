@@ -11,6 +11,8 @@ import Services from "./pages/Services";
 import DrogaScience from "./pages/DrogaScience";
 import Grants from "./pages/Grants";
 import Projects from "./pages/Projects";
+import Publications from "./pages/Publications";
+import Labs from "./pages/Labs";
 import News from "./pages/News";
 import Contact from "./pages/Contact";
 import NotFound from "./pages/NotFound";
@@ -63,6 +65,8 @@ const AppRoutes = () => {
             <Route path="/droga-science" element={<DrogaScience />} />
             <Route path="/droga-science/grants" element={<Grants />} />
             <Route path="/droga-science/projects" element={<Projects />} />
+            <Route path="/droga-science/publications" element={<Publications />} />
+            <Route path="/droga-science/labs" element={<Labs />} />
             <Route path="/news" element={<News />} />
             <Route path="/contact" element={<Contact />} />
             <Route path="*" element={<NotFound />} />

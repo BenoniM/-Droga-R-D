@@ -15,10 +15,10 @@ import HexagonalBackground from "@/components/HexagonalBackground";
 gsap.registerPlugin(ScrollTrigger);
 
 // Import images
-import facilityImg from "@/assets/facility.jpg";
-import labImg from "@/assets/lab-research.jpg";
-import heroImg from "@/assets/hero-science.jpg";
-import plantsImg from "@/assets/herbal8.jpg";
+import facilityImg from "@/assets/Images/IMG_4514.jpg";
+import labImg from "@/assets/Images/IMG_4528.jpg";
+import heroImg from "@/assets/Images/IMG_4582.jpg";
+import plantsImg from "@/assets/Project/pexels-hson-10636409.jpg";
 import pillarVideo from "@/assets/pillar/4909887-hd_1080_1920_30fps.mp4";
 
 import project1Img from "@/assets/Project/droga-manufacture.png";
@@ -278,7 +278,7 @@ const About = () => {
         return {
           x: (r.left + r.width / 2 - sectionRect.left) / sectionRect.width,
           y: (r.top + r.height / 2 - sectionRect.top) / sectionRect.height,
-          radiusX: (r.width / 2 + 80) / sectionRect.width, 
+          radiusX: (r.width / 2 + 80) / sectionRect.width,
           radiusY: (r.height / 2 + 80) / sectionRect.height
         };
       }) : [];
@@ -286,7 +286,7 @@ const About = () => {
       for (let attempts = 0; attempts < 200 && spots.length < numSpots; attempts++) {
         const x = 0.05 + Math.random() * 0.9;
         const y = 0.05 + Math.random() * 0.9;
-        
+
         let tooClose = false;
         for (const spot of spots) {
           if (Math.sqrt(Math.pow(spot.xFrac - x, 2) + Math.pow(spot.yFrac - y, 2)) < minDistance) {
@@ -305,7 +305,7 @@ const About = () => {
             break;
           }
         }
-        
+
         if (!inForbiddenZone) {
           spots.push({
             xFrac: x,
@@ -372,8 +372,8 @@ const About = () => {
       tl.to([mfgSegments[2]], { y: 0, duration: 0.4, ease: "power4.out" })
         .to([mfgSegments[1], mfgSegments[3]], { y: 0, duration: 0.4, ease: "power3.out" }, "-=0.2")
         .to([mfgSegments[0], mfgSegments[4]], { y: 0, duration: 0.3, ease: "power3.out" }, "-=0.2")
-        .to([".mfg-content", ".mfg-hex-canvas-wrapper"], { 
-          autoAlpha: 1, 
+        .to([".mfg-content", ".mfg-hex-canvas-wrapper"], {
+          autoAlpha: 1,
           duration: 0.15,
           onComplete: () => setHexActive(true),
           onReverseComplete: () => setHexActive(false),
@@ -676,8 +676,8 @@ const About = () => {
                       </p>
                     </div>
                     <div className="mt-8">
-                      <Button className="bg-white text-black hover:bg-black hover:text-white transition-all font-bold rounded-none px-8 py-6 tracking-widest text-xs uppercase">
-                        Learn More
+                      <Button asChild className="bg-white text-black hover:bg-black hover:text-white transition-all font-bold rounded-none px-8 py-6 tracking-widest text-xs uppercase">
+                        <Link to="/droga-science/labs">Learn More</Link>
                       </Button>
                     </div>
                   </SectionReveal>

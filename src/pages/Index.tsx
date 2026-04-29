@@ -12,11 +12,11 @@ import SectionReveal from "@/components/SectionReveal";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import HexagonalBackground from "@/components/HexagonalBackground";
-import heroImg from "@/assets/hero-science.jpg";
-import labImg from "@/assets/lab-research.jpg";
-import facilityImg from "@/assets/facility.jpg";
-import moleculesImg from "@/assets/molecules.jpg";
-import plantsImg from "@/assets/herbal8.jpg";
+import heroImg from "@/assets/Images/IMG_4582.jpg";
+import labImg from "@/assets/Images/IMG_4528.jpg";
+import facilityImg from "@/assets/Images/IMG_4514.jpg";
+import moleculesImg from "@/assets/Images/IMG_4543.jpg";
+import plantsImg from "@/assets/Images/IMG_4565.jpg";
 import pillarVideo from "@/assets/pillar/4909887-hd_1080_1920_30fps.mp4";
 
 import project1Img from "@/assets/Project/droga-manufacture.png";
@@ -1115,8 +1115,8 @@ const Index = () => {
               <p className="mt-6 text-base md:text-lg font-body text-white/70">
                 Our integrated research campus houses laboratories, bioequivalence units, and quality control centers.
               </p>
-              <Button variant="default" size="lg" className="mt-8 bg-white text-black hover:bg-white/90" asChild>
-                <Link to="/about#labs">Explore Facilities</Link>
+              <Button variant="default" size="lg" className="mt-8 bg-white text-black hover:bg-[#FFF200] hover:text-black" asChild>
+                <Link to="/droga-science/labs">Explore Facilities</Link>
               </Button>
             </SectionReveal>
           </div>
@@ -1143,10 +1143,7 @@ const Index = () => {
               {/* Left Column */}
               <div className="flex-1 flex flex-col justify-between translate-y-[100vh] news-content-col h-full">
                 <div className="pt-2">
-                  <span className="text-xs md:text-base font-bold uppercase tracking-[0.2em] text-muted-foreground">Stay Updated</span>
-                  <h2 className="font-heading text-2xl md:text-5xl font-semibold tracking-tight mt-2 md:mt-4 text-foreground">
-                    Latest News
-                  </h2>
+                  <span className="text-xs md:text-base font-bold uppercase tracking-[0.2em] text-black">Latest News</span>
                 </div>
                 <div className="mt-auto">
                   <article className="group cursor-pointer overflow-hidden rounded-sm bg-card transition-all duration-300 hover:bg-highlight hover:-translate-y-1.5 shadow-sm">
@@ -1179,7 +1176,7 @@ const Index = () => {
               {/* Right Column */}
               <div className="flex-1 flex flex-col justify-between translate-y-[100vh] news-content-col h-full">
                 <div className="flex justify-end pt-2">
-                  <Link to="/news" className="flex items-center gap-1 md:gap-2 text-xs md:text-base font-heading font-medium text-foreground hover:text-highlight transition-colors">
+                  <Link to="/news" className="flex items-center gap-1 md:gap-2 text-xs md:text-base font-heading font-medium text-foreground transition-colors border-2 rounded-full px-6 py-3 border-black hover:bg-highlight hover:text-black">
                     View All <ArrowRight className="w-3 h-3 md:w-4 md:h-4" />
                   </Link>
                 </div>

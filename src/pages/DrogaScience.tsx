@@ -1,15 +1,24 @@
-import { Link } from "react-router-dom";
+import { useRef } from "react";
 import { motion } from "framer-motion";
-import { FlaskConical, BookOpen, Award, Building2, Beaker, Dna, Microscope, Leaf, Zap } from "lucide-react";
-import { Button } from "@/components/ui/button";
+import { useGSAP } from "@gsap/react";
+import gsap from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
+import { FlaskConical, BookOpen, Award, Building2, Users } from "lucide-react";
+import { Link } from "react-router-dom";
+
+gsap.registerPlugin(ScrollTrigger);
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import SectionReveal from "@/components/SectionReveal";
-import AnimatedCounter from "@/components/AnimatedCounter";
-import moleculesImg from "@/assets/molecules.jpg";
-import labImg from "@/assets/lab-research.jpg";
-import facilityImg from "@/assets/facility.jpg";
-import plantsImg from "@/assets/herbal8.jpg";
+import moleculesImg from "@/assets/Images/IMG_4543.jpg";
+import labImg from "@/assets/Images/IMG_4528.jpg";
+import facilityImg from "@/assets/Images/IMG_4514.jpg";
+import plantsImg from "@/assets/Images/IMG_4565.jpg";
+
+import seminarImg1 from "@/assets/Seminar/gfhf.png";
+import seminarImg2 from "@/assets/Seminar/s.png";
+import seminarImg3 from "@/assets/Seminar/sdfsdf.png";
+import seminarImg4 from "@/assets/Seminar/sfd.png";
 
 const pillars = [
   { icon: FlaskConical, title: "Drug Discovery", desc: "Natural and herbal pharmaceutical research with modern scientific methodologies." },
@@ -18,38 +27,121 @@ const pillars = [
   { icon: Building2, title: "Bioequivalence", desc: "GCP-compliant studies for regulatory approval and quality assurance." },
 ];
 
-const researchWings = [
-  { icon: Dna, title: "Drug Discovery Wing", desc: "Focused on API identification, excipient characterization, and herbal medicine formulation from Ethiopia's rich botanical heritage.", image: moleculesImg, projects: 12 },
-  { icon: Beaker, title: "Food & Nutrition Wing", desc: "Developing nutraceuticals, dietary supplements, and functional food products for improved public health outcomes.", image: plantsImg, projects: 8 },
-  { icon: Microscope, title: "Cosmetics & Detergent Wing", desc: "Formulating medicated skincare, personal care, and hygiene products using natural and synthetic ingredients.", image: labImg, projects: 6 },
-  { icon: Leaf, title: "Medicinal Plants Wing", desc: "Cultivating, studying, and extracting bioactive compounds from indigenous Ethiopian medicinal plants.", image: plantsImg, projects: 9 },
-  { icon: Zap, title: "Quality Control Wing", desc: "Advanced analytical testing with HPLC, UV-Vis, FTIR for pharmaceutical and food product quality assurance.", image: facilityImg, projects: 7 },
-];
-
 const DrogaScience = () => {
+  const statsRef = useRef<HTMLElement>(null);
+
+  useGSAP(() => {
+    const segments = gsap.utils.toArray<HTMLElement>('.stats-segment', statsRef.current!);
+    const statCols = gsap.utils.toArray<HTMLElement>('.stat-col', statsRef.current!);
+    
+    if (segments.length === 5 && statCols.length === 5) {
+      const getSegs = (indices: number[]) => indices.map(i => segments[i]);
+      const getStatCols = (indices: number[]) => indices.map(i => statCols[i]);
+
+      const tl = gsap.timeline({
+        scrollTrigger: {
+          trigger: statsRef.current,
+          start: "top 95%",
+          end: "bottom 80%",
+          scrub: 1.5,
+        }
+      });
+
+      const updateText = (index: number, val: number) => {
+        const col = statCols[index];
+        const textEl = col.querySelector('.count-text');
+        const suffix = col.dataset.suffix || "";
+        if (textEl) textEl.innerHTML = Math.round(val).toLocaleString() + suffix;
+      };
+
+      const c0 = { val: 0 };
+      const c1 = { val: 0 };
+      const c2 = { val: 0 };
+      const c3 = { val: 0 };
+      const c4 = { val: 0 };
+
+      tl.to(getSegs([2]), { y: 0, duration: 1, ease: "none" }, 0)
+        .to(c2, { val: parseInt(statCols[2].dataset.end || "0"), duration: 1, ease: "none", onUpdate: () => updateText(2, c2.val) }, 0)
+
+        .to(getSegs([1, 3]), { y: 0, duration: 0.65, ease: "none" }, 0.35)
+        .to(c1, { val: parseInt(statCols[1].dataset.end || "0"), duration: 0.65, ease: "none", onUpdate: () => updateText(1, c1.val) }, 0.35)
+        .to(c3, { val: parseInt(statCols[3].dataset.end || "0"), duration: 0.65, ease: "none", onUpdate: () => updateText(3, c3.val) }, 0.35)
+
+        .to(getSegs([0, 4]), { y: 0, duration: 0.3, ease: "none" }, 0.7)
+        .to(c0, { val: parseInt(statCols[0].dataset.end || "0"), duration: 0.3, ease: "none", onUpdate: () => updateText(0, c0.val) }, 0.7)
+        .to(c4, { val: parseInt(statCols[4].dataset.end || "0"), duration: 0.3, ease: "none", onUpdate: () => updateText(4, c4.val) }, 0.7);
+    }
+  }, { scope: statsRef, dependencies: [] });
+
   return (
     <div className="min-h-screen bg-background">
       <Navbar />
 
-      {/* Hero with image */}
-      <section className="relative h-[70vh] flex items-end overflow-hidden">
-        <img src={moleculesImg} alt="Molecular research" className="absolute inset-0 w-full h-full object-cover" />
+      {/* Hero with image matching Grants/Publications style */}
+      <section className="relative pt-32 pb-24 px-6 overflow-hidden">
+        <motion.img
+          src={moleculesImg}
+          alt="Seminar Hero"
+          className="absolute inset-0 w-full h-full object-cover"
+          initial={{ scale: 1.1 }}
+          animate={{ scale: 1 }}
+          transition={{ duration: 1.4, ease: [0.22, 1, 0.36, 1] }}
+        />
         <div className="absolute inset-0 bg-foreground/70" />
-        <div className="relative container-grid px-6 pb-20 z-10">
-          <motion.div initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8 }}>
-            <span className="text-xs font-bold uppercase tracking-[0.3em] text-highlight">Innovation Hub</span>
+        <div className="relative container-grid z-10">
+          <motion.div
+            initial={{ opacity: 0, y: 30 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8 }}
+            className="text-center max-w-4xl mx-auto"
+          >
+            <div className="flex items-center justify-center gap-3 mb-6">
+              <motion.div
+                animate={{ rotate: [0, 5, -5, 0] }}
+                transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
+              >
+                <Users className="w-10 h-10 text-highlight" strokeWidth={1.5} />
+              </motion.div>
+              <span className="text-xs font-bold uppercase tracking-[0.3em] text-highlight">Knowledge Exchange</span>
+            </div>
             <h1 className="font-heading text-5xl md:text-7xl font-bold tracking-tighter text-surface-dark-foreground mt-4">
-              Droga Science
+              Droga Seminar
             </h1>
-            <p className="mt-6 text-lg text-surface-dark-foreground/70 max-w-xl font-body">
-              Our integrated R&D ecosystem advancing pharmaceutical innovation through scientific rigor and collaboration.
+            <p className="mt-6 text-lg text-surface-dark-foreground/70 max-w-2xl mx-auto font-body leading-relaxed">
+              Bringing together experts, partners, and researchers to exchange knowledge and discuss new findings in pharmaceutical science.
             </p>
           </motion.div>
         </div>
       </section>
 
+      {/* Droga Seminar section right below the hero */}
+      <section id="seminar" className="section-padding">
+        <div className="container-grid grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
+          <SectionReveal>
+            <span className="overline-dark">Knowledge Exchange</span>
+            <h2 className="font-heading text-4xl font-semibold tracking-tight mt-4 text-foreground">
+              Droga Seminar
+            </h2>
+            <p className="mt-6 text-lg font-body text-muted-foreground leading-relaxed">
+              The Droga Seminar is organized on a regular basis with the objective of bringing together Droga members, experts from various departments and units, as well as external partners to exchange knowledge and ideas through in-depth analysis of relevant topics.
+            </p>
+            <p className="mt-4 text-lg font-body text-muted-foreground leading-relaxed">
+              It also serves as a platform for discussing new in house research developments and presenting findings from funded research projects.
+            </p>
+          </SectionReveal>
+          <SectionReveal delay={0.2}>
+            <div className="grid grid-cols-2 gap-4">
+              <img src={seminarImg1} alt="Seminar" className="w-full h-48 object-cover rounded-sm shadow-md" />
+              <img src={seminarImg2} alt="Seminar" className="w-full h-48 object-cover rounded-sm shadow-md mt-8" />
+              <img src={seminarImg3} alt="Seminar" className="w-full h-48 object-cover rounded-sm shadow-md -mt-8" />
+              <img src={seminarImg4} alt="Seminar" className="w-full h-48 object-cover rounded-sm shadow-md" />
+            </div>
+          </SectionReveal>
+        </div>
+      </section>
+
       {/* Scientific Pillars */}
-      <section className="section-padding">
+      <section className="section-padding bg-surface-subtle">
         <div className="container-grid">
           <SectionReveal>
             <span className="overline-dark">Our Pillars</span>
@@ -75,138 +167,64 @@ const DrogaScience = () => {
         </div>
       </section>
 
-      {/* Research Wings - Visually Rich */}
-<section className="section-padding bg-surface-subtle">
-  <div className="container-grid">
-    <SectionReveal>
-      <span className="text-xs font-bold uppercase tracking-[0.2em] text-highlight">Research Ecosystem</span>
-      <h2 className="font-heading text-4xl md:text-5xl font-semibold tracking-tight mt-4 text-foreground">
-        Research Wings
-      </h2>
-      <p className="mt-4 text-foreground/60 font-body max-w-2xl">
-        Five specialized research divisions driving innovation across pharmaceutical, food, and cosmetic sciences.
-      </p>
-    </SectionReveal>
-
-    <div className="mt-16 space-y-6">
-      {researchWings.map((wing, i) => {
-        const Icon = wing.icon;
-        return (
-          <motion.div
-            key={wing.title}
-            initial={{ opacity: 0, x: i % 2 === 0 ? -40 : 40 }}
-            whileInView={{ opacity: 1, x: 0 }}
-            viewport={{ once: true, margin: "-60px" }}
-            transition={{ duration: 0.7, delay: i * 0.1 }}
-            whileHover={{ y: -4, transition: { duration: 0.3 } }}
-            className="group grid grid-cols-1 md:grid-cols-[1fr_2fr] gap-0 bg-card rounded-sm overflow-hidden cursor-pointer hover:bg-highlight transition-all duration-300"
-          >
-            <div className="relative aspect-[16/10] md:aspect-auto overflow-hidden">
-              <img src={wing.image} alt={wing.title} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" />
-              <div className="absolute inset-0 bg-black/20" />
-              <motion.div
-                className="absolute top-4 left-4 w-12 h-12 rounded-full bg-highlight flex items-center justify-center"
-                animate={{ rotate: [0, 5, -5, 0] }}
-                transition={{ duration: 6, repeat: Infinity, ease: "easeInOut", delay: i * 0.5 }}
-              >
-                <Icon className="w-6 h-6 text-black" strokeWidth={1.5} />
-              </motion.div>
-            </div>
-            <div className="p-8 md:p-10 flex flex-col justify-center group-hover:bg-highlight transition-colors duration-300">
-              <div className="flex items-center gap-3 mb-3">
-                <h3 className="font-heading text-xl md:text-2xl font-bold text-foreground group-hover:text-black transition-colors duration-300">{wing.title}</h3>
-                <span className="px-3 py-1 bg-highlight/20 rounded-sm text-xs font-heading font-bold text-highlight group-hover:bg-black/20 group-hover:text-black transition-colors duration-300">{wing.projects} Projects</span>
-              </div>
-              <p className="text-sm font-body text-foreground/60 leading-relaxed max-w-lg group-hover:text-black/70 transition-colors duration-300">{wing.desc}</p>
-            </div>
-          </motion.div>
-        );
-      })}
-    </div>
-  </div>
-</section>
-
-      {/* Stats */}
-      <section className="section-padding bg-highlight">
-        <div className="container-grid">
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-12">
-            <div className="text-left">
-              <div className="font-heading text-5xl md:text-6xl font-bold tabular-nums text-foreground">5</div>
-              <div className="mt-2 text-sm font-body text-foreground/60 uppercase tracking-widest font-bold">Research Wings</div>
-            </div>
-            <div className="text-left">
-              <div className="font-heading text-5xl md:text-6xl font-bold tabular-nums text-foreground">42+</div>
-              <div className="mt-2 text-sm font-body text-foreground/60 uppercase tracking-widest font-bold">Active Projects</div>
-            </div>
-            <div className="text-left">
-              <div className="font-heading text-5xl md:text-6xl font-bold tabular-nums text-foreground">414K</div>
-              <div className="mt-2 text-sm font-body text-foreground/60 uppercase tracking-widest font-bold">ETB Grants Awarded</div>
-            </div>
-            <div className="text-left">
-              <div className="font-heading text-5xl md:text-6xl font-bold tabular-nums text-foreground">3</div>
-              <div className="mt-2 text-sm font-body text-foreground/60 uppercase tracking-widest font-bold">Major Facilities</div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Grant Opportunities */}
-      <section className="section-padding bg-surface-subtle">
-        <div className="container-grid grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
-          <SectionReveal>
-            <span className="overline-dark">Funding</span>
-            <h2 className="font-heading text-4xl font-semibold tracking-tight mt-4 text-foreground">
-              Droga Research Grant
-            </h2>
-            <p className="mt-6 text-lg font-body text-muted-foreground leading-relaxed">
-              DRG supports junior and senior researchers dedicated to improving human health through pharmaceutical research. We fund projects addressing real challenges with tangible impact potential.
-            </p>
-            <h4 className="font-heading text-sm font-bold uppercase tracking-widest text-foreground/60 mt-8 mb-4">Research Areas</h4>
-            <ul className="space-y-2">
-              {["API Discovery & Excipient Characterization", "Herbal Medicine", "Food Supplements & Nutraceuticals", "Formulation Development", "Cosmetics"].map((area) => (
-                <li key={area} className="flex items-center gap-3">
-                  <div className="w-1.5 h-1.5 bg-highlight rounded-full" />
-                  <span className="text-sm font-body text-muted-foreground">{area}</span>
-                </li>
-              ))}
-            </ul>
-            <Button variant="hero" size="lg" className="mt-8" asChild>
-              <Link to="/droga-science/grants">Apply for Grant</Link>
-            </Button>
-          </SectionReveal>
-          <SectionReveal delay={0.2}>
-            <div className="overflow-hidden rounded-sm">
-              <img src={labImg} alt="Research in progress" className="w-full h-[450px] object-cover" />
-            </div>
-          </SectionReveal>
-        </div>
-      </section>
-
-      {/* Labs & Facilities */}
+      {/* Labs & Facilities with images */}
       <section id="labs" className="section-padding">
         <div className="container-grid">
           <SectionReveal>
-            <span className="overline-dark">Infrastructure</span>
-            <h2 className="font-heading text-4xl font-semibold tracking-tight mt-4 text-foreground">Labs & Facilities</h2>
+            <h2 className="font-heading text-4xl font-semibold tracking-tight mt-4 text-foreground">Laboratory</h2>
           </SectionReveal>
-          <div className="mt-12 grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div className="mt-12 space-y-12">
             {[
-              { title: "Research Laboratories", desc: "Drug discovery, food & nutrition, and cosmetic product development labs." },
-              { title: "Bioequivalence Study Units", desc: "Clinical units, medical laboratories, and bioanalytical facilities." },
-              { title: "Quality Control Units", desc: "HPLC, UV-Vis, FTIR and precision analytical instruments." },
-              { title: "Formulation & Development", desc: "Pilot-scale development for scaling innovations to market-ready products." },
+              { title: "Research Laboratories", desc: "Drug discovery, food & nutrition, and cosmetic product development labs.", img: labImg },
+              { title: "Bioequivalence Study Units", desc: "Clinical units, medical laboratories, and bioanalytical facilities.", img: facilityImg },
+              { title: "Quality Control Units", desc: "HPLC, UV-Vis, FTIR and precision analytical instruments.", img: moleculesImg },
+              { title: "Formulation & Development", desc: "Pilot-scale development for scaling innovations to market-ready products.", img: plantsImg },
             ].map((lab, i) => (
-              <SectionReveal key={lab.title} delay={i * 0.1}>
-                <motion.div
-                  whileHover={{ y: -6, transition: { duration: 0.3 } }}
-                  className="group p-8 bg-surface-subtle rounded-sm hover:bg-highlight transition-all duration-300 cursor-pointer"
-                >
-                  <h4 className="font-heading text-xl font-bold text-foreground">{lab.title}</h4>
-                  <p className="mt-3 text-sm text-muted-foreground group-hover:text-foreground/70 leading-relaxed transition-colors duration-300">{lab.desc}</p>
-                </motion.div>
-              </SectionReveal>
+              <motion.div
+                key={lab.title}
+                initial={{ opacity: 0, x: i % 2 === 0 ? -60 : 60 }}
+                whileInView={{ opacity: 1, x: 0 }}
+                viewport={{ once: true, margin: "-50px" }}
+                transition={{ duration: 1.2, delay: i * 0.15, ease: [0.25, 1, 0.5, 1] }}
+                style={{ willChange: "transform, opacity" }}
+              >
+                <Link to="/droga-science/labs">
+                  <motion.div
+                    whileHover={{ y: -5 }}
+                    className="group flex flex-col md:flex-row gap-8 items-center bg-surface-subtle rounded-sm overflow-hidden hover:bg-highlight transition-all duration-300 cursor-pointer"
+                  >
+                    <div className="w-full md:w-1/2 h-64 md:h-80 overflow-hidden">
+                      <img src={lab.img} alt={lab.title} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" />
+                    </div>
+                    <div className="w-full md:w-1/2 p-8 md:p-12 flex flex-col justify-center">
+                      <h4 className="font-heading text-2xl md:text-3xl font-bold text-foreground mb-4">{lab.title}</h4>
+                      <p className="text-base text-muted-foreground group-hover:text-foreground/70 leading-relaxed transition-colors duration-300">{lab.desc}</p>
+                    </div>
+                  </motion.div>
+                </Link>
+              </motion.div>
             ))}
           </div>
+        </div>
+      </section>
+
+      {/* 5-Segment Animated Stats */}
+      <section ref={statsRef} className="relative z-20 h-[40vh] md:h-[50vh] overflow-hidden bg-background">
+        <div className="absolute inset-0 flex z-0">
+          {[
+            { end: 12, suffix: "+", label: "Projects" },
+            { end: 17, suffix: "+", label: "Research Partners" },
+            { end: 5, suffix: "", label: "Grant Funded" },
+            { end: 300, suffix: " sq.m", label: "Analytical Lab" },
+            { end: 9951, suffix: " sq.m", label: "R&D Center" }
+          ].map((stat, i) => (
+            <div key={i} className="w-1/5 h-full bg-foreground translate-y-full stats-segment relative border-r border-background/10 last:border-r-0">
+              <div className="absolute inset-x-0 top-[30%] md:top-[40%] text-center px-1 md:px-4 stat-col text-surface-dark-foreground" data-end={stat.end} data-suffix={stat.suffix}>
+                <div className="font-heading text-lg md:text-3xl lg:text-4xl font-bold count-text">0{stat.suffix}</div>
+                <div className="mt-2 md:mt-4 text-[8px] md:text-xs font-body text-surface-dark-foreground/70 uppercase tracking-widest font-bold leading-tight">{stat.label}</div>
+              </div>
+            </div>
+          ))}
         </div>
       </section>
 

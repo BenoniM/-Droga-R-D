@@ -31,11 +31,11 @@ const AnimatedCounter = ({ end, suffix = "", prefix = "", duration = 2, label }:
   }, [isInView, end, duration]);
 
   return (
-    <div ref={ref} className="text-left">
-      <div className="font-heading text-5xl md:text-6xl font-bold tabular-nums text-foreground">
+    <div ref={ref} className="text-center">
+      <div className="font-heading text-3xl md:text-4xl font-bold tabular-nums text-inherit">
         {prefix}{count.toLocaleString()}{suffix}
       </div>
-      <div className="mt-2 text-sm font-body text-muted-foreground uppercase tracking-widest">{label}</div>
+      <div className="mt-2 text-[10px] md:text-xs font-body text-inherit/70 uppercase tracking-widest font-bold">{label}</div>
     </div>
   );
 };

@@ -5,9 +5,14 @@ import { Button } from "@/components/ui/button";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import SectionReveal from "@/components/SectionReveal";
-import heroImg from "@/assets/hero-science.jpg";
-import labImg from "@/assets/lab-research.jpg";
-import facilityImg from "@/assets/facility.jpg";
+import heroImg from "@/assets/Images/IMG_4582.jpg";
+import labImg from "@/assets/Images/IMG_4528.jpg";
+import facilityImg from "@/assets/Images/IMG_4514.jpg";
+
+import grantImg1 from "@/assets/Grant/hgfj.png";
+import grantImg2 from "@/assets/Grant/jy.png";
+import grantImg3 from "@/assets/Grant/tyte.png";
+import grantImg4 from "@/assets/Grant/xcv.png";
 
 const grantCategories = [
   { name: "API Discovery & Excipient Characterization", icon: FlaskIcon },
@@ -18,11 +23,11 @@ const grantCategories = [
 ];
 
 const pastGrants = [
-  { title: "Evaluation of the hypolipidemic effect of leaf extract of Lippia Adoensis var. Koseret in hypercholesterolemic mice", amount: "71,984.00", icon: Award, image: labImg },
-  { title: "Exploration Of Spirulina (Arthrospira Fusiformis) And Oyster Mushroom Formulation as Potential Nutraceuticals for improved Nutrition and Better Human Health", amount: "100,000.00", icon: Trophy, image: facilityImg },
-  { title: "Effect of replacement of Wheat with fava bean and black cumin flours on nutritional properties and sensory attributes of bread", amount: "62,800.00", icon: Medal, image: heroImg },
-  { title: "Formulation, In-Vitro evaluation & optimization of milk based oral dispersible Griseofulvin tablets prepared by direct compression method", amount: "90,750.00", icon: Star, image: labImg },
-  { title: "Formulation design and physicochemical evaluation of Diabetic foot care emollient, A way to tackling diabetic foot xerosis (DFX)", amount: "89,400.00", icon: BadgeCheck, image: facilityImg },
+  { title: "Evaluation of the hypolipidemic effect of leaf extract of Lippia Adoensis var. Koseret in hypercholesterolemic mice", amount: "71,984.00", icon: Award, image: grantImg1 },
+  { title: "Exploration Of Spirulina (Arthrospira Fusiformis) And Oyster Mushroom Formulation as Potential Nutraceuticals for improved Nutrition and Better Human Health", amount: "100,000.00", icon: Trophy, image: grantImg2 },
+  { title: "Effect of replacement of Wheat with fava bean and black cumin flours on nutritional properties and sensory attributes of bread", amount: "62,800.00", icon: Medal, image: grantImg3 },
+  { title: "Formulation, In-Vitro evaluation & optimization of milk based oral dispersible Griseofulvin tablets prepared by direct compression method", amount: "90,750.00", icon: Star, image: grantImg4 },
+  { title: "Formulation design and physicochemical evaluation of Diabetic foot care emollient, A way to tackling diabetic foot xerosis (DFX)", amount: "89,400.00", icon: BadgeCheck, image: grantImg1 },
 ];
 
 function FlaskIcon({ className }: { className?: string }) {
@@ -41,7 +46,9 @@ function SparkleIcon({ className }: { className?: string }) {
   return <svg className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><path d="m12 3-1.912 5.813a2 2 0 0 1-1.275 1.275L3 12l5.813 1.912a2 2 0 0 1 1.275 1.275L12 21l1.912-5.813a2 2 0 0 1 1.275-1.275L21 12l-5.813-1.912a2 2 0 0 1-1.275-1.275L12 3Z"/></svg>;
 }
 
-const containerVariants = {
+import type { Variants } from "framer-motion";
+
+const containerVariants: Variants = {
   hidden: { opacity: 0 },
   visible: {
     opacity: 1,
@@ -49,7 +56,7 @@ const containerVariants = {
   }
 };
 
-const itemVariants = {
+const itemVariants: Variants = {
   hidden: { opacity: 0, y: 30 },
   visible: { opacity: 1, y: 0, transition: { duration: 0.6, ease: "easeOut" } }
 };
@@ -259,26 +266,6 @@ const Grants = () => {
         </div>
       </section>
 
-      {/* Parallax banner - already centered */}
-      <section className="relative h-[40vh] overflow-hidden">
-        <motion.img
-          src={facilityImg}
-          alt="Research facility"
-          className="w-full h-[130%] object-cover absolute -top-[15%]"
-          initial={{ y: 0 }}
-          whileInView={{ y: -30 }}
-          viewport={{ once: true }}
-          transition={{ duration: 1.5 }}
-        />
-        <div className="absolute inset-0 bg-foreground/50 flex items-center justify-center">
-          <SectionReveal className="text-center px-6">
-            <h2 className="font-heading text-3xl md:text-4xl font-bold text-surface-dark-foreground tracking-tight">
-              Funding Tomorrow's Breakthroughs
-            </h2>
-          </SectionReveal>
-        </div>
-      </section>
-
       {/* Application CTA - already centered */}
       <section className="section-padding bg-surface-subtle relative overflow-hidden">
         <motion.div
@@ -309,7 +296,7 @@ const Grants = () => {
             <p className="mt-4 text-base md:text-lg font-body text-foreground/70 max-w-xl mx-auto">
               Applications open every January. Ethiopian healthcare professionals, researchers, and academicians are welcome to submit their proposals.
             </p>
-            <Link to="/apply">
+            <Link to="/contact">
               <Button
                 variant="default"
                 size="lg"
