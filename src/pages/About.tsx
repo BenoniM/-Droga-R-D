@@ -203,15 +203,22 @@ const HexagonalPartnersGrid = () => {
   }, []);
 
   return (
-    <div className="w-full max-w-6xl mx-auto py-12" ref={gridRef}>
-      <div className="flex flex-wrap justify-center items-center px-2 md:px-4">
+    <div className="w-full max-w-6xl mx-auto py-12 relative" ref={gridRef}>
+      {activePartner !== null && (
+        <div 
+          className="absolute inset-0 z-30 cursor-pointer" 
+          onClick={() => setActivePartner(null)}
+        />
+      )}
+      <div className="flex flex-wrap justify-center items-center px-2 md:px-4 relative z-10">
         {partners.map((partner, index) => {
           const isActive = activePartner === index;
+          const isCompressed = activePartner !== null && !isActive;
 
           return (
             <div
               key={index}
-              className={`relative w-[100px] h-[115px] md:w-[160px] md:h-[184px] transition-all duration-300 ${isActive ? 'z-40' : 'z-10'}`}
+              className={`relative w-[100px] h-[115px] md:w-[160px] md:h-[184px] transition-all duration-500 ${isActive ? 'z-40' : 'z-10'} ${isCompressed ? 'scale-[0.8] opacity-20 blur-[1px]' : 'scale-100 opacity-100'}`}
               style={{
                 margin: isMobile ? '-0.75rem 0.25rem' : '-1rem 0.5rem', // Interlocking honeycomb negative margins
               }}
