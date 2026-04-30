@@ -374,7 +374,10 @@ const Navbar = () => {
           >
             <Link
               to="/contact"
-              className="hidden lg:inline-flex h-full items-center justify-center px-8 text-sm font-bold text-white bg-black hover:bg-[#FFF200] hover:text-black transition-colors duration-300"
+              className={`hidden lg:inline-flex h-full items-center justify-center px-8 text-sm font-bold transition-colors duration-300 ${location.pathname === "/contact"
+                ? "bg-[#FFF200] text-black"
+                : "bg-black text-white hover:bg-[#FFF200] hover:text-black"
+                }`}
             >
               Contact Us
             </Link>
