@@ -177,6 +177,13 @@ const unitPillars = [
 const HexagonalPartnersGrid = () => {
   const [activePartner, setActivePartner] = useState<number | null>(null);
   const gridRef = useRef<HTMLDivElement>(null);
+  const [isMobile, setIsMobile] = useState(() => typeof window !== 'undefined' && window.innerWidth < 768);
+
+  useEffect(() => {
+    const checkMobile = () => setIsMobile(window.innerWidth < 768);
+    window.addEventListener('resize', checkMobile);
+    return () => window.removeEventListener('resize', checkMobile);
+  }, []);
 
   const togglePartner = (index: number) => {
     setActivePartner(activePartner === index ? null : index);
@@ -197,24 +204,24 @@ const HexagonalPartnersGrid = () => {
 
   return (
     <div className="w-full max-w-6xl mx-auto py-12" ref={gridRef}>
-      <div className="flex flex-wrap justify-center items-center px-4">
+      <div className="flex flex-wrap justify-center items-center px-2 md:px-4">
         {partners.map((partner, index) => {
           const isActive = activePartner === index;
 
           return (
             <div
               key={index}
-              className={`relative w-[140px] h-[160px] md:w-[160px] md:h-[184px] transition-all duration-300 ${isActive ? 'z-40' : 'z-10'}`}
+              className={`relative w-[100px] h-[115px] md:w-[160px] md:h-[184px] transition-all duration-300 ${isActive ? 'z-40' : 'z-10'}`}
               style={{
-                margin: '-1rem 0.5rem', // Interlocking honeycomb negative margins
+                margin: isMobile ? '-0.75rem 0.25rem' : '-1rem 0.5rem', // Interlocking honeycomb negative margins
               }}
             >
               {/* The expanded container uses absolute positioning to overlay without moving siblings */}
               <div
                 onClick={() => togglePartner(index)}
                 className={`absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 cursor-pointer transition-all duration-500 ease-[cubic-bezier(0.34,1.56,0.64,1)] ${isActive
-                  ? 'w-[300px] h-[345px] md:w-[360px] md:h-[415px]'
-                  : 'w-[140px] h-[160px] md:w-[160px] md:h-[184px]'
+                  ? 'w-[280px] h-[320px] md:w-[360px] md:h-[415px]'
+                  : 'w-[100px] h-[115px] md:w-[160px] md:h-[184px]'
                   }`}
                 style={{
                   filter: isActive
@@ -261,6 +268,13 @@ const About = () => {
   const [activeUnit, setActiveUnit] = useState<number | null>(null);
   const [hexActive, setHexActive] = useState(false);
   const [hexSpots, setHexSpots] = useState<any[]>([]);
+  const [isMobile, setIsMobile] = useState(() => typeof window !== 'undefined' && window.innerWidth < 768);
+
+  useEffect(() => {
+    const checkMobile = () => setIsMobile(window.innerWidth < 768);
+    window.addEventListener('resize', checkMobile);
+    return () => window.removeEventListener('resize', checkMobile);
+  }, []);
 
   useEffect(() => {
     // Randomize spots for the manufacturing section
@@ -387,7 +401,7 @@ const About = () => {
     const videos = gsap.utils.toArray<HTMLElement>('.pillar-video');
     const video = videos[0];
 
-    if (wrappers.length === 4 && video) {
+    if (wrappers.length === 4 && video && window.innerWidth >= 768) {
       const tl = gsap.timeline({
         scrollTrigger: {
           trigger: ".pillars-pin-target",
@@ -428,18 +442,18 @@ const About = () => {
             transition={{ duration: 0.9, delay: 0.2 }}
           >
             <span className="text-sm font-bold uppercase tracking-[0.3em] text-[#FFF200]">About Us</span>
-            <h1 className="font-heading text-6xl md:text-8xl lg:text-9xl font-bold tracking-tighter text-white mt-4 leading-none whitespace-nowrap">
+            <h1 className="font-heading text-6xl md:text-8xl lg:text-9xl font-bold tracking-tighter text-white mt-4 leading-none whitespace-normal md:whitespace-nowrap">
               Our Story
             </h1>
             <div className="w-24 h-1 bg-[#FFF200] mt-6 origin-left section-line" />
             <p className="mt-6 text-lg md:text-xl text-white/80 max-w-lg leading-relaxed">
               Advancing pharmaceutical research, innovation, and quality through scientific excellence since 2021.
             </p>
-            <div className="flex gap-4 mt-8">
-              <Button size="lg" asChild className="bg-[#FFF200] text-black hover:bg-white transition-all duration-300 font-bold">
+            <div className="flex flex-col sm:flex-row gap-4 mt-8">
+              <Button size="lg" asChild className="bg-[#FFF200] text-black hover:bg-white transition-all duration-300 font-bold w-full sm:w-auto h-auto py-3">
                 <Link to="/droga-science">Explore Research</Link>
               </Button>
-              <Button variant="outline" size="lg" asChild className="border-white/80 text-white bg-white/10 backdrop-blur-sm hover:bg-white hover:text-black transition-all duration-300 font-bold">
+              <Button variant="outline" size="lg" asChild className="border-white/80 text-white bg-white/10 backdrop-blur-sm hover:bg-white hover:text-black transition-all duration-300 font-bold w-full sm:w-auto h-auto py-3">
                 <Link to="/contact">Contact Us</Link>
               </Button>
             </div>
@@ -459,23 +473,23 @@ const About = () => {
               Droga Research and<br className="hidden md:block" /> Development Department
             </h2>
           </SectionReveal>
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 mt-12">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 md:gap-16 mt-6 md:mt-12">
             <SectionReveal>
               <div className="space-y-6 text-lg text-muted-foreground font-body leading-relaxed">
                 <p>
                   Established in 2021, the Droga Research and Development Department is one of the major wings of Droga Pharma PLC, a diversified private company operating mainly in healthcare services and agricultural exports. The company has evolved from a pharmaceutical wholesale and importing business into an integrated healthcare group with a strong national presence and expanding operations across multiple African markets.
                 </p>
-                <p>
+                <p className="hidden md:block">
                   This wing was established with the vision of becoming a state-of-the-art research center and providing quality research services that address challenges in conducting effective research in the country. It also focuses on identifying and addressing problems related to the nutritional and medicinal needs of society.
                 </p>
               </div>
             </SectionReveal>
             <SectionReveal delay={0.15}>
-              <div className="space-y-6 text-lg text-muted-foreground font-body leading-relaxed">
-                <p>
+              <div className="space-y-0 md:space-y-6 text-lg text-muted-foreground font-body leading-relaxed">
+                <p className="hidden md:block">
                   The R&D division comprises four major units: the bioequivalence and analytical laboratory, drug discovery and development unit, food & nutraceutical unit, and cosmetic & detergent unit. Under these units, research activities such as drug discovery, characterization, food development, organic cosmetic development, and related research are undertaken. Furthermore, analytical services are also offered.
                 </p>
-                <div className="pt-4">
+                <div className="pt-0 md:pt-4">
                   <Button variant="outline" size="lg" asChild className="border-black text-black hover:bg-[#FFF200] hover:border-[#FFF200] hover:text-black transition-all duration-300 font-bold">
                     <Link to="/droga-science">Learn More <ArrowRight className="w-4 h-4 ml-2" /></Link>
                   </Button>
@@ -485,13 +499,14 @@ const About = () => {
           </div>
         </div>
       </section>
+      
       {/* 02 Major Units — Pillar style like Home Page */}
       <section className="relative overflow-hidden bg-white pillars-section">
         <div className="section-padding relative w-full h-full pillars-pin-target">
 
-          {/* Background Video */}
-          <div className="absolute inset-x-0 top-0 mt-4 md:mt-8 flex justify-center pointer-events-none z-0 overflow-hidden">
-            <div className="w-[90%] md:w-[45%] lg:w-[23%] h-[550px] relative rounded-[0.3rem] overflow-hidden opacity-90 pillar-video border border-black/10">
+          {/* Background Video — normal flow on mobile (above cards), absolute on desktop */}
+          <div className="hidden md:flex absolute inset-x-0 top-0 mt-8 justify-center pointer-events-none z-0 overflow-hidden">
+            <div className="w-[45%] lg:w-[23%] h-[550px] relative rounded-[0.3rem] overflow-hidden opacity-90 pillar-video border border-black/10">
               <video
                 src={pillarVideo}
                 autoPlay
@@ -503,65 +518,73 @@ const About = () => {
             </div>
           </div>
 
-          <div className="w-full max-w-[96%] mx-auto px-4 relative z-10 mix-blend-difference pt-12">
+          {/* Mobile video — in normal flow, above cards */}
+          <div className="md:hidden flex justify-center pointer-events-none mb-8">
+            <div className="w-[90%] h-[240px] relative rounded-[0.3rem] overflow-hidden opacity-90 pillar-video border border-black/10">
+              <video src={pillarVideo} autoPlay loop muted playsInline className="w-full h-full object-cover" />
+            </div>
+          </div>
+
+          <div className="w-full max-w-[96%] mx-auto px-4 relative z-10 md:mix-blend-difference pt-4 md:pt-12">
             <SectionReveal>
               <div className="flex flex-col items-center justify-center mb-2">
-                <span className="block text-center text-sm md:text-base font-bold uppercase tracking-[0.2em] text-white">
+                <span className="block text-center text-sm md:text-base font-bold uppercase tracking-[0.2em] text-black md:text-white">
                   Scientific Focus
                 </span>
-                <div className="w-12 h-px bg-white mt-4" />
+                <div className="w-12 h-px bg-black md:bg-white mt-4" />
               </div>
-              <h2 className="font-heading text-4xl md:text-5xl font-semibold tracking-tight mt-4 text-white text-center">
+              <h2 className="font-heading text-4xl md:text-5xl font-semibold tracking-tight mt-4 text-black md:text-white text-center">
                 Major Units
               </h2>
             </SectionReveal>
           </div>
 
           <div className="w-full max-w-[96%] mx-auto px-4 relative z-10">
-            <div className="flex flex-col md:flex-row md:flex-wrap lg:flex-nowrap gap-6 mt-16 perspective-1000 pillar-card-container">
+            <div className="grid grid-cols-2 md:flex md:flex-row md:flex-wrap lg:flex-nowrap gap-4 md:gap-6 mt-16 perspective-1000 pillar-card-container">
               {unitPillars.map((pillar, index) => {
                 const isActive = activeUnit === index;
-                const isCompressed = activeUnit !== null && !isActive;
+                const isCompressed = activeUnit !== null && !isActive && !isMobile;
 
                 return (
                   <div
                     key={pillar.title}
-                    className={`pillar-wrapper duration-700 ease-[cubic-bezier(0.16,1,0.3,1)] w-full md:w-[calc(50%-0.75rem)] lg:w-auto lg:min-w-0 ${isActive ? 'pillar-flex-active' : isCompressed ? 'pillar-flex-compressed' : 'pillar-flex-default'}`}
+                    className={`pillar-wrapper transition-all duration-700 ease-[cubic-bezier(0.16,1,0.3,1)] md:w-[calc(50%-0.75rem)] lg:w-auto lg:min-w-0 ${isMobile ? (isActive ? 'col-span-2' : '') : (isActive ? 'pillar-flex-active' : isCompressed ? 'pillar-flex-compressed' : 'pillar-flex-default')}`}
                     style={{ transitionProperty: 'flex, width' }}
                   >
                     <div
-                      className={`pillar-card relative h-[550px] rounded-[0.3rem] overflow-hidden border border-black/10 bg-white/70 backdrop-blur-md transition-all duration-700 flex flex-col items-center p-8 ${isActive ? 'shadow-[0_20px_40px_rgb(0,0,0,0.08)] -translate-y-2' : ''}`}
+                      className={`pillar-card relative rounded-[0.3rem] overflow-hidden border border-black/10 bg-white/70 backdrop-blur-md transition-all duration-700 flex flex-col items-center p-4 md:p-8
+                        ${isMobile ? (isActive ? 'h-auto min-h-[260px]' : 'h-[200px]') : `h-[550px] ${isActive ? 'shadow-[0_20px_40px_rgb(0,0,0,0.08)] -translate-y-2' : ''}`}`}
                     >
                       {/* Default State: Title & Icon */}
-                      <div className={`w-full text-center transition-all duration-700 ${isActive ? '-translate-y-4' : ''} ${isCompressed ? 'opacity-0 scale-75 pointer-events-none' : 'opacity-100 scale-100'}`}>
-                        <h3 className="font-heading text-xl lg:text-2xl font-bold text-black leading-tight h-16 flex items-center justify-center whitespace-pre-line">
+                      <div className={`w-full text-center transition-all duration-700 ${!isMobile && isActive ? '-translate-y-4' : ''} ${isCompressed ? 'opacity-0 scale-75 pointer-events-none' : 'opacity-100 scale-100'}`}>
+                        <h3 className="font-heading text-sm md:text-xl lg:text-2xl font-bold text-black leading-tight flex items-center justify-center whitespace-pre-line min-h-[2.5rem] md:h-16">
                           {pillar.title}
                         </h3>
                       </div>
 
-                      <div className={`absolute inset-0 flex items-center justify-center transition-all duration-700 ${isActive ? 'scale-75 -translate-y-8 opacity-20' : ''} ${isCompressed ? 'opacity-0 scale-50 pointer-events-none' : 'opacity-100'}`}>
-                        <pillar.icon className="w-20 h-20 lg:w-24 lg:h-24 text-[#FFF200]" strokeWidth={1} />
+                      <div className={`${isMobile ? 'flex-1 flex' : 'absolute inset-0 flex'} items-center justify-center transition-all duration-700 ${!isMobile && isActive ? 'scale-75 -translate-y-8 opacity-20' : ''} ${isCompressed ? 'opacity-0 scale-50 pointer-events-none' : 'opacity-100'}`}>
+                        <pillar.icon className="w-10 h-10 md:w-20 md:h-20 lg:w-24 lg:h-24 text-[#FFF200]" strokeWidth={1} />
                       </div>
 
                       {/* Compressed State: Vertical Title */}
-                      <div className={`absolute inset-0 flex items-center justify-center transition-all duration-700 pointer-events-none ${isCompressed ? 'opacity-100 delay-200' : 'opacity-0'}`}>
+                      <div className={`hidden md:flex absolute inset-0 items-center justify-center transition-all duration-700 pointer-events-none ${isCompressed ? 'opacity-100 delay-200' : 'opacity-0'}`}>
                         <h3 className="font-heading text-2xl font-bold text-black tracking-widest whitespace-nowrap -rotate-90">
                           {pillar.title}
                         </h3>
                       </div>
 
                       {/* Default Summary Text at the bottom */}
-                      <div className={`absolute bottom-20 left-8 right-8 text-center transition-all duration-700 ${isActive || isCompressed ? 'opacity-0 translate-y-4 pointer-events-none' : 'opacity-100 translate-y-0'}`}>
+                      <div className={`hidden md:block absolute bottom-20 left-8 right-8 text-center transition-all duration-700 ${isActive || isCompressed ? 'opacity-0 translate-y-4 pointer-events-none' : 'opacity-100 translate-y-0'}`}>
                         <p className="text-sm text-black/70 font-body">
                           {pillar.summary}
                         </p>
                       </div>
 
                       {/* Button to show detail */}
-                      <div className={`absolute bottom-6 left-0 right-0 flex justify-center transition-all duration-700 z-10 ${isCompressed ? 'opacity-0 pointer-events-none' : 'opacity-100'}`}>
+                      <div className={`${isMobile ? 'mt-2 flex justify-center' : 'absolute bottom-6 left-0 right-0 flex justify-center'} transition-all duration-700 z-10 ${isCompressed ? 'opacity-0 pointer-events-none' : 'opacity-100'}`}>
                         <Button
                           variant="outline"
-                          className="rounded-full border-black/20 text-xs text-black uppercase tracking-wider bg-white/50 backdrop-blur hover:bg-[#FFF200] hover:text-black hover:border-[#FFF200] transition-colors"
+                          className="rounded-full border-black/20 text-[10px] md:text-xs text-black uppercase tracking-wider bg-white/50 backdrop-blur hover:bg-[#FFF200] hover:text-black hover:border-[#FFF200] transition-colors px-3 py-1 md:px-4 md:py-2"
                           onClick={(e) => {
                             e.stopPropagation();
                             setActiveUnit(isActive ? null : index);
@@ -572,7 +595,7 @@ const About = () => {
                       </div>
 
                       {/* Details slide up */}
-                      <div className={`absolute inset-x-0 bottom-0 transition-all duration-700 ease-in-out bg-white p-6 h-[75%] border-t border-black/5 overflow-y-auto custom-scrollbar ${isActive ? 'translate-y-0 opacity-100 pointer-events-auto' : 'translate-y-full opacity-0 pointer-events-none'}`}>
+                      <div className={`${isMobile ? 'w-full mt-3 border-t border-black/10 pt-3' : 'absolute inset-x-0 bottom-0 h-[75%] border-t border-black/5'} transition-all duration-700 ease-in-out bg-white p-3 md:p-6 overflow-y-auto custom-scrollbar ${isMobile ? (isActive ? 'block' : 'hidden') : (isActive ? 'translate-y-0 opacity-100 pointer-events-auto' : 'translate-y-full opacity-0 pointer-events-none')}`}>
                         <div className="space-y-8">
                           {pillar.details.map((detail, i) => (
                             <div key={i}>
@@ -623,7 +646,7 @@ const About = () => {
                 </div>
 
                 {/* Image Container */}
-                <div className="w-full lg:w-[70%] h-[400px] lg:h-[550px] relative overflow-hidden mt-12 lg:mt-0">
+                <div className="w-full lg:w-[70%] h-[250px] md:h-[400px] lg:h-[550px] relative overflow-hidden mt-12 lg:mt-0">
                   <img src={facilityImg} alt="Bioanalytical Lab" className="w-full h-[130%] -top-[15%] absolute object-cover about-parallax-img" />
                 </div>
 
@@ -684,7 +707,7 @@ const About = () => {
                 </div>
 
                 {/* Image Container */}
-                <div className="w-full lg:w-[70%] h-[400px] lg:h-[550px] relative overflow-hidden mt-12 lg:mt-0 order-1 lg:order-2">
+                <div className="w-full lg:w-[70%] h-[250px] md:h-[400px] lg:h-[550px] relative overflow-hidden mt-12 lg:mt-0 order-1 lg:order-2">
                   <img src={labImg} alt="Research Lab" className="w-full h-[130%] -top-[15%] absolute object-cover about-parallax-img" />
                 </div>
               </div>
@@ -825,13 +848,9 @@ const About = () => {
                   <div className="w-12 h-px bg-black origin-left section-line" />
                   <span className="text-sm font-bold uppercase tracking-[0.2em] text-black/60">Our Vision</span>
                 </div>
-                <h3 className="font-heading text-4xl md:text-5xl font-black text-black leading-tight mb-8">
-                  To become a premier<br />
-                  <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#2D3748] to-[#2D3748]/60">Research Center</span>
+                <h3 className="font-heading text-3xl md:text-4xl font-semibold text-black leading-tight mb-8">
+                  Vision: To be the leading integrated healthcare ecosystem provider in Ethiopia.
                 </h3>
-                <p className="text-lg text-black/70 font-medium leading-relaxed">
-                  Providing quality research services that address challenges in conducting effective research, and addressing problems related to the nutritional and medicinal needs of the society.
-                </p>
               </SectionReveal>
             </div>
 
@@ -847,20 +866,9 @@ const About = () => {
                   <div className="w-12 h-px bg-black origin-left section-line" />
                   <span className="text-sm font-bold uppercase tracking-[0.2em] text-black/60">Our Mission</span>
                 </div>
-                <div className="space-y-8">
-                  <div className="flex gap-4 items-start">
-                    <span className="font-heading text-xl font-bold text-[#FFF200] bg-black w-10 h-10 flex items-center justify-center shrink-0">01</span>
-                    <p className="text-black/80 font-medium leading-relaxed">To conduct research primarily on identifying the potential of local herbs and formulating them into modern pharmaceutical products.</p>
-                  </div>
-                  <div className="flex gap-4 items-start">
-                    <span className="font-heading text-xl font-bold text-[#FFF200] bg-black w-10 h-10 flex items-center justify-center shrink-0">02</span>
-                    <p className="text-black/80 font-medium leading-relaxed">To serve as an incubator by accommodating different researchers with innovative ideas.</p>
-                  </div>
-                  <div className="flex gap-4 items-start">
-                    <span className="font-heading text-xl font-bold text-[#FFF200] bg-black w-10 h-10 flex items-center justify-center shrink-0">03</span>
-                    <p className="text-black/80 font-medium leading-relaxed">To conduct high-level research including new drug discovery and product development.</p>
-                  </div>
-                </div>
+                <h3 className="font-heading text-3xl md:text-4xl font-semibold text-black leading-tight mb-8">
+                  Mission: We provide integrated, quality, and innovative healthcare products and services that enhance the health and well-being of every community we serve.
+                </h3>
               </SectionReveal>
             </div>
           </div>

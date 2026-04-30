@@ -348,9 +348,9 @@ const Services = () => {
             <h2 className="font-heading text-4xl md:text-5xl font-bold tracking-tight mt-4 text-foreground leading-tight">Type of Tests in Phase I</h2>
           </SectionReveal>
 
-          <div className="mt-20 space-y-32">
+          <div className="mt-12 md:mt-20 space-y-16 md:space-y-32">
             {/* Raw Material Testing */}
-            <div className="relative pt-16 lg:pt-24 mb-32">
+            <div className="relative pt-16 lg:pt-24 mb-16 md:mb-32">
               <div className="flex flex-col lg:flex-row relative items-start lg:items-center">
                 {/* Dark Top Title */}
                 <div className="absolute -top-8 left-0 lg:left-[5%] z-20 bg-black px-6 py-4 md:px-10 md:py-6 shadow-md w-auto max-w-[90%]">
@@ -360,12 +360,12 @@ const Services = () => {
                 </div>
 
                 {/* Image Container */}
-                <div className="w-full lg:w-[70%] h-[400px] relative overflow-hidden mt-12 lg:mt-0 rounded-sm">
+                <div className="w-full lg:w-[70%] h-[250px] md:h-[400px] relative overflow-hidden mt-12 lg:mt-0 rounded-sm">
                   <img src={labImg} alt="Raw Material Testing" className="w-full h-[130%] -top-[15%] absolute object-cover svc-parallax-img" />
                 </div>
 
                 {/* Content Box */}
-                <div className="w-[90%] mx-auto lg:w-[45%] lg:absolute lg:right-0 lg:top-1/2 lg:-translate-y-1/2 z-10 bg-[#FFF200] p-8 md:p-12 shadow-xl -mt-16 lg:mt-0 relative facility-info-box">
+                <div className="w-[90%] mx-auto lg:w-[45%] lg:absolute lg:right-0 lg:top-1/2 lg:-translate-y-1/2 z-10 bg-[#FFF200] p-8 md:p-12 shadow-xl -mt-8 md:-mt-16 lg:mt-0 relative facility-info-box">
                   <SectionReveal delay={0.2}>
                     <h4 className="font-heading text-2xl md:text-3xl font-black text-black mb-6 uppercase leading-tight tracking-tight">
                       Ensuring Quality at the Source
@@ -384,7 +384,7 @@ const Services = () => {
             </div>
 
             {/* Finished Product Testing */}
-            <div className="relative pt-16 lg:pt-24 mb-16">
+            <div className="relative pt-16 lg:pt-24 mb-8 md:mb-16">
               <div className="flex flex-col lg:flex-row relative items-start lg:items-center justify-end">
                 {/* Dark Top Title */}
                 <div className="absolute -top-8 right-0 lg:right-[5%] z-20 bg-black px-6 py-4 md:px-10 md:py-6 shadow-md w-auto max-w-[90%] text-right">
@@ -394,7 +394,7 @@ const Services = () => {
                 </div>
 
                 {/* Content Box */}
-                <div className="w-[90%] mx-auto lg:w-[45%] lg:absolute lg:left-0 lg:top-1/2 lg:-translate-y-1/2 z-10 bg-white p-8 md:p-12 shadow-xl border border-black/5 -mt-16 lg:mt-0 relative order-2 lg:order-1 facility-info-box">
+                <div className="w-[90%] mx-auto lg:w-[45%] lg:absolute lg:left-0 lg:top-1/2 lg:-translate-y-1/2 z-10 bg-white p-8 md:p-12 shadow-xl border border-black/5 -mt-8 md:-mt-16 lg:mt-0 relative order-2 lg:order-1 facility-info-box">
                   <SectionReveal delay={0.2}>
                     <h4 className="font-heading text-2xl md:text-3xl font-black text-black mb-6 uppercase leading-tight tracking-tight">
                       Comprehensive Validation
@@ -411,7 +411,7 @@ const Services = () => {
                 </div>
 
                 {/* Image Container */}
-                <div className="w-full lg:w-[70%] h-[400px] relative overflow-hidden mt-12 lg:mt-0 order-1 lg:order-2 rounded-sm">
+                <div className="w-full lg:w-[70%] h-[250px] md:h-[400px] relative overflow-hidden mt-12 lg:mt-0 order-1 lg:order-2 rounded-sm">
                   <img src={facilityImg} alt="Finished Product Testing" className="w-full h-[130%] -top-[15%] absolute object-cover svc-parallax-img" />
                 </div>
               </div>
@@ -427,18 +427,30 @@ const Services = () => {
           <img src={logoImg} alt="Droga Logo" className="w-[500px] h-[500px] object-contain filter blur-[10px]" />
         </div>
 
-        <div className="container-grid relative w-full mb-12 z-10">
+        <div className="container-grid relative w-full mb-12 z-10 px-6">
           <div className="absolute -left-4 top-0 font-heading text-[10rem] md:text-[14rem] font-black text-black/[0.04] leading-none select-none pointer-events-none section-number">03</div>
-          <SectionReveal>
-            <div className="flex items-center gap-4 mb-2">
-              <span className="text-sm md:text-base font-bold uppercase tracking-[0.2em] text-muted-foreground">Advanced Instrumentation</span>
+          <div className="flex flex-col gap-8">
+            <SectionReveal>
+              <div className="flex items-center gap-4 mb-2">
+                <span className="text-sm md:text-base font-bold uppercase tracking-[0.2em] text-muted-foreground">Advanced Instrumentation</span>
+              </div>
+              <h2 className="font-heading text-4xl md:text-6xl font-bold tracking-tight mt-4 text-foreground leading-tight">Our Analytical Capabilities</h2>
+            </SectionReveal>
+
+            {/* Carousel Navigation Buttons - Centered and Enlarged */}
+            <div className="flex items-center justify-center gap-8 mt-4">
+              <button onClick={scrollPrev} className="carousel-prev w-16 h-16 md:w-20 md:h-20 flex items-center justify-center rounded-full bg-[#FFF200] text-black hover:scale-110 transition-all duration-300 shadow-xl border-none">
+                <ChevronLeft className="w-8 h-8 md:w-10 md:h-10" />
+              </button>
+              <button onClick={scrollNext} className="carousel-next w-16 h-16 md:w-20 md:h-20 flex items-center justify-center rounded-full bg-[#FFF200] text-black hover:scale-110 transition-all duration-300 shadow-xl border-none">
+                <ChevronRight className="w-8 h-8 md:w-10 md:h-10" />
+              </button>
             </div>
-            <h2 className="font-heading text-4xl md:text-5xl font-bold tracking-tight mt-4 text-foreground leading-tight">Our Analytical Capabilities</h2>
-          </SectionReveal>
+          </div>
         </div>
 
         {/* Horizontal Drag Wrapper */}
-        <div className="relative w-full h-[400px] flex items-center z-10 select-none">
+        <div className="relative w-full h-[300px] md:h-[400px] flex items-center z-10 select-none">
           <div className="overflow-hidden w-full h-full" ref={emblaRef}>
             <div className="flex items-center h-full py-8 cursor-grab active:cursor-grabbing">
               {[...instruments, ...instruments, ...instruments].map((inst, index) => (
@@ -446,11 +458,13 @@ const Services = () => {
                   key={`${inst.name}-${index}`}
                   className="inst-card flex-[0_0_280px] md:flex-[0_0_380px] mx-3 md:mx-4"
                 >
-                  <div className="inst-card-inner w-full h-[160px] md:h-[300px] flex flex-col items-center justify-center gap-4 p-6 bg-white/20 backdrop-blur-2xl border border-transparent rounded-2xl will-change-transform">
-                    <div className="w-36 h-36 bg-white/80 rounded-full flex items-center justify-center flex-shrink-0 shadow-sm">
-                      <inst.icon className="w-16 h-16 text-black" />
+                  <div className="inst-card-inner relative w-full h-[180px] md:h-[280px] flex flex-col items-center justify-center p-6 bg-white/10 backdrop-blur-2xl border border-white/10 rounded-2xl will-change-transform mt-12 md:mt-16">
+                    <div className="absolute -top-10 md:-top-16 w-24 h-24 md:w-36 md:h-36 bg-white rounded-full flex items-center justify-center shadow-lg border-4 border-surface-subtle">
+                      <inst.icon className="w-12 h-12 md:w-16 md:h-16 text-black" />
                     </div>
-                    <span className="font-body text-base md:text-lg text-black font-semibold text-center leading-snug">{inst.name}</span>
+                    <div className="mt-8 md:mt-12 text-center">
+                      <span className="font-body text-sm md:text-lg text-black font-bold leading-tight px-2">{inst.name}</span>
+                    </div>
                   </div>
                 </div>
               ))}
@@ -458,28 +472,18 @@ const Services = () => {
           </div>
         </div>
 
-        <div className="container-grid w-full mt-12 z-10 relative">
+        <div className="container-grid w-full mt-8 md:mt-12 z-10 relative px-6">
           <SectionReveal delay={0.2}>
-            <div className="flex items-center justify-center gap-6 lg:gap-12">
-              {/* Left Button (Prev) */}
-              <button onClick={scrollPrev} className="carousel-prev w-16 h-16 flex items-center justify-center rounded-full bg-[#FFF200] text-black hover:scale-110 transition-all duration-300 shadow-xl border-none flex-shrink-0">
-                <ChevronLeft className="w-8 h-8" />
-              </button>
-
+            <div className="flex flex-col items-center justify-center">
               {/* Center Info Box — dynamic per focused instrument */}
-              <div className="max-w-3xl p-8 bg-white border-l-4 border-highlight rounded-r-md shadow-sm">
-                <h4 className="font-heading text-lg font-bold text-foreground mb-2 transition-all duration-300">
+              <div className="w-full max-w-3xl p-6 md:p-8 bg-white border-l-4 border-highlight rounded-r-md shadow-md">
+                <h4 className="font-heading text-lg md:text-xl font-bold text-foreground mb-3 transition-all duration-300">
                   {baseInstruments[focusedInst].name}
                 </h4>
-                <p className="text-foreground/80 text-base italic font-medium leading-relaxed text-center md:text-left transition-all duration-300">
+                <p className="text-foreground/80 text-sm md:text-base italic font-medium leading-relaxed transition-all duration-300">
                   {baseInstruments[focusedInst].desc}
                 </p>
               </div>
-
-              {/* Right Button (Next) */}
-              <button onClick={scrollNext} className="carousel-next w-16 h-16 flex items-center justify-center rounded-full bg-[#FFF200] text-black hover:scale-110 transition-all duration-300 shadow-xl border-none flex-shrink-0">
-                <ChevronRight className="w-8 h-8" />
-              </button>
             </div>
           </SectionReveal>
         </div>
@@ -590,8 +594,13 @@ const Services = () => {
                       </h3>
 
                       {/* Description — expands on active */}
-                      <div className={`overflow-hidden transition-all duration-500 ease-in-out ${activeIndex === i ? "max-h-32 opacity-100 mt-4" : "max-h-0 opacity-0"}`}>
-                        <p className="text-base text-muted-foreground leading-relaxed max-w-md">{item.desc}</p>
+                      <div className={`overflow-hidden transition-all duration-500 ease-in-out ${activeIndex === i ? "max-h-[500px] opacity-100 mt-4" : "max-h-0 opacity-0"}`}>
+                        <p className="text-base text-muted-foreground leading-relaxed max-w-md mb-4">{item.desc}</p>
+                        
+                        {/* Mobile Image */}
+                        <div className="lg:hidden w-full h-[200px] rounded-md overflow-hidden relative shadow-sm">
+                          <img src={item.img} alt={item.title} className="w-full h-full object-cover" />
+                        </div>
                       </div>
                     </div>
 
