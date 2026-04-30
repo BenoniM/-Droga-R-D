@@ -1,14 +1,13 @@
+import { useRef } from "react";
 import { Link } from "react-router-dom";
-import { motion } from "framer-motion";
+import { motion, useScroll, useTransform } from "framer-motion";
+import type { Variants } from "framer-motion";
 import { Award, Medal, Trophy, Star, BadgeCheck, Crown, FileCheck, Users, ShieldCheck, Clock } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import SectionReveal from "@/components/SectionReveal";
 import heroImg from "@/assets/Images/IMG_4582.jpg";
-import labImg from "@/assets/Images/IMG_4528.jpg";
-import facilityImg from "@/assets/Images/IMG_4514.jpg";
-
 import grantImg1 from "@/assets/Grant/hgfj.png";
 import grantImg2 from "@/assets/Grant/jy.png";
 import grantImg3 from "@/assets/Grant/tyte.png";
@@ -46,27 +45,151 @@ function SparkleIcon({ className }: { className?: string }) {
   return <svg className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><path d="m12 3-1.912 5.813a2 2 0 0 1-1.275 1.275L3 12l5.813 1.912a2 2 0 0 1 1.275 1.275L12 21l1.912-5.813a2 2 0 0 1 1.275-1.275L21 12l-5.813-1.912a2 2 0 0 1-1.275-1.275L12 3Z"/></svg>;
 }
 
-import type { Variants } from "framer-motion";
-
 const containerVariants: Variants = {
   hidden: { opacity: 0 },
-  visible: {
-    opacity: 1,
-    transition: { staggerChildren: 0.1, delayChildren: 0.2 }
-  }
+  visible: { opacity: 1, transition: { staggerChildren: 0.1, delayChildren: 0.2 } },
 };
 
 const itemVariants: Variants = {
   hidden: { opacity: 0, y: 30 },
-  visible: { opacity: 1, y: 0, transition: { duration: 0.6, ease: "easeOut" } }
+  visible: { opacity: 1, y: 0, transition: { duration: 0.6, ease: "easeOut" as const } },
 };
 
+// ── Sticky Grant Card ──────────────────────────────────────────────────────────
+
+type GrantItem = {
+  title: string;
+  amount: string;
+  icon: React.ElementType;
+  image: string;
+};
+
+function StickyGrantCard({
+  grant,
+  index,
+  total,
+  containerRef,
+}: {
+  grant: GrantItem;
+  index: number;
+  total: number;
+  containerRef: React.RefObject<HTMLDivElement>;
+}) {
+  const Icon = grant.icon;
+  const isLast = index === total - 1;
+
+  const { scrollYProgress } = useScroll({
+    target: containerRef,
+    offset: ["start start", "end end"],
+  });
+
+  const segStart = index / total;
+  const segEnd = (index + 1) / total;
+  // Only start animating in the last 15% of this card's scroll segment
+  const exitStart = segEnd - 0.15;
+
+  // Tilt + shrink as card exits — skip for last card
+  const rotate = useTransform(
+    scrollYProgress,
+    [segStart, exitStart, segEnd],
+    isLast ? [0, 0, 0] : [0, 0, -3.5]
+  );
+  const scale = useTransform(
+    scrollYProgress,
+    [segStart, exitStart, segEnd],
+    isLast ? [1, 1, 1] : [1, 1, 0.92]
+  );
+  // Only fade the text panel, not the whole card
+  const textOpacity = useTransform(
+    scrollYProgress,
+    [segStart, exitStart, segEnd],
+    isLast ? [1, 1, 1] : [1, 1, 0.4]
+  );
+  const y = useTransform(
+    scrollYProgress,
+    [segStart, exitStart, segEnd],
+    isLast ? ["0%", "0%", "0%"] : ["0%", "0%", "-5%"]
+  );
+
+  const cardBg = index % 2 === 0 ? "#ffffff" : "#fffef5";
+
+  return (
+    <div
+      className="sticky top-0 h-screen flex items-center justify-center px-4 md:px-12 bg-background"
+      style={{ zIndex: index + 1, isolation: "isolate" }}
+    >
+      <motion.div
+        style={{ rotate, scale, y, transformOrigin: "50% 110%", willChange: "auto" }}
+        className="w-full max-w-6xl rounded-2xl overflow-hidden shadow-2xl border border-black/[0.06] flex flex-col lg:flex-row"
+        transformTemplate={(_, generated) =>
+          generated === "none" || generated === "translateZ(0px) translateY(0%) scale(1) rotate(0deg)"
+            ? "none"
+            : generated
+        }
+      >
+        {/* Left: text */}
+        <motion.div
+          style={{ opacity: textOpacity, background: cardBg, willChange: "auto" }}
+          className="flex-1 flex flex-col justify-between p-10 md:p-14"
+        >
+          <span
+            className="font-heading font-bold text-[6rem] md:text-[8rem] leading-none select-none"
+            style={{ color: "rgba(0,0,0,0.06)" }}
+          >
+            {String(index + 1).padStart(2, "0")}
+          </span>
+
+          <div className="mt-auto">
+            <div className="inline-flex items-center gap-2 px-3 py-1 bg-foreground rounded-sm mb-5">
+              <Icon className="w-3.5 h-3.5 text-highlight" strokeWidth={2} />
+              <span className="text-[10px] font-bold uppercase tracking-widest text-highlight">Granted</span>
+            </div>
+
+            <h3 className="font-heading text-xl md:text-2xl font-bold text-foreground leading-snug max-w-lg">
+              {grant.title}
+            </h3>
+
+            <div className="mt-6 flex items-baseline gap-2">
+              <span className="font-heading text-3xl md:text-4xl font-bold text-foreground tabular-nums">
+                {grant.amount}
+              </span>
+              <span className="text-sm text-foreground/40 font-medium">ETB</span>
+            </div>
+
+            <div className="mt-6 h-px w-full bg-foreground/10">
+              <div
+                className="h-full bg-foreground"
+                style={{ width: `${((index + 1) / total) * 100}%` }}
+              />
+            </div>
+            <span className="mt-2 text-[10px] text-foreground/30 font-medium tracking-widest uppercase">
+              {index + 1} of {total} funded projects
+            </span>
+          </div>
+        </motion.div>
+
+        {/* Right: image */}
+        <div
+          className="w-full lg:w-[48%] aspect-[4/3] lg:aspect-auto shrink-0 overflow-hidden"
+          style={{ minHeight: "320px" }}
+        >
+          <img src={grant.image} alt={grant.title} className="w-full h-full object-cover" />
+        </div>
+      </motion.div>
+    </div>
+  );
+}
+
+// ── Page ──────────────────────────────────────────────────────────────────────
+
 const Grants = () => {
+  const stickyContainerRef = useRef<HTMLDivElement>(null);
+
   return (
     <div className="min-h-screen bg-background">
       <Navbar />
 
-      {/* Hero with image - Centered */}
+      {/* Hero */}
       <section className="relative pt-32 pb-24 px-6 overflow-hidden">
         <motion.img
           src={heroImg}
@@ -103,7 +226,7 @@ const Grants = () => {
         </div>
       </section>
 
-      {/* About DRG - already centered */}
+      {/* About DRG */}
       <section className="section-padding">
         <div className="container-grid max-w-4xl text-center mx-auto">
           <SectionReveal>
@@ -114,12 +237,14 @@ const Grants = () => {
             >
               <Trophy className="w-16 h-16 text-highlight mx-auto" strokeWidth={1} />
             </motion.div>
-            <h2 className="font-heading text-3xl md:text-4xl font-semibold tracking-tight text-foreground">Our Commitment to Advancing Pharmaceutical Research</h2>
+            <h2 className="font-heading text-3xl md:text-4xl font-semibold tracking-tight text-foreground">
+              Our Commitment to Advancing Pharmaceutical Research
+            </h2>
             <p className="mt-6 text-lg font-body text-muted-foreground leading-relaxed max-w-2xl mx-auto">
               At Droga Research Grant (DRG), we believe that meaningful health solutions start with innovative research.
               Our mission is to support both junior and senior researchers who are dedicated to improving human health
               through pharmaceutical and related research. We are particularly interested in projects that address real
-              challenges faced by our communities and country, and that have the potential to make a tangible impact on people’s lives.
+              challenges faced by our communities and country, and that have the potential to make a tangible impact on people's lives.
             </p>
             <p className="mt-4 text-md font-body text-muted-foreground leading-relaxed max-w-2xl mx-auto">
               Our goal is to empower researchers to transform ideas into solutions that improve the quality of pharmaceuticals and healthcare products.
@@ -128,13 +253,15 @@ const Grants = () => {
         </div>
       </section>
 
-      {/* Eligibility & Requirements - Centered heading */}
+      {/* Eligibility & Requirements */}
       <section className="section-padding bg-surface-subtle">
         <div className="container-grid">
           <SectionReveal>
             <div className="text-center">
               <span className="overline-dark">Who Can Apply</span>
-              <h2 className="font-heading text-3xl md:text-4xl font-semibold tracking-tight mt-4 text-foreground">Eligibility & Requirements</h2>
+              <h2 className="font-heading text-3xl md:text-4xl font-semibold tracking-tight mt-4 text-foreground">
+                Eligibility & Requirements
+              </h2>
             </div>
           </SectionReveal>
           <motion.div
@@ -148,7 +275,7 @@ const Grants = () => {
               { icon: Users, title: "Eligible Applicants", desc: "Ethiopian healthcare professionals, researchers, and academicians committed to advancing knowledge in pharmaceutical and health sciences." },
               { icon: FileCheck, title: "Submission Limit", desc: "Each applicant can submit one proposal per year." },
               { icon: ShieldCheck, title: "IRB Approval", desc: "For projects involving human subjects or animals, Institutional Review Board (IRB) approval is required before funds are released." },
-              { icon: Clock, title: "No-Cost Extensions", desc: "We consider requests for no-cost extensions only under special circumstances on a case-by-case basis." }
+              { icon: Clock, title: "No-Cost Extensions", desc: "We consider requests for no-cost extensions only under special circumstances on a case-by-case basis." },
             ].map((item) => (
               <motion.div
                 key={item.title}
@@ -165,13 +292,15 @@ const Grants = () => {
         </div>
       </section>
 
-      {/* Grant Categories - Centered heading */}
+      {/* Grant Categories */}
       <section className="section-padding">
         <div className="container-grid">
           <SectionReveal>
             <div className="text-center">
               <span className="overline-dark">Research Areas We Support</span>
-              <h2 className="font-heading text-3xl md:text-4xl font-semibold tracking-tight mt-4 text-foreground">Funded Research Areas</h2>
+              <h2 className="font-heading text-3xl md:text-4xl font-semibold tracking-tight mt-4 text-foreground">
+                Funded Research Areas
+              </h2>
               <p className="mt-4 text-muted-foreground font-body max-w-2xl mx-auto">
                 We fund research across key areas in pharmaceutical sciences and related fields.
               </p>
@@ -202,71 +331,38 @@ const Grants = () => {
         </div>
       </section>
 
-      {/* Past Achievements - Centered heading */}
-      <section className="section-padding bg-surface-subtle">
-        <div className="container-grid">
+      {/* Past Achievements — Sticky Scroll Cards */}
+      <section className="bg-background">
+        {/* Section header */}
+        <div className="container-grid py-20 border-b border-foreground/10">
           <SectionReveal>
-            <div className="text-center">
-              <span className="overline-dark">Celebrating Past Research Achievements</span>
-              <h2 className="font-heading text-3xl md:text-4xl font-semibold tracking-tight mt-4 text-foreground">Funded Research Achievements</h2>
-              <p className="mt-4 text-muted-foreground font-body max-w-2xl mx-auto">
-                Over the past four years, DRG has proudly funded projects that showcase the diversity and impact of pharmaceutical research.
-              </p>
-            </div>
+            <span className="text-xs font-bold uppercase tracking-[0.3em] text-foreground/50">
+              Celebrating Past Research
+            </span>
+            <h2 className="font-heading text-4xl md:text-5xl font-bold tracking-tight mt-4 text-foreground">
+              Funded Research<br />Achievements
+            </h2>
+            <p className="mt-4 text-muted-foreground font-body max-w-md">
+              Over the past four years, DRG has proudly funded projects that showcase the diversity and impact of pharmaceutical research.
+            </p>
           </SectionReveal>
-          <motion.div
-            className="mt-12 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"
-            variants={containerVariants}
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true }}
-          >
-            {pastGrants.map((grant, i) => {
-              const Icon = grant.icon;
-              return (
-                <motion.div
-                  key={grant.title}
-                  variants={itemVariants}
-                  whileHover={{ y: -8, transition: { duration: 0.3 } }}
-                  className="group relative bg-card rounded-sm overflow-hidden card-shadow hover:shadow-2xl transition-all duration-500"
-                >
-                  <div className="relative aspect-[16/9] overflow-hidden">
-                    <img
-                      src={grant.image}
-                      alt={grant.title}
-                      className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
-                    />
-                    <div className="absolute inset-0 bg-gradient-to-t from-foreground/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
-                    <motion.div
-                      className="absolute bottom-4 right-4"
-                      animate={{ rotate: [0, 5, -5, 0] }}
-                      transition={{ duration: 4, repeat: Infinity, ease: "easeInOut", delay: i * 0.5 }}
-                    >
-                      <div className="w-12 h-12 rounded-full bg-highlight flex items-center justify-center shadow-lg">
-                        <Icon className="w-6 h-6 text-foreground" strokeWidth={1.5} />
-                      </div>
-                    </motion.div>
-                    <div className="absolute top-4 left-4 px-3 py-1 bg-highlight rounded-sm shadow-md">
-                      <span className="text-xs font-heading font-bold text-foreground">GRANTED</span>
-                    </div>
-                  </div>
-                  <div className="p-6 group-hover:bg-highlight transition-colors duration-300">
-                    <h4 className="font-heading text-base font-bold text-foreground leading-snug line-clamp-3 group-hover:line-clamp-none transition-all duration-300">
-                      {grant.title}
-                    </h4>
-                    <div className="mt-4 flex items-center gap-2">
-                      <span className="font-heading text-xl font-bold text-foreground">{grant.amount}</span>
-                      <span className="text-sm text-muted-foreground group-hover:text-foreground/60 transition-colors duration-300">ETB</span>
-                    </div>
-                  </div>
-                </motion.div>
-              );
-            })}
-          </motion.div>
+        </div>
+
+        {/* Sticky cards */}
+        <div className="relative" ref={stickyContainerRef}>
+          {pastGrants.map((grant, i) => (
+            <StickyGrantCard
+              key={grant.title}
+              grant={grant}
+              index={i}
+              total={pastGrants.length}
+              containerRef={stickyContainerRef}
+            />
+          ))}
         </div>
       </section>
 
-      {/* Application CTA - already centered */}
+      {/* Application CTA */}
       <section className="section-padding bg-surface-subtle relative overflow-hidden">
         <motion.div
           className="absolute top-10 left-10 opacity-10"

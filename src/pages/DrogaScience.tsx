@@ -1,5 +1,5 @@
 import { useRef } from "react";
-import { motion } from "framer-motion";
+import { motion, useScroll, useTransform } from "framer-motion";
 import { useGSAP } from "@gsap/react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
@@ -27,8 +27,126 @@ const pillars = [
   { icon: Building2, title: "Bioequivalence", desc: "GCP-compliant studies for regulatory approval and quality assurance." },
 ];
 
+const labs = [
+  { title: "Research Laboratories", desc: "Drug discovery, food & nutrition, and cosmetic product development labs.", img: labImg },
+  { title: "Bioequivalence Study Units", desc: "Clinical units, medical laboratories, and bioanalytical facilities.", img: facilityImg },
+  { title: "Quality Control Units", desc: "HPLC, UV-Vis, FTIR and precision analytical instruments.", img: moleculesImg },
+  { title: "Formulation & Development", desc: "Pilot-scale development for scaling innovations to market-ready products.", img: plantsImg },
+];
+
+function StickyLabCard({
+  lab,
+  index,
+  total,
+  containerRef,
+}: {
+  lab: { title: string; desc: string; img: string };
+  index: number;
+  total: number;
+  containerRef: React.RefObject<HTMLDivElement>;
+}) {
+  const isLast = index === total - 1;
+
+  const { scrollYProgress } = useScroll({
+    target: containerRef,
+    offset: ["start start", "end end"],
+  });
+
+  const segStart = index / total;
+  const segEnd = (index + 1) / total;
+  // Only start animating in the last 15% of this card's scroll segment
+  const exitStart = segEnd - 0.15;
+
+  const rotate = useTransform(
+    scrollYProgress,
+    [segStart, exitStart, segEnd],
+    isLast ? [0, 0, 0] : [0, 0, -3.5]
+  );
+  const scale = useTransform(
+    scrollYProgress,
+    [segStart, exitStart, segEnd],
+    isLast ? [1, 1, 1] : [1, 1, 0.92]
+  );
+  const textOpacity = useTransform(
+    scrollYProgress,
+    [segStart, exitStart, segEnd],
+    isLast ? [1, 1, 1] : [1, 1, 0.4]
+  );
+  const y = useTransform(
+    scrollYProgress,
+    [segStart, exitStart, segEnd],
+    isLast ? ["0%", "0%", "0%"] : ["0%", "0%", "-5%"]
+  );
+
+  const cardBg = index % 2 === 0 ? "#ffffff" : "#fffef5";
+
+  return (
+    <div
+      className="sticky top-0 h-screen flex items-center justify-center px-4 md:px-12 bg-background"
+      style={{ zIndex: index + 1, isolation: "isolate" }}
+    >
+      <motion.div
+        style={{ rotate, scale, y, transformOrigin: "50% 110%", willChange: "auto" }}
+        className="w-full max-w-6xl rounded-2xl overflow-hidden shadow-2xl border border-black/[0.06] flex flex-col lg:flex-row"
+        transformTemplate={(_, generated) =>
+          // Only apply transform when actually animating — avoids blurry text at rest
+          generated === "none" || generated === "translateZ(0px) translateY(0%) scale(1) rotate(0deg)"
+            ? "none"
+            : generated
+        }
+      >
+        {/* Left: text */}
+        <motion.div
+          style={{ opacity: textOpacity, background: cardBg, willChange: "auto" }}
+          className="flex-1 flex flex-col justify-between p-10 md:p-14"
+        >
+          <span
+            className="font-heading font-bold text-[6rem] md:text-[8rem] leading-none select-none"
+            style={{ color: "rgba(0,0,0,0.06)" }}
+          >
+            {String(index + 1).padStart(2, "0")}
+          </span>
+
+          <div className="mt-auto">
+            <div className="inline-flex items-center gap-2 px-3 py-1 bg-foreground rounded-sm mb-5">
+              <span className="text-[10px] font-bold uppercase tracking-widest text-highlight">Laboratory</span>
+            </div>
+
+            <h3 className="font-heading text-xl md:text-2xl font-bold text-foreground leading-snug max-w-lg">
+              {lab.title}
+            </h3>
+
+            <p className="mt-4 text-base text-muted-foreground leading-relaxed max-w-md">
+              {lab.desc}
+            </p>
+
+            <div className="mt-8 h-px w-full bg-foreground/10">
+              <div
+                className="h-full bg-foreground"
+                style={{ width: `${((index + 1) / total) * 100}%` }}
+              />
+            </div>
+            <span className="mt-2 text-[10px] text-foreground/30 font-medium tracking-widest uppercase">
+              {index + 1} of {total} facilities
+            </span>
+          </div>
+        </motion.div>
+
+        {/* Right: image — no opacity */}
+        <div
+          className="w-full lg:w-[48%] aspect-[4/3] lg:aspect-auto shrink-0 overflow-hidden"
+          style={{ minHeight: "320px" }}
+        >
+          <img src={lab.img} alt={lab.title} className="w-full h-full object-cover" />
+        </div>
+      </motion.div>
+    </div>
+  );
+}
+
 const DrogaScience = () => {
   const statsRef = useRef<HTMLElement>(null);
+  const labsContainerRef = useRef<HTMLDivElement>(null);
 
   useGSAP(() => {
     const segments = gsap.utils.toArray<HTMLElement>('.stats-segment', statsRef.current!);
@@ -167,44 +285,30 @@ const DrogaScience = () => {
         </div>
       </section>
 
-      {/* Labs & Facilities with images */}
-      <section id="labs" className="section-padding">
-        <div className="container-grid">
+      {/* Labs & Facilities — Sticky Scroll Cards */}
+      <section id="labs" className="bg-background">
+        <div className="container-grid py-20 border-b border-foreground/10">
           <SectionReveal>
-            <h2 className="font-heading text-4xl font-semibold tracking-tight mt-4 text-foreground">Laboratory</h2>
+            <span className="text-xs font-bold uppercase tracking-[0.3em] text-foreground/50">Facilities</span>
+            <h2 className="font-heading text-4xl md:text-5xl font-bold tracking-tight mt-4 text-foreground">
+              Laboratory &<br />Facilities
+            </h2>
+            <p className="mt-4 text-muted-foreground font-body max-w-md">
+              State-of-the-art infrastructure supporting every stage of pharmaceutical research and development.
+            </p>
           </SectionReveal>
-          <div className="mt-12 space-y-12">
-            {[
-              { title: "Research Laboratories", desc: "Drug discovery, food & nutrition, and cosmetic product development labs.", img: labImg },
-              { title: "Bioequivalence Study Units", desc: "Clinical units, medical laboratories, and bioanalytical facilities.", img: facilityImg },
-              { title: "Quality Control Units", desc: "HPLC, UV-Vis, FTIR and precision analytical instruments.", img: moleculesImg },
-              { title: "Formulation & Development", desc: "Pilot-scale development for scaling innovations to market-ready products.", img: plantsImg },
-            ].map((lab, i) => (
-              <motion.div
-                key={lab.title}
-                initial={{ opacity: 0, x: i % 2 === 0 ? -60 : 60 }}
-                whileInView={{ opacity: 1, x: 0 }}
-                viewport={{ once: true, margin: "-50px" }}
-                transition={{ duration: 1.2, delay: i * 0.15, ease: [0.25, 1, 0.5, 1] }}
-                style={{ willChange: "transform, opacity" }}
-              >
-                <Link to="/droga-science/labs">
-                  <motion.div
-                    whileHover={{ y: -5 }}
-                    className="group flex flex-col md:flex-row gap-8 items-center bg-surface-subtle rounded-sm overflow-hidden hover:bg-highlight transition-all duration-300 cursor-pointer"
-                  >
-                    <div className="w-full md:w-1/2 h-64 md:h-80 overflow-hidden">
-                      <img src={lab.img} alt={lab.title} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" />
-                    </div>
-                    <div className="w-full md:w-1/2 p-8 md:p-12 flex flex-col justify-center">
-                      <h4 className="font-heading text-2xl md:text-3xl font-bold text-foreground mb-4">{lab.title}</h4>
-                      <p className="text-base text-muted-foreground group-hover:text-foreground/70 leading-relaxed transition-colors duration-300">{lab.desc}</p>
-                    </div>
-                  </motion.div>
-                </Link>
-              </motion.div>
-            ))}
-          </div>
+        </div>
+
+        <div className="relative" ref={labsContainerRef}>
+          {labs.map((lab, i) => (
+            <StickyLabCard
+              key={lab.title}
+              lab={lab}
+              index={i}
+              total={labs.length}
+              containerRef={labsContainerRef}
+            />
+          ))}
         </div>
       </section>
 
