@@ -21,9 +21,19 @@ const queryClient = new QueryClient();
 
 const ScrollToTop = () => {
   const { pathname } = useLocation();
+
   useEffect(() => {
-    window.scrollTo({ top: 0, behavior: "smooth" });
+    // Disable browser's automatic scroll restoration on refresh
+    if ("scrollRestoration" in window.history) {
+      window.history.scrollRestoration = "manual";
+    }
+  }, []);
+
+  useEffect(() => {
+    // Force instant scroll to top on route change or refresh
+    window.scrollTo(0, 0);
   }, [pathname]);
+
   return null;
 };
 

@@ -437,13 +437,13 @@ const Services = () => {
               <h2 className="font-heading text-4xl md:text-6xl font-bold tracking-tight mt-4 text-foreground leading-tight">Our Analytical Capabilities</h2>
             </SectionReveal>
 
-            {/* Carousel Navigation Buttons - Centered and Enlarged */}
-            <div className="flex items-center justify-center gap-8 mt-4">
-              <button onClick={scrollPrev} className="carousel-prev w-16 h-16 md:w-20 md:h-20 flex items-center justify-center rounded-full bg-[#FFF200] text-black hover:scale-110 transition-all duration-300 shadow-xl border-none">
-                <ChevronLeft className="w-8 h-8 md:w-10 md:h-10" />
+            {/* Carousel Navigation Buttons - Mobile Only */}
+            <div className="flex md:hidden items-center justify-center gap-8 mt-4">
+              <button onClick={scrollPrev} className="carousel-prev w-16 h-16 flex items-center justify-center rounded-full bg-[#FFF200] text-black hover:scale-110 transition-all duration-300 shadow-xl border-none">
+                <ChevronLeft className="w-8 h-8" />
               </button>
-              <button onClick={scrollNext} className="carousel-next w-16 h-16 md:w-20 md:h-20 flex items-center justify-center rounded-full bg-[#FFF200] text-black hover:scale-110 transition-all duration-300 shadow-xl border-none">
-                <ChevronRight className="w-8 h-8 md:w-10 md:h-10" />
+              <button onClick={scrollNext} className="carousel-next w-16 h-16 flex items-center justify-center rounded-full bg-[#FFF200] text-black hover:scale-110 transition-all duration-300 shadow-xl border-none">
+                <ChevronRight className="w-8 h-8" />
               </button>
             </div>
           </div>
@@ -474,7 +474,13 @@ const Services = () => {
 
         <div className="container-grid w-full mt-8 md:mt-12 z-10 relative px-6">
           <SectionReveal delay={0.2}>
-            <div className="flex flex-col items-center justify-center">
+            <div className="flex items-center justify-center gap-6 md:gap-12 w-full max-w-5xl mx-auto">
+              
+              {/* Prev Button - Desktop Only */}
+              <button onClick={scrollPrev} className="hidden md:flex carousel-prev w-16 h-16 md:w-20 md:h-20 items-center justify-center rounded-full bg-[#FFF200] text-black hover:scale-110 transition-all duration-300 shadow-xl border-none shrink-0">
+                <ChevronLeft className="w-8 h-8 md:w-10 md:h-10" />
+              </button>
+
               {/* Center Info Box — dynamic per focused instrument */}
               <div className="w-full max-w-3xl p-6 md:p-8 bg-white border-l-4 border-highlight rounded-r-md shadow-md">
                 <h4 className="font-heading text-lg md:text-xl font-bold text-foreground mb-3 transition-all duration-300">
@@ -484,6 +490,12 @@ const Services = () => {
                   {baseInstruments[focusedInst].desc}
                 </p>
               </div>
+
+              {/* Next Button - Desktop Only */}
+              <button onClick={scrollNext} className="hidden md:flex carousel-next w-16 h-16 md:w-20 md:h-20 items-center justify-center rounded-full bg-[#FFF200] text-black hover:scale-110 transition-all duration-300 shadow-xl border-none shrink-0">
+                <ChevronRight className="w-8 h-8 md:w-10 md:h-10" />
+              </button>
+              
             </div>
           </SectionReveal>
         </div>
