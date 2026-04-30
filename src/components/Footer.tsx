@@ -44,11 +44,11 @@ const Footer = () => {
         <div className="w-1/5 h-full bg-highlight translate-y-full footer-segment"></div>
       </div>
 
-      <div className="container relative z-10 mx-auto px-4 md:px-6 py-12 md:py-16 footer-content invisible">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 md:gap-12">
+      <div className="container relative z-10 mx-auto px-4 md:px-6 py-10 md:py-16 footer-content invisible">
+        <div className="grid grid-cols-2 lg:grid-cols-4 gap-x-6 gap-y-10 md:gap-12">
           {/* Brand with Logo - Centered on mobile, left on desktop */}
-          <div className="text-center md:text-left">
-            <div className="flex flex-col items-center md:items-start gap-3 mb-4">
+          <div className="col-span-2 lg:col-span-1 text-center md:text-left">
+            <div className="flex flex-row items-center md:items-start gap-3 mb-3 justify-center md:justify-start">
               <img 
                 src={logo} 
                 alt="Droga R&D Logo" 
@@ -65,7 +65,7 @@ const Footer = () => {
           </div>
 
           {/* Quick Links - Centered on mobile, left on desktop */}
-          <div className="text-center md:text-left">
+          <div className="col-span-1 text-center md:text-left">
             <h4 className="font-heading text-xs font-black uppercase tracking-widest text-foreground mb-6">Quick Links</h4>
             <ul className="space-y-3">
               {["About Us", "Services", "Droga Science", "News", "Contact"].map((link) => (
@@ -82,7 +82,7 @@ const Footer = () => {
           </div>
 
           {/* Research - Centered on mobile, left on desktop */}
-          <div className="text-center md:text-left">
+          <div className="col-span-1 text-center md:text-left">
             <h4 className="font-heading text-xs font-black uppercase tracking-widest text-foreground mb-6">Research</h4>
             <ul className="space-y-3">
               {["Grants", "Projects", "Publications", "Labs & Facilities"].map((link) => (
@@ -99,9 +99,9 @@ const Footer = () => {
           </div>
 
           {/* Contact - Centered on mobile, left on desktop */}
-          <div className="text-center md:text-left">
+          <div className="col-span-2 lg:col-span-1 text-center md:text-left">
             <h4 className="font-heading text-xs font-black uppercase tracking-widest text-foreground mb-6">Contact</h4>
-            <ul className="space-y-4">
+            <ul className="space-y-3">
               <li className="flex items-center justify-center md:justify-start gap-3 text-sm font-medium text-foreground/70">
                 <Mail className="w-4 h-4 mt-0.5 shrink-0" />
                 <span>rnd1@drogapharma.com</span>
@@ -110,15 +110,15 @@ const Footer = () => {
                 <Phone className="w-4 h-4 mt-0.5 shrink-0" />
                 <span>info@drogapharma.com</span>
               </li>
-              <li className="flex items-start justify-center md:justify-start gap-3 text-sm font-medium text-foreground/70">
+              <li className="flex flex-row items-start justify-center md:justify-start gap-3 text-sm font-medium text-foreground/70">
                 <MapPin className="w-4 h-4 mt-0.5 shrink-0" />
-                <span className="text-left">Abuare, Woreda 07, Arada Sub City, Addis Ababa, Ethiopia</span>
+                <span className="text-center md:text-left max-w-[250px] md:max-w-none">Abuare, Woreda 07, Arada Sub City, Addis Ababa, Ethiopia</span>
               </li>
             </ul>
           </div>
         </div>
 
-        <div className="mt-12 md:mt-16 pt-8 border-t border-foreground/20 flex flex-col md:flex-row justify-between items-center gap-4">
+        <div className="mt-8 md:mt-16 pt-8 border-t border-foreground/20 flex flex-col md:flex-row justify-between items-center gap-4">
           <p className="text-xs font-medium text-foreground/60 text-center md:text-left">
             © 2026 Droga Research and Development Center. All rights reserved.
           </p>

@@ -309,6 +309,7 @@ const Index = () => {
   const [activeProjectDetail, setActiveProjectDetail] = useState<number | null>(null);
   const [hexActive, setHexActive] = useState(false);
   const [hexSpots, setHexSpots] = useState<any[]>([]);
+  const [isMobile, setIsMobile] = useState(() => typeof window !== 'undefined' && window.innerWidth < 768);
 
   useEffect(() => {
     // Randomize spots per segment on refresh
@@ -377,6 +378,12 @@ const Index = () => {
   }, []);
 
   useEffect(() => {
+    const checkMobile = () => setIsMobile(window.innerWidth < 768);
+    window.addEventListener('resize', checkMobile);
+    return () => window.removeEventListener('resize', checkMobile);
+  }, []);
+
+  useEffect(() => {
     const interval = setInterval(() => {
       setCurrentSlide(prev => {
         setPrevSlide(prev);
@@ -401,52 +408,19 @@ const Index = () => {
   useEffect(() => {
     if (currentSlide !== displayIndex && textRef.current) {
       const subtitleBlocks = gsap.utils.toArray<HTMLElement>(textRef.current.querySelectorAll('.subtitle-reveal-container .reveal-block'));
-
-      // Grab the fixed horizontal bars and reverse them so index 0 is the BOTTOM bar
       const descBoxes = gsap.utils.toArray<HTMLElement>(textRef.current.querySelectorAll('.desc-reveal-box')).reverse();
+      const mob = window.innerWidth < 768;
+      const coverOrigin = mob ? 'top' : 'bottom';
+      const revealOrigin = mob ? 'bottom' : 'top';
 
       const tl = gsap.timeline();
-
       tl.addLabel("startCover");
-
-      // Wipe UP to cover (scaleY 0 -> 1, origin bottom)
-      tl.to(subtitleBlocks, {
-        scaleY: 1,
-        transformOrigin: "bottom",
-        duration: 0.5,
-        ease: "power2.inOut"
-      }, "startCover");
-
-      tl.to(descBoxes, {
-        scaleY: 1,
-        transformOrigin: "bottom",
-        duration: 0.5,
-        ease: "power2.inOut",
-        stagger: 0.15 // Stagger bottom-to-top
-      }, "startCover");
-
-      // Change text while safely covered
-      tl.call(() => {
-        setDisplayIndex(currentSlide);
-      });
-
+      tl.to(subtitleBlocks, { scaleY: 1, transformOrigin: coverOrigin, duration: 0.5, ease: "power2.inOut" }, "startCover");
+      tl.to(descBoxes, { scaleY: 1, transformOrigin: coverOrigin, duration: 0.5, ease: "power2.inOut", stagger: 0.15 }, "startCover");
+      tl.call(() => { setDisplayIndex(currentSlide); });
       tl.addLabel("startReveal");
-
-      // Wipe UP to reveal (scaleY 1 -> 0, origin top)
-      tl.to(subtitleBlocks, {
-        scaleY: 0,
-        transformOrigin: "top",
-        duration: 0.5,
-        ease: "power2.inOut"
-      }, "startReveal");
-
-      tl.to(descBoxes, {
-        scaleY: 0,
-        transformOrigin: "top",
-        duration: 0.5,
-        ease: "power2.inOut",
-        stagger: 0.15 // Reveal bottom-to-top
-      }, "startReveal");
+      tl.to(subtitleBlocks, { scaleY: 0, transformOrigin: revealOrigin, duration: 0.5, ease: "power2.inOut" }, "startReveal");
+      tl.to(descBoxes, { scaleY: 0, transformOrigin: revealOrigin, duration: 0.5, ease: "power2.inOut", stagger: 0.15 }, "startReveal");
     }
   }, [currentSlide, displayIndex]);
 
@@ -465,7 +439,7 @@ const Index = () => {
     // Research Impact 5-Segment Reveal
     const segments = gsap.utils.toArray<HTMLElement>('.section-segment');
     const impactCols = gsap.utils.toArray<HTMLElement>('.impact-col');
-    if (segments.length === 5 && impactCols.length === 5) {
+    if (segments.length === 5 && impactCols.length === 5 && window.innerWidth >= 768) {
       const getSegs = (indices: number[]) => indices.map(i => segments[i]);
       const getImpactCols = (indices: number[]) => indices.map(i => impactCols[i]);
 
@@ -505,12 +479,42 @@ const Index = () => {
         .to(".impact-header", { autoAlpha: 1, duration: 0.15 }, 0.80);
     }
 
+    // Mobile Impact Stats Scrub
+    const mobileImpactCols = gsap.utils.toArray<HTMLElement>('.mobile-impact-col');
+    if (mobileImpactCols.length > 0 && window.innerWidth < 768) {
+      const tl = gsap.timeline({
+        scrollTrigger: {
+          trigger: ".mobile-impact-section",
+          start: "top 80%",
+          end: "bottom 80%",
+          scrub: 1.5,
+        }
+      });
+      
+      const updateTextMob = (index: number, val: number) => {
+        const col = mobileImpactCols[index];
+        const textEl = col.querySelector('.count-text');
+        const suffix = col.dataset.suffix || "";
+        if (textEl) textEl.innerHTML = Math.round(val).toLocaleString() + suffix;
+      };
+
+      mobileImpactCols.forEach((col, i) => {
+        const c = { val: 0 };
+        tl.to(c, { 
+          val: parseInt(col.dataset.end || "0"), 
+          duration: 1, 
+          ease: "none", 
+          onUpdate: () => updateTextMob(i, c.val) 
+        }, 0);
+      });
+    }
+
     // Pillar Section Scroll Flow
     const wrappers = gsap.utils.toArray<HTMLElement>('.pillar-wrapper');
     const videos = gsap.utils.toArray<HTMLElement>('.pillar-video');
     const video = videos[0];
 
-    if (wrappers.length === 4 && video) {
+    if (wrappers.length === 4 && video && window.innerWidth >= 768) {
       const tl = gsap.timeline({
         scrollTrigger: {
           trigger: ".pillars-pin-target",
@@ -519,9 +523,8 @@ const Index = () => {
           scrub: true,
         }
       });
-
       tl.fromTo(video, { y: 600 }, { y: 0, duration: 1, ease: "power2.out" })
-        .fromTo([wrappers[1], wrappers[2]], { y: 600 }, { y: 35, duration: 1, ease: "power2.out" }, "+=0.1") // Wait for 0.5 units of scroll before center pillars
+        .fromTo([wrappers[1], wrappers[2]], { y: 600 }, { y: 35, duration: 1, ease: "power2.out" }, "+=0.1")
         .fromTo([wrappers[0], wrappers[3]], { y: 600 }, { y: 35, duration: 1, ease: "power2.out" }, "-=0.1");
     }
 
@@ -618,17 +621,19 @@ const Index = () => {
     );
 
     // Freeze the entire main content (Featured Projects + Facility) when Facility hits bottom
-    ScrollTrigger.create({
-      trigger: ".main-content-wrapper",
-      start: "bottom bottom",
-      pin: true,
-      pinSpacing: false, // Allows News section to scroll OVER the frozen page!
-    });
+    if (window.innerWidth >= 768) {
+      ScrollTrigger.create({
+        trigger: ".main-content-wrapper",
+        start: "bottom bottom",
+        pin: true,
+        pinSpacing: false,
+      });
+    }
 
     // Latest News 3-Segment Reveal
     const newsSegments = gsap.utils.toArray<HTMLElement>('.news-segment');
     const newsCols = gsap.utils.toArray<HTMLElement>('.news-content-col');
-    if (newsSegments.length === 3 && newsCols.length === 3) {
+    if (newsSegments.length === 3 && newsCols.length === 3 && window.innerWidth >= 768) {
       const getNewsSegs = (indices: number[]) => indices.map(i => newsSegments[i]);
       const getNewsCols = (indices: number[]) => indices.map(i => newsCols[i]);
 
@@ -716,9 +721,9 @@ const Index = () => {
       {/* Hero Section */}
       <section className="relative h-screen flex flex-col md:flex-row overflow-hidden hero-section z-10 bg-background">
 
-        {/* Left Segment: Texts and Links */}
+        {/* Text — bottom on mobile, left on desktop */}
         <div
-          className="w-full md:w-1/2 h-1/2 md:h-full flex flex-col justify-center px-6 md:px-12 lg:px-20 z-20 relative pt-20 md:pt-0"
+          className="order-last md:order-none w-full md:w-1/2 h-1/2 md:h-full flex flex-col justify-center px-6 md:px-12 lg:px-20 z-20 relative"
           ref={textRef}
         >
           <div className="mb-4 md:mb-6">
@@ -738,7 +743,7 @@ const Index = () => {
               </span>
             </div>
           </div>
-          <h1 className="font-heading text-4xl md:text-5xl lg:text-6xl font-bold tracking-tighter leading-[1.05] text-foreground">
+          <h1 className="font-heading text-[1.65rem] sm:text-4xl md:text-5xl lg:text-6xl font-bold tracking-tighter leading-[1.05] text-foreground">
             Droga Research And <br className="hidden lg:block" /> Development Center
           </h1>
           <div className="mt-6 md:mt-8 min-h-[100px] md:min-h-[120px] relative w-full overflow-hidden">
@@ -752,23 +757,23 @@ const Index = () => {
               ))}
             </div>
           </div>
-          <div className="flex flex-wrap gap-4">
-            <Button variant="default" size="lg" asChild className="bg-black text-white hover:bg-[#FFF200] hover:text-black transition-all duration-300 border-none">
+          <div className="flex gap-2 md:flex-wrap md:gap-4">
+            <Button variant="default" size="lg" asChild className="flex-1 md:flex-none bg-black text-white hover:bg-[#FFF200] hover:text-black transition-all duration-300 border-none text-xs md:text-base px-3 md:px-6">
               <Link to="/droga-science">Explore Research</Link>
             </Button>
-            <Button variant="default" size="lg" asChild className="bg-transparent border border-foreground text-foreground hover:bg-foreground hover:text-background transition-all duration-300">
+            <Button variant="default" size="lg" asChild className="flex-1 md:flex-none bg-transparent border border-foreground text-foreground hover:bg-foreground hover:text-background transition-all duration-300 text-xs md:text-base px-3 md:px-6">
               <Link to="/droga-science/projects">View Projects</Link>
             </Button>
           </div>
         </div>
 
-        {/* Right Segment: Full Height Stacking Images */}
-        <div className="w-full md:w-1/2 h-1/2 md:h-full relative overflow-hidden bg-muted">
+        {/* Image — top on mobile, right on desktop */}
+        <div className="order-first md:order-none w-full md:w-1/2 h-1/2 md:h-full relative overflow-hidden bg-muted">
           {heroSlidesData.map((slide, i) => {
             const isCurrent = i === currentSlide;
             const isPrev = i === prevSlide;
 
-            let transform = 'translateY(100%) scale(1)';
+            let transform: string;
             let zIndex = 0;
             let transition = 'none';
 
@@ -777,72 +782,98 @@ const Index = () => {
               zIndex = 2;
               transition = 'transform 1.2s cubic-bezier(0.77, 0, 0.175, 1)';
             } else if (isPrev) {
-              transform = 'translateY(-15%) scale(0.95)';
+              transform = isMobile ? 'translateY(15%) scale(0.95)' : 'translateY(-15%) scale(0.95)';
               zIndex = 1;
               transition = 'transform 1.2s cubic-bezier(0.77, 0, 0.175, 1)';
+            } else {
+              transform = isMobile ? 'translateY(-100%) scale(1)' : 'translateY(100%) scale(1)';
             }
 
             return (
-              <div
-                key={i}
-                className="absolute inset-0 w-full h-full overflow-hidden"
-                style={{
-                  transform,
-                  zIndex,
-                  transition,
-                }}
-              >
+              <div key={i} className="absolute inset-0 w-full h-full overflow-hidden" style={{ transform, zIndex, transition }}>
                 <img src={slide.image} className="w-full h-full object-cover" alt={slide.subtitle} />
                 <div className="absolute inset-0 bg-black/10" />
               </div>
             );
           })}
+          {/* Gradient for navbar clearance on mobile */}
+          <div className="absolute inset-x-0 top-0 h-20 bg-gradient-to-b from-black/25 to-transparent md:hidden pointer-events-none z-10" />
         </div>
       </section>
 
       {/* Research Impact Stats */}
-      <section className="relative z-20 h-[60vh] md:h-[60vh] research-impact-section overflow-hidden">
+      <section className="relative z-20 research-impact-section overflow-hidden h-auto md:h-[60vh]">
 
-        {/* Header - Static, invisible until end */}
-        <div className="absolute inset-x-0 top-0 pt-8 md:pt-20 pointer-events-none z-20">
-          <div className="text-center impact-header invisible">
-            <span className="text-xs md:text-sm font-bold uppercase tracking-[0.2em] text-muted-foreground block text-center w-full">Research Impact</span>
-            <h2 className="font-heading text-3xl md:text-4xl font-semibold tracking-tight mt-2 text-foreground text-center">
-              Measurable Results
-            </h2>
+        {/* MOBILE: Simple static stats grid (with scrub) */}
+        <div className="md:hidden bg-white py-14 px-6 mobile-impact-section">
+          <div className="text-center mb-10">
+            <span className="text-xs font-bold uppercase tracking-[0.2em] text-muted-foreground block">Research Impact</span>
+            <h2 className="font-heading text-3xl font-semibold tracking-tight mt-2 text-foreground">Measurable Results</h2>
+          </div>
+          <div className="grid grid-cols-2 gap-4 max-w-sm mx-auto">
+            <div className="text-center border border-black/5 rounded-lg py-6 px-3 bg-white shadow-sm mobile-impact-col" data-end="12" data-suffix="+">
+              <div className="font-heading text-3xl font-bold text-foreground count-text">0+</div>
+              <div className="mt-2 text-[10px] font-body text-muted-foreground uppercase tracking-wider">Projects</div>
+            </div>
+            <div className="text-center border border-black/5 rounded-lg py-6 px-3 bg-white shadow-sm mobile-impact-col" data-end="17" data-suffix="+">
+              <div className="font-heading text-3xl font-bold text-foreground count-text">0+</div>
+              <div className="mt-2 text-[10px] font-body text-muted-foreground uppercase tracking-wider">Research Partners</div>
+            </div>
+            <div className="text-center border border-black/5 rounded-lg py-6 px-3 bg-white shadow-sm mobile-impact-col" data-end="5" data-suffix="">
+              <div className="font-heading text-3xl font-bold text-foreground count-text">0</div>
+              <div className="mt-2 text-[10px] font-body text-muted-foreground uppercase tracking-wider">Grant Funded</div>
+            </div>
+            <div className="text-center border border-black/5 rounded-lg py-6 px-3 bg-white shadow-sm mobile-impact-col" data-end="300" data-suffix=" sq.m">
+              <div className="font-heading text-3xl font-bold text-foreground count-text">0 sq.m</div>
+              <div className="mt-2 text-[10px] font-body text-muted-foreground uppercase tracking-wider">Analytical Lab</div>
+            </div>
+          </div>
+          <div className="mt-4 flex justify-center">
+            <div className="text-center border border-black/5 rounded-lg py-6 px-3 bg-white shadow-sm mobile-impact-col min-w-[140px]" data-end="9951" data-suffix=" sq.m">
+              <div className="font-heading text-3xl font-bold text-foreground count-text">0 sq.m</div>
+              <div className="mt-2 text-[10px] font-body text-muted-foreground uppercase tracking-wider">R&D Center</div>
+            </div>
           </div>
         </div>
 
-        {/* 5-segment background with content perfectly pinned inside */}
-        <div className="absolute inset-0 flex  z-0">
+        {/* DESKTOP: Header - Static, invisible until GSAP reveals it */}
+        <div className="hidden md:block absolute inset-x-0 top-0 pt-8 md:pt-20 pointer-events-none z-20">
+          <div className="text-center impact-header invisible">
+            <span className="text-xs md:text-sm font-bold uppercase tracking-[0.2em] text-muted-foreground block text-center w-full">Research Impact</span>
+            <h2 className="font-heading text-3xl md:text-4xl font-semibold tracking-tight mt-2 text-foreground text-center">Measurable Results</h2>
+          </div>
+        </div>
+
+        {/* DESKTOP: 5-segment animated background */}
+        <div className="hidden md:flex absolute inset-0 z-0">
           <div className="w-1/5 h-full bg-white translate-y-full section-segment relative">
-            <div className="absolute inset-x-0 top-[140px] md:top-[220px] text-center px-1 md:px-4 impact-col" data-end="12" data-suffix="+">
-              <div className="font-heading text-lg md:text-4xl font-bold text-foreground count-text">0+</div>
-              <div className="mt-1 md:mt-2 text-[8px] md:text-xs font-body text-muted-foreground uppercase tracking-wider leading-tight">Projects</div>
+            <div className="absolute inset-x-0 top-[220px] text-center px-4 impact-col" data-end="12" data-suffix="+">
+              <div className="font-heading text-4xl font-bold text-foreground count-text">0+</div>
+              <div className="mt-2 text-xs font-body text-muted-foreground uppercase tracking-wider leading-tight">Projects</div>
             </div>
           </div>
           <div className="w-1/5 h-full bg-white translate-y-full section-segment relative">
-            <div className="absolute inset-x-0 top-[140px] md:top-[220px] text-center px-1 md:px-4 impact-col" data-end="17" data-suffix="+">
-              <div className="font-heading text-lg md:text-4xl font-bold text-foreground count-text">0+</div>
-              <div className="mt-1 md:mt-2 text-[8px] md:text-xs font-body text-muted-foreground uppercase tracking-wider leading-tight">Research Partners</div>
+            <div className="absolute inset-x-0 top-[220px] text-center px-4 impact-col" data-end="17" data-suffix="+">
+              <div className="font-heading text-4xl font-bold text-foreground count-text">0+</div>
+              <div className="mt-2 text-xs font-body text-muted-foreground uppercase tracking-wider leading-tight">Research Partners</div>
             </div>
           </div>
           <div className="w-1/5 h-full bg-white translate-y-full section-segment relative">
-            <div className="absolute inset-x-0 top-[140px] md:top-[220px] text-center px-1 md:px-4 impact-col" data-end="5" data-suffix="">
-              <div className="font-heading text-lg md:text-4xl font-bold text-foreground count-text">0</div>
-              <div className="mt-1 md:mt-2 text-[8px] md:text-xs font-body text-muted-foreground uppercase tracking-wider leading-tight">Grant Funded</div>
+            <div className="absolute inset-x-0 top-[220px] text-center px-4 impact-col" data-end="5" data-suffix="">
+              <div className="font-heading text-4xl font-bold text-foreground count-text">0</div>
+              <div className="mt-2 text-xs font-body text-muted-foreground uppercase tracking-wider leading-tight">Grant Funded</div>
             </div>
           </div>
           <div className="w-1/5 h-full bg-white translate-y-full section-segment relative">
-            <div className="absolute inset-x-0 top-[140px] md:top-[220px] text-center px-1 md:px-4 impact-col" data-end="300" data-suffix=" sq.m">
-              <div className="font-heading text-lg md:text-4xl font-bold text-foreground count-text">0 sq.m</div>
-              <div className="mt-1 md:mt-2 text-[8px] md:text-xs font-body text-muted-foreground uppercase tracking-wider leading-tight">Analytical Lab</div>
+            <div className="absolute inset-x-0 top-[220px] text-center px-4 impact-col" data-end="300" data-suffix=" sq.m">
+              <div className="font-heading text-4xl font-bold text-foreground count-text">0 sq.m</div>
+              <div className="mt-2 text-xs font-body text-muted-foreground uppercase tracking-wider leading-tight">Analytical Lab</div>
             </div>
           </div>
           <div className="w-1/5 h-full bg-white translate-y-full section-segment relative">
-            <div className="absolute inset-x-0 top-[140px] md:top-[220px] text-center px-1 md:px-4 impact-col" data-end="9951" data-suffix=" sq.m">
-              <div className="font-heading text-lg md:text-4xl font-bold text-foreground count-text">0 sq.m</div>
-              <div className="mt-1 md:mt-2 text-[8px] md:text-xs font-body text-muted-foreground uppercase tracking-wider leading-tight">R&D Center</div>
+            <div className="absolute inset-x-0 top-[220px] text-center px-4 impact-col" data-end="9951" data-suffix=" sq.m">
+              <div className="font-heading text-4xl font-bold text-foreground count-text">0 sq.m</div>
+              <div className="mt-2 text-xs font-body text-muted-foreground uppercase tracking-wider leading-tight">R&D Center</div>
             </div>
           </div>
         </div>
@@ -853,17 +884,16 @@ const Index = () => {
         {/* Our Core Research Pillars - Glassmorphism Grid */}
         <section className="relative overflow-hidden bg-background pillars-section">
           <div className="section-padding relative w-full h-full pillars-pin-target">
-            {/* Background Video */}
-            <div className="absolute inset-x-0 top-0 mt-4 md:mt-8 flex justify-center pointer-events-none z-0 overflow-hidden">
-              <div className="w-[90%] md:w-[45%] lg:w-[23%] h-[550px] relative rounded-[0.3rem] border border-black overflow-hidden opacity-90 pillar-video">
-                <video
-                  src={pillarVideo}
-                  autoPlay
-                  loop
-                  muted
-                  playsInline
-                  className="w-full h-full object-cover"
-                />
+            {/* Background Video — normal flow on mobile (above cards), absolute on desktop */}
+            <div className="hidden md:flex absolute inset-x-0 top-0 mt-8 justify-center pointer-events-none z-0 overflow-hidden">
+              <div className="w-[45%] lg:w-[23%] h-[550px] relative rounded-[0.3rem] border border-black overflow-hidden opacity-90 pillar-video">
+                <video src={pillarVideo} autoPlay loop muted playsInline className="w-full h-full object-cover" />
+              </div>
+            </div>
+            {/* Mobile video — in normal flow, above cards */}
+            <div className="md:hidden flex justify-center pointer-events-none mb-8">
+              <div className="w-[90%] h-[240px] relative rounded-[0.3rem] border border-black overflow-hidden opacity-90 pillar-video">
+                <video src={pillarVideo} autoPlay loop muted playsInline className="w-full h-full object-cover" />
               </div>
             </div>
 
@@ -881,71 +911,69 @@ const Index = () => {
               </SectionReveal>
             </div>
 
-            <div className="flex flex-col md:flex-row md:flex-wrap lg:flex-nowrap gap-6 mt-16 perspective-1000 pillar-card-container">
+            <div className="grid grid-cols-2 md:flex md:flex-row md:flex-wrap lg:flex-nowrap gap-4 md:gap-6 md:mt-16 perspective-1000 pillar-card-container">
               {pillarCards.map((pillar, index) => {
                 const isActive = activePillar === index;
-                const isCompressed = activePillar !== null && !isActive;
+                const isCompressed = activePillar !== null && !isActive && !isMobile;
 
                 return (
                   <div
                     key={pillar.title}
-                    className={`pillar-wrapper duration-700 ease-[cubic-bezier(0.16,1,0.3,1)] w-full md:w-[calc(50%-0.75rem)] lg:w-auto lg:min-w-0 ${isActive ? 'pillar-flex-active' : isCompressed ? 'pillar-flex-compressed' : 'pillar-flex-default'}`}
+                    className={`pillar-wrapper transition-all duration-700 ease-[cubic-bezier(0.16,1,0.3,1)] md:w-[calc(50%-0.75rem)] lg:w-auto lg:min-w-0 ${isMobile ? (isActive ? 'col-span-2' : '') : (isActive ? 'pillar-flex-active' : isCompressed ? 'pillar-flex-compressed' : 'pillar-flex-default')}`}
                     style={{ transitionProperty: 'flex, width' }}
                   >
                     <div
-                      className={`pillar-card relative h-[550px] rounded-[0.3rem] overflow-hidden border border-[#DBDBDB] bg-white/50 backdrop-blur-lg shadow-[0_8px_30px_rgb(0,0,0,0.04)] transition-all duration-700 flex flex-col items-center p-8 ${isActive ? 'shadow-[0_20px_40px_rgb(0,0,0,0.08)] -translate-y-2' : ''}`}
+                      className={`pillar-card relative rounded-[0.3rem] overflow-hidden border border-[#DBDBDB] bg-white/50 backdrop-blur-lg shadow-[0_8px_30px_rgb(0,0,0,0.04)] transition-all duration-700 flex flex-col items-center p-4 md:p-8
+                        ${isMobile ? (isActive ? 'h-auto min-h-[260px]' : 'h-[200px]') : `h-[550px] ${isActive ? 'shadow-[0_20px_40px_rgb(0,0,0,0.08)] -translate-y-2' : ''}`}`}
                     >
-                      {/* Default State: Title & Icon */}
-                      <div className={`w-full text-center transition-all duration-700 ${isActive ? '-translate-y-4' : ''} ${isCompressed ? 'opacity-0 scale-75 pointer-events-none' : 'opacity-100 scale-100'}`}>
-                        <h3 className="font-heading text-xl lg:text-2xl font-bold text-black leading-tight h-16 flex items-center justify-center whitespace-pre-line">
+                      {/* Title */}
+                      <div className={`w-full text-center transition-all duration-700 ${!isMobile && isActive ? '-translate-y-4' : ''} ${isCompressed ? 'opacity-0 scale-75 pointer-events-none' : 'opacity-100 scale-100'}`}>
+                        <h3 className="font-heading text-sm md:text-xl lg:text-2xl font-bold text-black leading-tight flex items-center justify-center whitespace-pre-line min-h-[2.5rem] md:h-16">
                           {pillar.title}
                         </h3>
                       </div>
 
-                      <div className={`absolute inset-0 flex items-center justify-center transition-all duration-700 ${isActive ? 'scale-75 -translate-y-8 opacity-20' : ''} ${isCompressed ? 'opacity-0 scale-50 pointer-events-none' : 'opacity-100'}`}>
-                        <pillar.icon className="w-20 h-20 lg:w-24 lg:h-24 text-[#FFF200]" strokeWidth={1} />
+                      {/* Icon */}
+                      <div className={`${isMobile ? 'flex-1 flex' : 'absolute inset-0 flex'} items-center justify-center transition-all duration-700 ${!isMobile && isActive ? 'scale-75 -translate-y-8 opacity-20' : ''} ${isCompressed ? 'opacity-0 scale-50 pointer-events-none' : 'opacity-100'}`}>
+                        <pillar.icon className="w-10 h-10 md:w-24 md:h-24 text-[#FFF200]" strokeWidth={1} />
                       </div>
 
-                      {/* Compressed State: Vertical Title */}
-                      <div className={`absolute inset-0 flex items-center justify-center transition-all duration-700 pointer-events-none ${isCompressed ? 'opacity-100 delay-200' : 'opacity-0'}`}>
+                      {/* Compressed State: Vertical Title (desktop only) */}
+                      <div className={`hidden md:flex absolute inset-0 items-center justify-center transition-all duration-700 pointer-events-none ${isCompressed ? 'opacity-100 delay-200' : 'opacity-0'}`}>
                         <h3 className="font-heading text-2xl font-bold text-black tracking-widest whitespace-nowrap -rotate-90">
                           {pillar.title}
                         </h3>
                       </div>
 
-                      {/* Default Summary Text at the bottom */}
-                      <div className={`absolute bottom-20 left-8 right-8 text-center transition-all duration-700 ${isActive || isCompressed ? 'opacity-0 translate-y-4 pointer-events-none' : 'opacity-100 translate-y-0'}`}>
-                        <p className="text-sm text-black/70 font-body">
-                          {pillar.summary}
-                        </p>
+                      {/* Summary (desktop only) */}
+                      <div className={`hidden md:block absolute bottom-20 left-8 right-8 text-center transition-all duration-700 ${isActive || isCompressed ? 'opacity-0 translate-y-4 pointer-events-none' : 'opacity-100 translate-y-0'}`}>
+                        <p className="text-sm text-black/70 font-body">{pillar.summary}</p>
                       </div>
 
-                      {/* Button to show detail */}
-                      <div className={`absolute bottom-6 left-0 right-0 flex justify-center transition-all duration-700 z-10 ${isCompressed ? 'opacity-0 pointer-events-none' : 'opacity-100'}`}>
+                      {/* Button */}
+                      <div className={`${isMobile ? 'mt-2 flex justify-center' : 'absolute bottom-6 left-0 right-0 flex justify-center'} transition-all duration-700 z-10 ${isCompressed ? 'opacity-0 pointer-events-none' : 'opacity-100'}`}>
                         <Button
                           variant="outline"
-                          className="rounded-full border-black/20 text-xs text-black uppercase tracking-wider bg-white/50 backdrop-blur hover:bg-[#FFF200] hover:text-black hover:border-[#FFF200] transition-colors"
+                          className="rounded-full border-black/20 text-[10px] md:text-xs text-black uppercase tracking-wider bg-white/50 backdrop-blur hover:bg-[#FFF200] hover:text-black hover:border-[#FFF200] transition-colors px-3 py-1 md:px-4 md:py-2"
                           onClick={(e) => {
                             e.stopPropagation();
                             setActivePillar(isActive ? null : index);
                           }}
                         >
-                          {isActive ? "Close Details" : "Touch for details"}
+                          {isActive ? 'Close' : 'Details'}
                         </Button>
                       </div>
 
-                      {/* Details slide up */}
-                      <div className={`absolute inset-x-0 bottom-0 transition-all duration-700 ease-in-out bg-white/95 backdrop-blur-2xl p-6 h-[75%] border-t border-white/30 overflow-y-auto custom-scrollbar ${isActive ? 'translate-y-0 opacity-100 pointer-events-auto' : 'translate-y-full opacity-0 pointer-events-none'}`}>
-                        <div className={`grid ${isActive ? 'grid-cols-1 md:grid-cols-2 gap-6' : 'grid-cols-1 space-y-4'}`}>
+                      {/* Details panel */}
+                      <div className={`${isMobile ? 'w-full mt-3 border-t border-black/10 pt-3' : 'absolute inset-x-0 bottom-0 h-[75%] border-t border-white/30'} transition-all duration-700 ease-in-out bg-white/95 backdrop-blur-2xl p-3 md:p-6 overflow-y-auto custom-scrollbar ${isMobile ? (isActive ? 'block' : 'hidden') : (isActive ? 'translate-y-0 opacity-100 pointer-events-auto' : 'translate-y-full opacity-0 pointer-events-none')}`}>
+                        <div className="grid grid-cols-1 gap-3">
                           {pillar.details.map((detail, i) => (
-                            <div key={i} className="mb-4 md:mb-0">
-                              <h4 className="font-heading text-sm font-bold text-black mb-2 uppercase tracking-wide border-b border-black/10 pb-1">
-                                {detail.heading}
-                              </h4>
-                              <ul className="space-y-1.5">
+                            <div key={i}>
+                              <h4 className="font-heading text-xs font-bold text-black mb-2 uppercase tracking-wide border-b border-black/10 pb-1">{detail.heading}</h4>
+                              <ul className="space-y-1">
                                 {detail.items.map((item, j) => (
-                                  <li key={j} className="flex items-start gap-2 text-xs text-black/80 font-medium">
-                                    <span className="text-highlight font-bold mt-0.5">•</span>
+                                  <li key={j} className="flex items-start gap-2 text-[11px] text-black/80 font-medium">
+                                    <span className="text-[#FFF200] font-bold mt-0.5">•</span>
                                     <span>{item}</span>
                                   </li>
                                 ))}
@@ -1124,8 +1152,36 @@ const Index = () => {
       </div> {/* End main-content-wrapper */}
 
       <div className="relative z-30">
-        {/* Latest News */}
-        <section className="relative z-20 min-h-screen section-padding latest-news-section overflow-hidden">
+
+        {/* MOBILE: Latest News — simple stacked layout */}
+        <section className="md:hidden bg-white py-14 px-5">
+          <div className="flex items-center justify-between mb-8">
+            <div>
+              <span className="text-xs font-bold uppercase tracking-[0.2em] text-muted-foreground block">Latest News</span>
+              <h2 className="font-heading text-3xl font-semibold tracking-tight mt-1 text-foreground">Recent Updates</h2>
+            </div>
+            <Link to="/news" className="flex items-center gap-1 text-sm font-heading font-medium border-2 rounded-full px-4 py-2 border-black hover:bg-[#FFF200] transition-colors">
+              All <ArrowRight className="w-3 h-3" />
+            </Link>
+          </div>
+          <div className="flex flex-col gap-5">
+            {newsItems.map((item, i) => (
+              <article key={i} className="group cursor-pointer overflow-hidden rounded-lg bg-white border border-black/5 shadow-sm transition-all duration-300 active:scale-[0.98]">
+                <div className="aspect-[16/9] overflow-hidden">
+                  <img src={item.image} alt={item.title} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
+                </div>
+                <div className="p-4">
+                  <span className="text-[11px] font-body text-muted-foreground">{item.date}</span>
+                  <h3 className="font-heading text-base font-bold mt-1 text-foreground line-clamp-2">{item.title}</h3>
+                  <p className="text-sm text-muted-foreground mt-1 line-clamp-2">{item.excerpt}</p>
+                </div>
+              </article>
+            ))}
+          </div>
+        </section>
+
+        {/* DESKTOP: Latest News — complex wipe animation */}
+        <section className="hidden md:block relative z-20 min-h-screen section-padding latest-news-section overflow-hidden">
           {/* Solid grey for anything below the 100vh overlap to prevent white gaps! */}
           <div className="absolute inset-x-0 bottom-0 top-[100vh] bg-white z-0"></div>
 
@@ -1138,21 +1194,21 @@ const Index = () => {
 
           {/* 100vh Window that clips the content while translated down */}
           <div className="absolute inset-x-0 top-0 h-[100vh] overflow-hidden pointer-events-none z-10">
-            <div className="w-[94%] mx-auto h-full pt-[15vh] md:pt-[20vh] pb-[5vh] md:pb-[10vh] flex gap-6 md:gap-10 pointer-events-auto">
+            <div className="w-[94%] mx-auto h-full pt-[20vh] pb-[10vh] flex gap-10 pointer-events-auto">
 
               {/* Left Column */}
               <div className="flex-1 flex flex-col justify-between translate-y-[100vh] news-content-col h-full">
                 <div className="pt-2">
-                  <span className="text-xs md:text-base font-bold uppercase tracking-[0.2em] text-black">Latest News</span>
+                  <span className="text-base font-bold uppercase tracking-[0.2em] text-black">Latest News</span>
                 </div>
                 <div className="mt-auto">
                   <article className="group cursor-pointer overflow-hidden rounded-sm bg-card transition-all duration-300 hover:bg-highlight hover:-translate-y-1.5 shadow-sm">
                     <div className="aspect-[16/10] bg-surface-subtle overflow-hidden">
                       <img src={newsItems[0].image} alt={newsItems[0].title} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
                     </div>
-                    <div className="p-3 md:p-6 group-hover:bg-highlight transition-colors duration-300">
-                      <span className="text-[10px] md:text-sm font-body text-muted-foreground group-hover:text-black/80 transition-colors duration-300">{newsItems[0].date}</span>
-                      <h3 className="font-heading text-sm md:text-xl font-bold mt-1 text-foreground group-hover:text-black transition-colors duration-300 line-clamp-2">{newsItems[0].title}</h3>
+                    <div className="p-6 group-hover:bg-highlight transition-colors duration-300">
+                      <span className="text-sm font-body text-muted-foreground group-hover:text-black/80 transition-colors duration-300">{newsItems[0].date}</span>
+                      <h3 className="font-heading text-xl font-bold mt-1 text-foreground group-hover:text-black transition-colors duration-300 line-clamp-2">{newsItems[0].title}</h3>
                     </div>
                   </article>
                 </div>
@@ -1165,9 +1221,9 @@ const Index = () => {
                     <div className="aspect-[16/10] bg-surface-subtle overflow-hidden">
                       <img src={newsItems[1].image} alt={newsItems[1].title} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
                     </div>
-                    <div className="p-3 md:p-6 group-hover:bg-highlight transition-colors duration-300">
-                      <span className="text-[10px] md:text-sm font-body text-muted-foreground group-hover:text-black/80 transition-colors duration-300">{newsItems[1].date}</span>
-                      <h3 className="font-heading text-sm md:text-xl font-bold mt-1 text-foreground group-hover:text-black transition-colors duration-300 line-clamp-2">{newsItems[1].title}</h3>
+                    <div className="p-6 group-hover:bg-highlight transition-colors duration-300">
+                      <span className="text-sm font-body text-muted-foreground group-hover:text-black/80 transition-colors duration-300">{newsItems[1].date}</span>
+                      <h3 className="font-heading text-xl font-bold mt-1 text-foreground group-hover:text-black transition-colors duration-300 line-clamp-2">{newsItems[1].title}</h3>
                     </div>
                   </article>
                 </div>
@@ -1176,8 +1232,8 @@ const Index = () => {
               {/* Right Column */}
               <div className="flex-1 flex flex-col justify-between translate-y-[100vh] news-content-col h-full">
                 <div className="flex justify-end pt-2">
-                  <Link to="/news" className="flex items-center gap-1 md:gap-2 text-xs md:text-base font-heading font-medium text-foreground transition-colors border-2 rounded-full px-6 py-3 border-black hover:bg-highlight hover:text-black">
-                    View All <ArrowRight className="w-3 h-3 md:w-4 md:h-4" />
+                  <Link to="/news" className="flex items-center gap-2 text-base font-heading font-medium text-foreground transition-colors border-2 rounded-full px-6 py-3 border-black hover:bg-highlight hover:text-black">
+                    View All <ArrowRight className="w-4 h-4" />
                   </Link>
                 </div>
                 <div className="mt-auto">
@@ -1185,9 +1241,9 @@ const Index = () => {
                     <div className="aspect-[16/10] bg-surface-subtle overflow-hidden">
                       <img src={newsItems[2].image} alt={newsItems[2].title} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
                     </div>
-                    <div className="p-3 md:p-6 group-hover:bg-highlight transition-colors duration-300">
-                      <span className="text-[10px] md:text-sm font-body text-muted-foreground group-hover:text-black/80 transition-colors duration-300">{newsItems[2].date}</span>
-                      <h3 className="font-heading text-sm md:text-xl font-bold mt-1 text-foreground group-hover:text-black transition-colors duration-300 line-clamp-2">{newsItems[2].title}</h3>
+                    <div className="p-6 group-hover:bg-highlight transition-colors duration-300">
+                      <span className="text-sm font-body text-muted-foreground group-hover:text-black/80 transition-colors duration-300">{newsItems[2].date}</span>
+                      <h3 className="font-heading text-xl font-bold mt-1 text-foreground group-hover:text-black transition-colors duration-300 line-clamp-2">{newsItems[2].title}</h3>
                     </div>
                   </article>
                 </div>

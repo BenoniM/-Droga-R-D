@@ -236,7 +236,7 @@ const Navbar = () => {
       // ── Closing Sequence (Reverse of Entrance) ──
       const header = document.getElementById("mobile-menu-header");
       const footer = document.getElementById("mobile-menu-footer");
-      
+
       const closeTl = gsap.timeline({
         onComplete: () => {
           gsap.set(panel, { display: "none", pointerEvents: "none" });
@@ -264,13 +264,13 @@ const Navbar = () => {
       });
 
       // 3. Hide Overlay
-      gsap.to(overlay, { 
-        opacity: 0, 
-        duration: 0.4, 
-        ease: "power2.in", 
-        onComplete: () => { 
-          if (overlay) gsap.set(overlay, { display: "none" }); 
-        } 
+      gsap.to(overlay, {
+        opacity: 0,
+        duration: 0.4,
+        ease: "power2.in",
+        onComplete: () => {
+          if (overlay) gsap.set(overlay, { display: "none" });
+        }
       });
     }
   }, [mobileMenuOpen]);
@@ -449,8 +449,8 @@ const Navbar = () => {
                   <Link
                     to={item.path}
                     className={`flex items-center justify-center w-full h-full text-center text-lg font-bold transition-all duration-300 ${isActive
-                        ? "bg-[#FFF200] text-black"
-                        : "bg-white text-black border-b border-gray-50 hover:bg-[#FFF200]/20"
+                      ? "bg-[#FFF200] text-black"
+                      : "bg-white text-black border-b border-gray-50 hover:bg-[#FFF200]/20"
                       }`}
                     onClick={() => setMobileMenuOpen(false)}
                   >
@@ -466,8 +466,8 @@ const Navbar = () => {
             <Link
               to="/contact"
               className={`flex items-center justify-center w-full h-full text-center text-lg font-bold transition-all duration-300 ${location.pathname === "/contact"
-                  ? "bg-[#FFF200] text-black"
-                  : "bg-black text-white hover:bg-[#FFF200]/80 hover:text-black"
+                ? "bg-[#FFF200] text-black"
+                : "bg-black text-white hover:bg-[#FFF200]/80 hover:text-black"
                 }`}
               onClick={() => setMobileMenuOpen(false)}
             >
