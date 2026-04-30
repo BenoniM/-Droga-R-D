@@ -21,8 +21,8 @@ import heroImg from "@/assets/Images/IMG_4582.jpg";
 import plantsImg from "@/assets/Project/pexels-hson-10636409.jpg";
 import pillarVideo from "@/assets/pillar/4909887-hd_1080_1920_30fps.mp4";
 
-import project1Img from "@/assets/Project/droga-manufacture.png";
-import project2Img from "@/assets/Project/Droga Oil Manufacturing Plant.jpg";
+import project1Img from "@/assets/Project/Droga Oil Manufacturing Plant.jpg";
+import project2Img from "@/assets/Project/droga-manufacture.png";
 import project3Img from "@/assets/Project/Soap Manufacturing.jpg";
 import project4Img from "@/assets/Project/Rosmary Manufacturing Plant.jpg";
 
@@ -425,7 +425,7 @@ const About = () => {
       <section className="relative h-[85vh] md:h-screen flex items-center overflow-hidden">
         <div className="absolute inset-0 overflow-hidden">
           <motion.img
-            src={project1Img}
+            src={project2Img}
             alt="Droga R&D"
             className="absolute inset-0 w-full h-[120%] -top-[10%] object-cover about-parallax-img"
             initial={{ scale: 1.08 }}

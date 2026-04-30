@@ -19,16 +19,16 @@ import moleculesImg from "@/assets/Images/IMG_4543.jpg";
 import plantsImg from "@/assets/Images/IMG_4565.jpg";
 import pillarVideo from "@/assets/pillar/4909887-hd_1080_1920_30fps.mp4";
 
-import project1Img from "@/assets/Project/droga-manufacture.png";
-import project2Img from "@/assets/Project/Droga Oil Manufacturing Plant.jpg";
+import project1Img from "@/assets/Project/Droga Oil Manufacturing Plant.jpg";
+import project2Img from "@/assets/Project/droga-manufacture.png";
 import project3Img from "@/assets/Project/Soap Manufacturing.jpg";
 import project4Img from "@/assets/Project/Rosmary Manufacturing Plant.jpg";
 
-import heroImg1 from "@/assets/Hero/pexels-jess-vide-9259992.jpg";
-import heroImg2 from "@/assets/Hero/pexels-mart-production-8450360.jpg";
-import heroImg3 from "@/assets/Hero/habesha_scientist_2.png";
-import heroImg4 from "@/assets/Hero/habesha_scientist.png";
-import heroImg5 from "@/assets/Hero/pexels-yaroslav-shuraev-8514588.jpg";
+import heroImg1 from "@/assets/Images/IMG_4565.jpg";
+import heroImg2 from "@/assets/Images/IMG_4582.jpg";
+import heroImg3 from "@/assets/Images/IMG_4644.jpg";
+import heroImg4 from "@/assets/Images/IMG_4543.jpg";
+import heroImg5 from "@/assets/Images/IMG_4514.jpg";
 
 const heroStackImages = [heroImg1, heroImg2, heroImg3, heroImg4, heroImg5];
 
