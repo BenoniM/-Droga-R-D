@@ -743,7 +743,7 @@ const Index = () => {
               </span>
             </div>
           </div>
-          <h1 className="font-heading text-[1.65rem] sm:text-4xl md:text-5xl lg:text-6xl font-bold tracking-tighter leading-[1.05] text-foreground">
+          <h1 className="font-heading text-4xl md:text-5xl lg:text-6xl font-bold tracking-tighter leading-[1.05] text-foreground">
             Droga Research And <br className="hidden lg:block" /> Development Center
           </h1>
           <div className="mt-6 md:mt-8 min-h-[100px] md:min-h-[120px] relative w-full overflow-hidden">
