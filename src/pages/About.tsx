@@ -203,7 +203,7 @@ const HexagonalPartnersGrid = () => {
   }, []);
 
   return (
-    <div className="w-full max-w-6xl mx-auto py-12 relative" ref={gridRef}>
+    <div className="w-full max-w-6xl mx-auto py-4 md:py-12 relative" ref={gridRef}>
       {activePartner !== null && (
         <div 
           className="absolute inset-0 z-30 cursor-pointer" 
@@ -220,7 +220,7 @@ const HexagonalPartnersGrid = () => {
               key={index}
               className={`relative w-[100px] h-[115px] md:w-[160px] md:h-[184px] transition-all duration-500 ${isActive ? 'z-40' : 'z-10'} ${isCompressed ? 'scale-[0.8] opacity-20 blur-[1px]' : 'scale-100 opacity-100'}`}
               style={{
-                margin: isMobile ? '-0.75rem 0.25rem' : '-1rem 0.5rem', // Interlocking honeycomb negative margins
+                margin: isMobile ? '1rem 0.25rem' : '-1rem 0.5rem', // Spread out vertically on mobile, interlocking on desktop
               }}
             >
               {/* The expanded container uses absolute positioning to overlay without moving siblings */}
@@ -889,7 +889,7 @@ const About = () => {
 
 
       {/* Partners */}
-      <section id="partners" className="section-padding relative overflow-hidden bg-gray-50/50">
+      <section id="partners" className="py-12 md:py-24 px-6 relative overflow-hidden bg-gray-50/50">
         <div className="container-grid text-center relative">
           <SectionReveal>
             <div className="flex items-center justify-center gap-4 mb-2">
