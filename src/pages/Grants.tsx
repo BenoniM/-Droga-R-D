@@ -1,4 +1,4 @@
-import { useRef } from "react";
+import { useRef, useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { motion, useScroll, useTransform } from "framer-motion";
 import type { Variants } from "framer-motion";
@@ -69,11 +69,13 @@ function StickyGrantCard({
   index,
   total,
   containerRef,
+  isMobile,
 }: {
   grant: GrantItem;
   index: number;
   total: number;
   containerRef: React.RefObject<HTMLDivElement>;
+  isMobile?: boolean;
 }) {
   const Icon = grant.icon;
   const isLast = index === total - 1;
@@ -115,7 +117,7 @@ function StickyGrantCard({
 
   return (
     <div
-      className="sticky top-0 h-screen flex items-center justify-center px-4 md:px-12 bg-background"
+      className="sticky top-0 h-[100dvh] flex items-center justify-center px-4 md:px-12 bg-background py-16 md:py-0"
       style={{ zIndex: index + 1, isolation: "isolate" }}
     >
       <motion.div
@@ -129,7 +131,7 @@ function StickyGrantCard({
       >
         {/* Left: text */}
         <motion.div
-          style={{ opacity: textOpacity, background: cardBg, willChange: "auto" }}
+          style={isMobile ? { background: cardBg } : { opacity: textOpacity, background: cardBg, willChange: "auto" }}
           className="flex-1 flex flex-col justify-between p-10 md:p-14"
         >
           <span
@@ -184,6 +186,13 @@ function StickyGrantCard({
 
 const Grants = () => {
   const stickyContainerRef = useRef<HTMLDivElement>(null);
+  const [isMobile, setIsMobile] = useState(() => typeof window !== 'undefined' && window.innerWidth < 768);
+
+  useEffect(() => {
+    const checkMobile = () => setIsMobile(window.innerWidth < 768);
+    window.addEventListener('resize', checkMobile);
+    return () => window.removeEventListener('resize', checkMobile);
+  }, []);
 
   return (
     <div className="min-h-screen bg-background">
@@ -334,7 +343,7 @@ const Grants = () => {
       {/* Past Achievements — Sticky Scroll Cards */}
       <section className="bg-background">
         {/* Section header */}
-        <div className="container-grid py-20 border-b border-foreground/10">
+        <div className="container-grid px-6 py-20 border-b border-foreground/10">
           <SectionReveal>
             <span className="text-xs font-bold uppercase tracking-[0.3em] text-foreground/50">
               Celebrating Past Research
@@ -357,6 +366,7 @@ const Grants = () => {
               index={i}
               total={pastGrants.length}
               containerRef={stickyContainerRef}
+              isMobile={isMobile}
             />
           ))}
         </div>

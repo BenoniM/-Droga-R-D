@@ -107,44 +107,74 @@ const Publications = () => {
                   <motion.div 
                     variants={itemVariants}
                     whileHover={{ y: -8, transition: { duration: 0.3 } }}
-                    className="group bg-card rounded-md shadow-md border-t-4 border-transparent hover:border-highlight hover:shadow-xl transition-all duration-300 p-8 cursor-pointer flex flex-col h-full"
+                    className="group bg-card hover:bg-[#FFF200] rounded-xl shadow-[0_8px_30px_rgb(0,0,0,0.04)] border border-foreground/5 hover:border-highlight/50 hover:shadow-[0_8px_30px_rgb(0,0,0,0.08)] transition-all duration-300 p-8 cursor-pointer flex flex-col h-full relative overflow-hidden"
                   >
-                    <BookOpen className="w-8 h-8 text-highlight mb-6 group-hover:scale-110 transition-transform duration-300" strokeWidth={1.5} />
-                    <h3 className="font-heading text-lg font-bold text-foreground leading-snug line-clamp-3 mb-4 group-hover:text-black transition-colors duration-300">
+                    <div className="absolute top-0 right-0 w-32 h-32 bg-highlight/10 rounded-full blur-3xl -mr-10 -mt-10 group-hover:bg-highlight/20 transition-colors duration-500" />
+                    
+                    <div className="w-12 h-12 rounded-full bg-black flex items-center justify-center mb-6 relative z-10 group-hover:scale-110 transition-transform duration-300">
+                      <BookOpen className="w-5 h-5 text-highlight" strokeWidth={2} />
+                    </div>
+                    
+                    <h3 className="font-heading text-xl font-bold text-foreground leading-snug line-clamp-3 mb-4 group-hover:text-black transition-colors duration-300 relative z-10">
                       {pub.title}
                     </h3>
-                    <p className="text-muted-foreground font-body text-sm line-clamp-4 flex-grow">
+                    
+                    <p className="text-muted-foreground font-body text-base line-clamp-4 flex-grow relative z-10">
                       {pub.shortDesc}
                     </p>
-                    <div className="mt-6 flex items-center text-black font-bold text-sm transition-colors duration-300">
-                      Read Full Details
-                      <ArrowRight className="w-4 h-4 ml-2 group-hover:translate-x-1 transition-transform duration-300" />
+                    
+                    <div className="mt-8 pt-6 border-t border-foreground/5 flex items-center justify-between relative z-10">
+                      <span className="text-foreground font-bold text-sm tracking-wide uppercase">
+                        Read Publication
+                      </span>
+                      <div className="w-8 h-8 rounded-full bg-foreground/5 flex items-center justify-center group-hover:bg-highlight group-hover:text-black transition-colors duration-300">
+                        <ArrowRight className="w-4 h-4" />
+                      </div>
                     </div>
                   </motion.div>
                 </DialogTrigger>
                 
-                <DialogContent className="max-w-3xl max-h-[85vh] overflow-y-auto">
-                  <DialogHeader>
-                    <DialogTitle className="font-heading text-xl md:text-2xl font-bold leading-snug pr-6">
-                      {pub.title}
-                    </DialogTitle>
-                  </DialogHeader>
-                  <div className="mt-6 space-y-6">
-                    <a
-                      href={pub.link}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="inline-flex items-center gap-2 px-4 py-2 bg-highlight/20 text-highlight hover:bg-highlight hover:text-black font-bold text-sm rounded-sm transition-colors duration-300"
-                    >
-                      {pub.linkText}
-                      <ExternalLink className="w-4 h-4" />
-                    </a>
-                    
-                    <div className="space-y-4">
+                <DialogContent className="max-w-4xl p-0 overflow-hidden bg-background border-foreground/10 flex flex-col !gap-0 max-h-[90vh] sm:rounded-2xl">
+                  {/* Sticky Header Area */}
+                  <div className="p-8 md:p-10 pb-8 bg-surface-subtle shrink-0 relative border-b border-foreground/5">
+                    <DialogHeader>
+                      <div className="flex flex-col md:flex-row md:items-start gap-4 md:gap-6 pr-8">
+                        <div className="w-14 h-14 rounded-2xl bg-highlight/20 flex items-center justify-center shrink-0">
+                          <BookOpen className="w-7 h-7 text-highlight" />
+                        </div>
+                        <div>
+                          <DialogTitle className="font-heading text-xl md:text-2xl font-bold leading-tight text-foreground text-left">
+                            {pub.title}
+                          </DialogTitle>
+                        </div>
+                      </div>
+                    </DialogHeader>
+                    <div className="mt-8 md:ml-20">
+                      <a
+                        href={pub.link}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="inline-flex items-center gap-2 px-6 py-3 bg-highlight text-black hover:bg-highlight/90 font-bold text-sm rounded-md transition-transform duration-300 hover:-translate-y-0.5 shadow-sm"
+                      >
+                        {pub.linkText}
+                        <ExternalLink className="w-4 h-4" />
+                      </a>
+                    </div>
+                  </div>
+
+                  {/* Scrollable Content Area */}
+                  <div className="p-8 md:p-10 overflow-y-auto">
+                    <div className="space-y-8 max-w-3xl mx-auto md:ml-10">
                       {pub.sections.map((sec, sIdx) => (
-                        <p key={sIdx} className="text-sm md:text-base text-muted-foreground font-body leading-relaxed">
-                          <strong className="text-foreground">{sec.heading}:</strong> {sec.content}
-                        </p>
+                        <div key={sIdx} className="group">
+                          <h4 className="font-heading text-lg font-bold text-foreground mb-3 flex items-center gap-3">
+                            <span className="w-2 h-2 rounded-full bg-highlight shrink-0" />
+                            {sec.heading}
+                          </h4>
+                          <p className="text-base md:text-lg text-muted-foreground font-body leading-relaxed">
+                            {sec.content}
+                          </p>
+                        </div>
                       ))}
                     </div>
                   </div>

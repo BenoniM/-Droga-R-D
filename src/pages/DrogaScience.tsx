@@ -1,4 +1,4 @@
-import { useRef } from "react";
+import { useRef, useState, useEffect } from "react";
 import { motion, useScroll, useTransform } from "framer-motion";
 import { useGSAP } from "@gsap/react";
 import gsap from "gsap";
@@ -39,11 +39,13 @@ function StickyLabCard({
   index,
   total,
   containerRef,
+  isMobile,
 }: {
   lab: { title: string; desc: string; img: string };
   index: number;
   total: number;
   containerRef: React.RefObject<HTMLDivElement>;
+  isMobile?: boolean;
 }) {
   const isLast = index === total - 1;
 
@@ -82,14 +84,13 @@ function StickyLabCard({
 
   return (
     <div
-      className="sticky top-0 h-screen flex items-center justify-center px-4 md:px-12 bg-background"
+      className="sticky top-0 h-[100dvh] flex items-center justify-center px-4 md:px-12 bg-background py-16 md:py-0"
       style={{ zIndex: index + 1, isolation: "isolate" }}
     >
       <motion.div
         style={{ rotate, scale, y, transformOrigin: "50% 110%", willChange: "auto" }}
         className="w-full max-w-6xl rounded-2xl overflow-hidden shadow-2xl border border-black/[0.06] flex flex-col lg:flex-row"
         transformTemplate={(_, generated) =>
-          // Only apply transform when actually animating — avoids blurry text at rest
           generated === "none" || generated === "translateZ(0px) translateY(0%) scale(1) rotate(0deg)"
             ? "none"
             : generated
@@ -97,8 +98,8 @@ function StickyLabCard({
       >
         {/* Left: text */}
         <motion.div
-          style={{ opacity: textOpacity, background: cardBg, willChange: "auto" }}
-          className="flex-1 flex flex-col justify-between p-10 md:p-14"
+          style={isMobile ? { background: cardBg } : { opacity: textOpacity, background: cardBg, willChange: "auto" }}
+          className="flex-1 flex flex-col justify-between p-8 md:p-14"
         >
           <span
             className="font-heading font-bold text-[6rem] md:text-[8rem] leading-none select-none"
@@ -147,6 +148,13 @@ function StickyLabCard({
 const DrogaScience = () => {
   const statsRef = useRef<HTMLElement>(null);
   const labsContainerRef = useRef<HTMLDivElement>(null);
+  const [isMobile, setIsMobile] = useState(() => typeof window !== 'undefined' && window.innerWidth < 768);
+
+  useEffect(() => {
+    const checkMobile = () => setIsMobile(window.innerWidth < 768);
+    window.addEventListener('resize', checkMobile);
+    return () => window.removeEventListener('resize', checkMobile);
+  }, []);
 
   useGSAP(() => {
     const segments = gsap.utils.toArray<HTMLElement>('.stats-segment', statsRef.current!);
@@ -287,7 +295,7 @@ const DrogaScience = () => {
 
       {/* Labs & Facilities — Sticky Scroll Cards */}
       <section id="labs" className="bg-background">
-        <div className="container-grid py-20 border-b border-foreground/10">
+        <div className="container-grid px-6 py-20 border-b border-foreground/10">
           <SectionReveal>
             <span className="text-xs font-bold uppercase tracking-[0.3em] text-foreground/50">Facilities</span>
             <h2 className="font-heading text-4xl md:text-5xl font-bold tracking-tight mt-4 text-foreground">
@@ -307,6 +315,7 @@ const DrogaScience = () => {
               index={i}
               total={labs.length}
               containerRef={labsContainerRef}
+              isMobile={isMobile}
             />
           ))}
         </div>
@@ -322,9 +331,9 @@ const DrogaScience = () => {
             { end: 300, suffix: " sq.m", label: "Analytical Lab" },
             { end: 9951, suffix: " sq.m", label: "R&D Center" }
           ].map((stat, i) => (
-            <div key={i} className="w-1/5 h-full bg-foreground translate-y-full stats-segment relative border-r border-background/10 last:border-r-0">
-              <div className="absolute inset-x-0 top-[30%] md:top-[40%] text-center px-1 md:px-4 stat-col text-surface-dark-foreground" data-end={stat.end} data-suffix={stat.suffix}>
-                <div className="font-heading text-lg md:text-3xl lg:text-4xl font-bold count-text">0{stat.suffix}</div>
+            <div key={i} className="w-1/5 h-full  bg-foreground translate-y-full stats-segment relative border-r border-background/10 last:border-r-0">
+              <div className="absolute inset-x-0 top-[40%] md:top-[40%] text-center px-1 md:px-4 stat-col text-surface-dark-foreground" data-end={stat.end} data-suffix={stat.suffix}>
+                <div className="font-heading text-3xl md:text-3xl lg:text-4xl font-bold count-text">0{stat.suffix}</div>
                 <div className="mt-2 md:mt-4 text-[8px] md:text-xs font-body text-surface-dark-foreground/70 uppercase tracking-widest font-bold leading-tight">{stat.label}</div>
               </div>
             </div>

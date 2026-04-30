@@ -119,11 +119,11 @@ const News = () => {
       <Navbar />
 
       {/* Hero Slider */}
-      <section className="flex-1 pt-20 bg-[#f5f5f3] overflow-hidden">
-        <div className="h-[calc(100vh-5rem)] flex flex-col lg:flex-row">
+      <section className="flex-1 pt-[72px] lg:pt-[80px] bg-[#f5f5f3] overflow-hidden relative">
+        <div className="min-h-[calc(100vh-5rem)] lg:h-[calc(100vh-5rem)] flex flex-col lg:flex-row w-full max-w-[1600px] mx-auto pb-8 lg:pb-0">
           {/* ── Left: Text Content ── */}
-          <div className="relative flex flex-col justify-between px-8 md:px-14 py-12 lg:py-16 w-full lg:w-[38%] shrink-0 overflow-hidden">
-            <div className="flex flex-col justify-center h-full">
+          <div className="relative flex flex-col justify-between px-6 md:px-14 py-8 lg:py-16 w-full lg:w-[42%] shrink-0 z-10 lg:h-full">
+            <div className="flex flex-col justify-center flex-1">
               <AnimatePresence mode="wait" custom={direction}>
                 <motion.div
                   key={current}
@@ -134,37 +134,29 @@ const News = () => {
                   exit="exit"
                   className="flex flex-col"
                 >
-                  {/* Category */}
-                  <span className="text-xs font-bold uppercase tracking-[0.25em] text-foreground/50 mb-4">
+                  <span className="text-[10px] md:text-xs font-bold uppercase tracking-[0.25em] text-foreground/50 mb-3 md:mb-4">
                     {article.category}
                   </span>
-
-                  {/* Title */}
-                  <h1 className="font-heading text-3xl md:text-4xl xl:text-5xl font-bold tracking-tight text-foreground leading-[1.1]">
+                  <h1 className="font-heading text-3xl md:text-4xl xl:text-5xl font-bold tracking-tight text-foreground leading-[1.15]">
                     {article.title}
                   </h1>
-
-                  {/* Excerpt */}
-                  <p className="mt-5 text-sm md:text-base text-foreground/60 leading-relaxed max-w-sm font-body">
+                  <p className="mt-4 md:mt-5 text-sm md:text-base text-foreground/60 leading-relaxed max-w-sm font-body">
                     {article.excerpt}
                   </p>
-
-                  {/* Date */}
                   <span className="mt-4 text-xs text-foreground/40 font-medium tracking-wide">
                     {article.date}
                   </span>
                 </motion.div>
               </AnimatePresence>
 
-              {/* CTA - Outside AnimatePresence to stay intact */}
               <button className="mt-8 self-start inline-flex items-center gap-2 bg-foreground text-background text-sm font-bold px-6 py-3 rounded-sm hover:bg-foreground/80 transition-colors duration-300 group">
                 Read More
                 <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform duration-300" />
               </button>
             </div>
 
-            {/* Slide counter */}
-            <div className="mt-auto pt-8 flex items-center gap-3">
+            {/* Desktop Slide counter */}
+            <div className="hidden lg:flex mt-auto pt-12 items-center gap-3">
               <span className="text-2xl font-bold font-heading text-foreground tabular-nums">
                 {String(current + 1).padStart(2, "0")}
               </span>
@@ -184,17 +176,16 @@ const News = () => {
           </div>
 
           {/* ── Right: Images ── */}
-          <div className="relative flex-1 flex items-center px-4 lg:px-8">
-            <div className="relative w-full h-[55vh] lg:h-[80%] flex items-center" style={{ perspective: "1000px" }}>
+          <div className="relative flex-1 flex flex-col justify-center px-4 md:px-8 py-4 lg:py-0 w-full min-h-[45vh] lg:min-h-0 lg:h-full">
+            <div className="relative w-full h-[38vh] md:h-[50vh] lg:h-[80%] flex items-center justify-start lg:justify-center mt-4 lg:mt-0" style={{ perspective: "1000px" }}>
               {/* Big Main (Current Article) */}
-              <div className="relative w-[72%] h-full pr-4 lg:pr-8">
+              <div className="relative w-[85%] lg:w-[75%] h-full pr-4 lg:pr-8 z-[5]">
                 <AnimatePresence mode="popLayout" initial={false}>
                   <motion.div
                     key={article.title}
                     layoutId={`card-${article.title}`}
-                    className="absolute inset-0 right-4 lg:right-8 overflow-hidden rounded-3xl"
+                    className="absolute inset-0 overflow-hidden rounded-2xl lg:rounded-3xl shadow-2xl"
                     style={{ 
-                      zIndex: 9999,
                       transformStyle: "preserve-3d",
                       transform: "translateZ(10px)"
                     }}
@@ -213,54 +204,81 @@ const News = () => {
                     <img
                       src={article.image}
                       alt={article.title}
-                      className="absolute inset-0 w-full h-full object-cover shadow-2xl"
+                      className="absolute inset-0 w-full h-full object-cover"
                     />
                   </motion.div>
                 </AnimatePresence>
               </div>
 
               {/* Small Peek (Next Article) */}
-              <div className="relative w-[28%] h-[60%]" style={{ zIndex: 10000 }}>
+              <div className="absolute right-0 top-1/2 -translate-y-1/2 lg:relative lg:top-0 lg:translate-y-0 w-[35%] lg:w-[28%] h-[65%] lg:h-[60%] lg:-ml-12 shadow-2xl rounded-xl lg:rounded-2xl border-[6px] border-[#f5f5f3]" style={{ zIndex: 10000 }}>
                 <motion.div
                   key={nextArticle.title}
                   layoutId={`card-${nextArticle.title}`}
                   onClick={() => handleManualNav(next)}
-                  className="absolute inset-0 overflow-hidden rounded-2xl cursor-pointer group"
+                  className="absolute inset-0 overflow-hidden rounded-lg lg:rounded-xl cursor-pointer group"
                   style={{ 
-                    zIndex: 10000,
                     transformStyle: "preserve-3d",
-                    transform: "translateZ(20px)"
+                    transform: "translateZ(30px)"
                   }}
                 >
                   <img
                     src={nextArticle.image}
                     alt={nextArticle.title}
-                    className="absolute inset-0 w-full h-full object-cover shadow-lg"
+                    className="absolute inset-0 w-full h-full object-cover"
                   />
-                  <div className="absolute inset-0 bg-black/20 flex flex-col justify-end p-4">
-                    <p className="text-white text-[10px] font-bold uppercase tracking-widest opacity-70">Next</p>
+                  <div className="absolute inset-0 bg-black/20 group-hover:bg-black/10 transition-colors flex flex-col justify-end p-3 lg:p-4">
+                    <p className="text-white text-[10px] font-bold uppercase tracking-widest opacity-90 drop-shadow-md">Next</p>
                   </div>
                 </motion.div>
               </div>
             </div>
+
+            {/* Mobile Controls & Counter */}
+            <div className="flex lg:hidden items-center justify-between mt-8 px-2 w-[85%]">
+              <div className="flex items-center gap-3">
+                <span className="text-xl font-bold font-heading text-foreground tabular-nums">
+                  {String(current + 1).padStart(2, "0")}
+                </span>
+                <span className="text-sm text-foreground/40 tabular-nums">
+                  / {String(newsArticles.length).padStart(2, "0")}
+                </span>
+              </div>
+              <div className="flex gap-2">
+                <button
+                  onClick={() => handleManualNav(prev)}
+                  aria-label="Previous"
+                  className="w-10 h-10 rounded-full bg-white text-foreground border border-foreground/10 flex items-center justify-center active:scale-95 transition-all shadow-sm"
+                >
+                  <ChevronLeft className="w-5 h-5" />
+                </button>
+                <button
+                  onClick={() => handleManualNav(next)}
+                  aria-label="Next"
+                  className="w-10 h-10 rounded-full bg-foreground text-background flex items-center justify-center active:scale-95 transition-all shadow-md"
+                >
+                  <ChevronRight className="w-5 h-5" />
+                </button>
+              </div>
+            </div>
           </div>
 
-            {/* Prev / Next arrows — bottom right */}
-            <div className="absolute bottom-6 right-6 flex gap-2 z-10">
-              <button
-                onClick={() => handleManualNav(prev)}
-                aria-label="Previous"
-                className="w-10 h-10 rounded-full bg-foreground text-background flex items-center justify-center hover:bg-foreground/80 transition-colors duration-300 shadow-md"
-              >
-                <ChevronLeft className="w-5 h-5" />
-              </button>
-              <button
-                onClick={() => handleManualNav(next)}
-                aria-label="Next"
-                className="w-10 h-10 rounded-full bg-foreground text-background flex items-center justify-center hover:bg-foreground/80 transition-colors duration-300 shadow-md"
-              >
-                <ChevronRight className="w-5 h-5" />
-              </button>
+          {/* Desktop Prev / Next arrows — bottom right */}
+          <div className="hidden lg:flex absolute bottom-8 right-8 gap-2 z-20">
+            <button
+              onClick={() => handleManualNav(prev)}
+              aria-label="Previous"
+              className="w-12 h-12 rounded-full bg-white text-foreground border border-foreground/10 flex items-center justify-center hover:bg-foreground hover:text-white hover:border-transparent transition-all duration-300 shadow-md group"
+            >
+              <ChevronLeft className="w-6 h-6 group-hover:-translate-x-0.5 transition-transform" />
+            </button>
+            <button
+              onClick={() => handleManualNav(next)}
+              aria-label="Next"
+              className="w-12 h-12 rounded-full bg-foreground text-white flex items-center justify-center hover:bg-highlight hover:text-black transition-all duration-300 shadow-xl group"
+            >
+              <ChevronRight className="w-6 h-6 group-hover:translate-x-0.5 transition-transform" />
+            </button>
           </div>
         </div>
       </section>
