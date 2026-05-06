@@ -1,6 +1,6 @@
 import { useRef, useState, useEffect } from "react";
 import { motion } from "framer-motion";
-import { Users, Target, Eye, FlaskConical, Droplets, Leaf, TestTube, ArrowRight } from "lucide-react";
+import { Users, Target, Eye, FlaskConical, Droplet, Apple, Microscope, Leaf, TestTube, ArrowRight } from "lucide-react";
 import { Link } from "react-router-dom";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
@@ -18,7 +18,9 @@ gsap.registerPlugin(ScrollTrigger);
 import facilityImg from "@/assets/Images/IMG_4514.jpg";
 import labImg from "@/assets/Images/IMG_4528.jpg";
 import heroImg from "@/assets/Images/IMG_4582.jpg";
-import plantsImg from "@/assets/Project/pexels-hson-10636409.jpg";
+import moleculesImg from "@/assets/Images/IMG_4543.jpg";
+import plantsImg from "@/assets/Images/IMG_4565.jpg";
+import nurseryImg from "@/assets/Project/pexels-hson-10636409.jpg";
 import pillarVideo from "@/assets/pillar/4909887-hd_1080_1920_30fps.mp4";
 
 import project1Img from "@/assets/Project/Droga Oil Manufacturing Plant.jpg";
@@ -32,7 +34,7 @@ import lotusLogo from "@/assets/Partners/Lotus.png";
 import emiLogo from "@/assets/Partners/EMI.png";
 import tekLogo from "@/assets/Partners/Tek.png";
 import dbuLogo from "@/assets/Partners/Debre Berhan.png";
-import aauLogo from "@/assets/Partners/AAU.jpg";
+import aauLogo from "@/assets/Partners/AAU.png";
 import emaLogo from "@/assets/Partners/EMA.png";
 import breezeLogo from "@/assets/Partners/Breeze.png";
 
@@ -73,101 +75,68 @@ const itemVariants = {
 
 const unitPillars = [
   {
-    title: "Drug Discovery & Development",
-    icon: FlaskConical,
-    summary: "Researching natural, herbal food and drug discovery, development and formulation.",
+    icon: Microscope,
+    title: "Drug Discovery",
+    summary: "Research of natural, herbal food and drug discovery, development and formulation.",
     details: [
       {
         heading: "Formulation Development",
-        items: [
-          "Solubility and stability improvement",
-          "Solid Oral, Oral liquid, Semi solids & Injectable",
-          "Continuous quality process",
-          "API effectiveness optimization"
-        ]
+        content: "Develops drug products through formulation studies to maximize the effectiveness and safety of API, such as improving the solubility and stability, and controlling of drug release. This wing is responsible for establishing the quality of the drug products as a continuum, from development through clinical manufacturing to commercial manufacturing. The activities under this include, but not limited to the Formulations of pharmaceuticals and Herbal medicines in forms of Solid Oral dosage forms, Oral liquid dosage forms, Semi solids & Injectable."
       },
       {
         heading: "Research Laboratory",
-        items: [
-          "Bioactive compound screening",
-          "Preclinical evaluation",
-          "Traditional & modern integration",
-          "Mechanism of action studies"
-        ]
+        content: "Our Research Laboratory serves as the core of the Drug Discovery Wing within the R&D Department, dedicated to the systematic exploration and development of novel therapeutic agents. The laboratory focuses on plant based and animal derived pharmaceutical research, integrating traditional knowledge with modern scientific methodologies to identify, evaluate, and develop effective drug candidates for a wide range of diseases and health conditions. Equipped with advanced research infrastructure and operated by a multidisciplinary team of scientists, pharmacognosy, botanists, biotechnologists, and researchers, the laboratory conducts end to end drug discovery activities. \n\nThese include bioactive compound screening, extraction and characterization of natural products, preclinical evaluation, mechanism of action studies, and safety and efficacy assessments. Our research emphasizes innovation, scientific rigor, and regulatory compliance, ensuring that all discoveries meet international quality and ethical standards. By leveraging technologies and evidence-based research approaches, the laboratory aims to transform promising natural compounds into safe, effective, and affordable pharmaceutical solutions. Through continuous innovation and collaboration, the Research Laboratory plays a vital role in advancing therapeutic discoveries, addressing unmet medical needs, and contributing to improved healthcare outcomes."
       }
     ]
   },
   {
-    title: "Food & Nutraceutical Sciences",
-    icon: Leaf,
-    summary: "Developing nutrition-based products for health, wellness, and preventive care.",
+    icon: Apple,
+    title: "Food & Nutraceutical Sciences Research",
+    summary: "Dedicated to the research and development of nutrition-based products aimed at supporting health, wellness, and preventive care.",
     details: [
       {
-        heading: "Product Focus",
-        items: [
-          "Specialized dietary formulations",
-          "Pediatric food supplements",
-          "Health support formulations",
-          "Volatile and fixed oils"
-        ]
-      },
-      {
-        heading: "Scientific Rigor",
-        items: [
-          "Ingredient standardization",
-          "Stability assessment",
-          "Safety evaluation",
-          "Regulatory compliance"
-        ]
+        content: "The Food and Nutritional Sciences Research Wing is dedicated to the research and development of nutrition-based products aimed at supporting health, wellness, and preventive care. This wing focuses on the development of specialized dietary formulations, pediatric food supplements, health support formulations, and volatile and fixed oils with recognized health benefits, primarily derived from natural sources.\n\nResearch activities are grounded in food science, nutrition, phytochemistry, and formulation science, ensuring scientifically sound and quality driven product development. The wing is supported by multidisciplinary teams composed of professionals with strong pharmacy backgrounds, working in close collaboration with partners and consultants from food science and nutrition backgrounds. This integrated approach ensures that all products are developed with both pharmaceutical rigor and food science expertise.\n\nThe team undertakes structured studies involving raw material evaluation, ingredient standardization, formulation development, stability assessment, and safety evaluation in alignment with applicable regulatory guidelines.\n\nThrough focused research, cross disciplinary collaboration, and rigorous quality practices, the Food and Nutritional Sciences Research Wing aim to deliver safe, effective, and evidence based nutritional solutions that contribute to improved health outcomes and overall wellbeing."
       }
     ]
   },
   {
-    title: "Cosmetic & Detergent R&D",
-    icon: Droplets,
-    summary: "Formulating and optimizing personal care and hygiene products.",
+    icon: Droplet,
+    title: "Cosmetic & Detergent Research and Development",
+    summary: "Dedicated to the formulation, development, and optimization of medicated and non-medicated cosmetic, personal care, and hygiene products.",
     details: [
       {
-        heading: "Scope of Work",
-        items: [
-          "Medicated skincare",
-          "Natural soaps and creams",
-          "Hair growth serums",
-          "Antiseptic formulations"
-        ]
-      },
-      {
-        heading: "Development",
-        items: [
-          "Pilot scale optimization",
-          "Process standardization",
-          "Ingredient compatibility",
-          "Performance evaluation"
-        ]
+        content: "The Cosmetic and Detergent Research and Development Wing is dedicated to the formulation, development, and optimization of medicated and non-medicated cosmetic, personal care, and hygiene products. This wing focuses on creating safe, effective, and high-quality products that meet consumer needs as well as applicable regulatory standards.\n\nThe research and development scope includes a wide range of products such as soaps, face washes, creams, lotions, serums, hair oils, hair growth serums, antiseptic formulations, and other cosmetic and detergent-based products. Emphasis is placed on scientific formulation design, ingredient compatibility, product stability, performance evaluation, and safety assessment.\n\nThe wing is supported by pilot scale development facilities, enabling formulation optimization, process standardization, and scale up studies for seamless transition from laboratory development to commercial manufacturing. Robust standard operating procedures (SOPs) are established to ensure product consistency, quality assurance, and reproducibility during scale-up and production.\n\nThrough structured research, formulation expertise, and pilot scale capabilities, the Cosmetic and Detergent Research and Development Wing plays a key role in delivering reliable, effective, and market-ready cosmetic, hair care, and hygiene products."
       }
     ]
   },
   {
-    title: "Bioequivalence & Analytical",
-    icon: TestTube,
-    summary: "Comprehensive analytical testing ensuring quality of pharmaceutical products.",
+    icon: FlaskConical,
+    title: "Bioequivalence & Analytical Laboratory",
+    summary: "Providing bioequivalence (BE) studies, pharmacokinetic studies, and comprehensive analytical testing services.",
     details: [
       {
-        heading: "BE Studies",
+        heading: "Bioequivalence studies",
+        content: "The center will provide BE studies under the following units:",
         items: [
-          "GCP compliant clinical unit",
-          "ICU facility integration",
-          "Pharmacokinetic studies",
-          "Method development"
+          "Clinical unit: the center will have a GCP compliant an independent clinical unit with all necessary instruments and housing capacity for large number of volunteers. It will also include a well-equipped ICU facility and pharmacy for storing different investigational drugs at various temperature limits.",
+          "Medical laboratory: focus on sample processing and analysis.",
+          "Bioanalytical laboratory: It offers services including Analysis of biological matrix, Bioavailability studies, Pharmacokinetic studies, Method development and validation."
         ]
       },
       {
-        heading: "Physicochemical",
+        heading: "Physicochemical analysis",
+        content: "Analysis of pharmaceutical ingredients and products (including OSD, OLD and Semisolid products). It includes:",
         items: [
-          "Raw material identification",
-          "Purity determination",
-          "Stability studies",
-          "Dissolution & assay"
+          "Raw Material Identification",
+          "Purity Determination for API and excipients",
+          "Assay",
+          "Dissolution Testing",
+          "Disintegration Testing",
+          "Hardness Testing",
+          "Friability Testing",
+          "Particle size analysis",
+          "Moisture Content Analysis",
+          "Stability Studies"
         ]
       }
     ]
@@ -237,25 +206,30 @@ const HexagonalPartnersGrid = () => {
                 }}
               >
                 <div
-                  className={`w-full h-full group flex flex-col items-center justify-center transition-colors duration-300 relative ${isActive ? 'bg-white pt-2 pb-2 px-6 md:pt-4 md:pb-4 md:px-10' : 'bg-white hover:bg-gray-50 p-0'
+                  className={`w-full h-full group flex flex-col items-center justify-center transition-colors duration-300 relative ${isActive ? 'bg-white pt-2 pb-2 px-6 md:pt-4 md:pb-4 md:px-10' : 'bg-white p-0'
                     }`}
                   style={{ clipPath: 'polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%)' }}
                 >
-                  <div className={`flex items-center justify-center shrink-0 transition-all duration-500 ${isActive ? 'w-20 h-20 md:w-28 md:h-28 mb-4' : 'w-[70%] h-[70%]'}`}>
+                  {/* Expanding circle on hover */}
+                  {!isActive && (
+                    <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-4 h-4 bg-[#FFF200] rounded-full scale-0 group-hover:scale-[20] transition-transform duration-700 ease-out z-0" />
+                  )}
+
+                  <div className={`flex items-center justify-center shrink-0 transition-all duration-500 relative z-10 ${isActive ? 'w-20 h-20 md:w-28 md:h-28 mb-4' : 'w-[70%] h-[70%]'}`}>
                     {partner.logo ? (
                       <img
                         src={partner.logo}
                         alt={partner.name}
-                        className={`max-h-full max-w-full object-contain filter transition-all duration-300 ${isActive ? 'grayscale-0' : 'grayscale group-hover:grayscale-0'}`}
+                        className={`max-h-full max-w-full object-contain transition-all duration-300 grayscale-0`}
                       />
                     ) : (
-                      <span className={`font-heading text-sm md:text-base font-bold text-center px-4 transition-colors duration-300 text-muted-foreground group-hover:text-black`}>{partner.name}</span>
+                      <span className={`font-heading text-sm md:text-base font-bold text-center px-4 transition-colors duration-300 ${isActive ? 'text-black' : 'text-muted-foreground group-hover:text-black'}`}>{partner.name}</span>
                     )}
                   </div>
 
                   {/* We only render the text if active so it doesn't try to cram into the small hexagon */}
                   <div
-                    className={`flex-1 text-center flex flex-col justify-start w-full transition-all duration-500 overflow-hidden ${isActive ? 'opacity-100 max-h-[200px]' : 'opacity-0 max-h-0'}`}
+                    className={`flex-1 text-center flex flex-col justify-start w-full transition-all duration-500 overflow-hidden relative z-10 ${isActive ? 'opacity-100 max-h-[200px]' : 'opacity-0 max-h-0'}`}
                   >
                     <h4 className={`font-heading text-lg md:text-xl font-bold mb-1 line-clamp-2 mt-1 text-black`}>{partner.name}</h4>
                     <p className={`text-xs md:text-sm leading-tight line-clamp-4 px-2 text-black/70`}>{partner.description}</p>
@@ -507,6 +481,44 @@ const About = () => {
         </div>
       </section>
       
+      {/* Vision & Mission — Refined design with white bg */}
+      <section id="vision" className="bg-white py-24 md:py-32 relative overflow-hidden border-t border-black/10">
+        <div className="container-grid relative px-6 md:px-12">
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-16 relative z-10">
+            {/* Vision */}
+            <div className="lg:col-span-5">
+              <SectionReveal>
+                <div className="flex items-center gap-4 mb-6">
+                  <div className="w-12 h-px bg-black origin-left section-line" />
+                  <span className="text-sm font-bold uppercase tracking-[0.2em] text-black/60">Our Vision</span>
+                </div>
+                <h3 className="font-heading text-3xl md:text-4xl font-semibold text-black leading-tight mb-8">
+                  Vision: To be the leading integrated healthcare ecosystem provider in Ethiopia.
+                </h3>
+              </SectionReveal>
+            </div>
+
+            {/* Divider on large screens */}
+            <div className="hidden lg:block lg:col-span-2 relative">
+              <div className="absolute left-1/2 top-0 bottom-0 w-px bg-black/10" />
+            </div>
+
+            {/* Mission */}
+            <div className="lg:col-span-5">
+              <SectionReveal delay={0.2}>
+                <div className="flex items-center gap-4 mb-6">
+                  <div className="w-12 h-px bg-black origin-left section-line" />
+                  <span className="text-sm font-bold uppercase tracking-[0.2em] text-black/60">Our Mission</span>
+                </div>
+                <h3 className="font-heading text-3xl md:text-4xl font-semibold text-black leading-tight mb-8">
+                  Mission: We provide integrated, quality, and innovative healthcare products and services that enhance the health and well-being of every community we serve.
+                </h3>
+              </SectionReveal>
+            </div>
+          </div>
+        </div>
+      </section>
+
       {/* 02 Major Units — Pillar style like Home Page */}
       <section className="relative overflow-hidden bg-white pillars-section">
         <div className="section-padding relative w-full h-full pillars-pin-target">
@@ -560,7 +572,7 @@ const About = () => {
                   >
                     <div
                       className={`pillar-card relative rounded-[0.3rem] overflow-hidden border border-black/10 bg-white/70 backdrop-blur-md transition-all duration-700 flex flex-col items-center p-4 md:p-8
-                        ${isMobile ? (isActive ? 'h-auto min-h-[260px]' : 'h-[200px]') : `h-[550px] ${isActive ? 'shadow-[0_20px_40px_rgb(0,0,0,0.08)] -translate-y-2' : ''}`}`}
+                        ${isMobile ? (isActive ? 'h-auto min-h-[260px]' : 'h-[200px]') : `h-[550px] ${isActive ? 'shadow-[0_20px_40px_rgb(0,0,0,0.08)]' : ''}`}`}
                     >
                       {/* Default State: Title & Icon */}
                       <div className={`w-full text-center transition-all duration-700 ${!isMobile && isActive ? '-translate-y-4' : ''} ${isCompressed ? 'opacity-0 scale-75 pointer-events-none' : 'opacity-100 scale-100'}`}>
@@ -575,7 +587,7 @@ const About = () => {
 
                       {/* Compressed State: Vertical Title */}
                       <div className={`hidden md:flex absolute inset-0 items-center justify-center transition-all duration-700 pointer-events-none ${isCompressed ? 'opacity-100 delay-200' : 'opacity-0'}`}>
-                        <h3 className="font-heading text-2xl font-bold text-black tracking-widest whitespace-nowrap -rotate-90">
+                        <h3 className="font-heading text-sm font-black text-black tracking-widest whitespace-nowrap -rotate-90">
                           {pillar.title}
                         </h3>
                       </div>
@@ -588,7 +600,7 @@ const About = () => {
                       </div>
 
                       {/* Button to show detail */}
-                      <div className={`${isMobile ? 'mt-2 flex justify-center' : 'absolute bottom-6 left-0 right-0 flex justify-center'} transition-all duration-700 z-10 ${isCompressed ? 'opacity-0 pointer-events-none' : 'opacity-100'}`}>
+                      <div className={`${isMobile ? 'mt-2 flex justify-center' : 'absolute bottom-6 left-0 right-0 flex justify-center'} transition-all duration-700 z-10 opacity-100`}>
                         <Button
                           variant="outline"
                           className="rounded-full border-black/20 text-[10px] md:text-xs text-black uppercase tracking-wider bg-white/50 backdrop-blur hover:bg-[#FFF200] hover:text-black hover:border-[#FFF200] transition-colors px-3 py-1 md:px-4 md:py-2"
@@ -597,29 +609,38 @@ const About = () => {
                             setActiveUnit(isActive ? null : index);
                           }}
                         >
-                          {isActive ? "Close Details" : "Touch for details"}
+                          {isActive ? 'Close' : 'Details'}
                         </Button>
                       </div>
 
                       {/* Details slide up */}
-                      <div className={`${isMobile ? 'w-full mt-3 border-t border-black/10 pt-3' : 'absolute inset-x-0 bottom-0 h-[75%] border-t border-black/5'} transition-all duration-700 ease-in-out bg-white p-3 md:p-6 overflow-y-auto custom-scrollbar ${isMobile ? (isActive ? 'block' : 'hidden') : (isActive ? 'translate-y-0 opacity-100 pointer-events-auto' : 'translate-y-full opacity-0 pointer-events-none')}`}>
-                        <div className="space-y-8">
+                      <div className={`${isMobile ? 'w-full mt-3 border-t border-black/10 pt-3 pb-20' : 'absolute inset-x-0 bottom-0 h-[75%] border-t border-black/5 pb-24'} transition-all duration-700 ease-in-out bg-white p-3 md:p-6 overflow-y-auto custom-scrollbar ${isMobile ? (isActive ? 'block' : 'hidden') : (isActive ? 'translate-y-0 opacity-100 pointer-events-auto' : 'translate-y-full opacity-0 pointer-events-none')}`}>
+                        <div className="flex flex-col gap-6">
                           {pillar.details.map((detail, i) => (
                             <div key={i}>
-                              <h4 className="font-heading text-sm font-bold text-black mb-4 uppercase tracking-wide border-b border-black/10 pb-1">
-                                {detail.heading}
-                              </h4>
-                              <ul className="space-y-3">
-                                {detail.items.map((item, j) => (
-                                  <li key={j} className="flex items-start gap-3 text-xs md:text-sm text-black/80 font-medium">
-                                    <div className="w-1.5 h-1.5 rounded-full bg-[#FFF200] mt-1.5 flex-shrink-0" />
-                                    <span>{item}</span>
-                                  </li>
-                                ))}
-                              </ul>
+                              {detail.heading && <h4 className="font-heading text-xs font-bold text-black mb-2 uppercase tracking-wide border-b border-black/10 pb-1">{detail.heading}</h4>}
+                              {detail.content && (
+                                <div className="space-y-3 mb-3">
+                                  {detail.content.split('\n\n').map((paragraph, k) => (
+                                    <p key={k} className="text-[11px] text-black/80 font-medium leading-relaxed">{paragraph}</p>
+                                  ))}
+                                </div>
+                              )}
+                              {detail.items && detail.items.length > 0 && (
+                                <ul className="space-y-2">
+                                  {detail.items.map((item, j) => (
+                                    <li key={j} className="flex items-start gap-2 text-[11px] text-black/80 font-medium leading-relaxed">
+                                      <span className="text-[#FFF200] font-bold mt-0.5">•</span>
+                                      <span>{item}</span>
+                                    </li>
+                                  ))}
+                                </ul>
+                              )}
                             </div>
                           ))}
                         </div>
+                        {/* Bottom spacer to prevent button overlap */}
+                        <div className="h-32 w-full" />
                       </div>
                     </div>
                   </div>
@@ -719,6 +740,74 @@ const About = () => {
                 </div>
               </div>
             </div>
+
+            {/* Quality Control Units */}
+            <div className="relative pt-16 lg:pt-24 mb-32">
+              <div className="flex flex-col lg:flex-row relative items-start lg:items-center">
+                {/* Dark Top Title */}
+                <div className="absolute -top-8 left-0 lg:left-[5%] z-20 bg-black px-6 py-4 md:px-10 md:py-6 shadow-md w-auto max-w-[90%]">
+                  <h3 className="text-white font-heading text-lg md:text-2xl font-bold tracking-widest uppercase m-0">
+                    3. Quality Control Units
+                  </h3>
+                </div>
+
+                {/* Image Container */}
+                <div className="w-full lg:w-[70%] h-[250px] md:h-[400px] lg:h-[550px] relative overflow-hidden mt-12 lg:mt-0">
+                  <img src={moleculesImg} alt="Quality Control Units" className="w-full h-[130%] -top-[15%] absolute object-cover about-parallax-img" />
+                </div>
+
+                {/* Content Box */}
+                <div className="w-[90%] mx-auto lg:w-[45%] lg:absolute lg:right-0 lg:top-1/2 lg:-translate-y-1/2 z-10 bg-[#FFF200] p-8 md:p-12 shadow-xl -mt-16 lg:mt-0 relative facility-info-box">
+                  <SectionReveal delay={0.2}>
+                    <h4 className="font-heading text-2xl md:text-3xl font-black text-black mb-6 uppercase leading-tight tracking-tight">
+                      Precision Analytical Instruments
+                    </h4>
+                    <div className="space-y-4 text-black/80 font-medium leading-relaxed text-sm md:text-base">
+                      <p>
+                        Our quality control units are outfitted with state-of-the-art analytical technologies including High-Performance Liquid Chromatography (HPLC), UV-Vis spectrophotometers, and FTIR systems.
+                      </p>
+                      <p>
+                        These precision instruments ensure every compound and formulation meets the highest international regulatory standards for purity and safety.
+                      </p>
+                    </div>
+                  </SectionReveal>
+                </div>
+              </div>
+            </div>
+
+            {/* Formulation & Development */}
+            <div className="relative pt-16 lg:pt-24 mb-32">
+              <div className="flex flex-col lg:flex-row relative items-start lg:items-center justify-end">
+                {/* Dark Top Title */}
+                <div className="absolute -top-8 right-0 lg:right-[5%] z-20 bg-black px-6 py-4 md:px-10 md:py-6 shadow-md w-auto max-w-[90%] text-right">
+                  <h3 className="text-white font-heading text-lg md:text-2xl font-bold tracking-widest uppercase m-0">
+                    4. Formulation & Development
+                  </h3>
+                </div>
+
+                {/* Content Box */}
+                <div className="w-[90%] mx-auto lg:w-[45%] lg:absolute lg:left-0 lg:top-1/2 lg:-translate-y-1/2 z-10 bg-[#FFF200] p-8 md:p-12 shadow-xl -mt-16 lg:mt-0 relative order-2 lg:order-1 facility-info-box">
+                  <SectionReveal delay={0.2}>
+                    <h4 className="font-heading text-2xl md:text-3xl font-black text-black mb-6 uppercase leading-tight tracking-tight">
+                      Scaling Innovations to Market
+                    </h4>
+                    <div className="space-y-4 text-black/80 font-medium leading-relaxed text-sm md:text-base">
+                      <p>
+                        Our pilot-scale formulation facilities bridge the gap between bench-top discovery and commercial-scale manufacturing.
+                      </p>
+                      <p>
+                        We specialize in developing robust manufacturing processes for natural and synthetic products, ensuring seamless tech transfer and market readiness.
+                      </p>
+                    </div>
+                  </SectionReveal>
+                </div>
+
+                {/* Image Container */}
+                <div className="w-full lg:w-[70%] h-[250px] md:h-[400px] lg:h-[550px] relative overflow-hidden mt-12 lg:mt-0 order-1 lg:order-2">
+                  <img src={plantsImg} alt="Pilot Formulation" className="w-full h-[130%] -top-[15%] absolute object-cover about-parallax-img" />
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </section>
@@ -782,6 +871,7 @@ const About = () => {
             </div>
 
             {/* Oil Manufacturing */}
+{/* 
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
               <SectionReveal className="lg:order-1">
                 <h3 className="font-heading text-3xl font-bold mb-6 text-black">Droga Oil Manufacturing Plant</h3>
@@ -800,26 +890,7 @@ const About = () => {
                 </div>
               </SectionReveal>
             </div>
-
-            {/* Conservation & Nursery */}
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
-              <SectionReveal>
-                <div className="overflow-hidden rounded-sm shadow-xl aspect-[4/3] relative group">
-                  <img src={plantsImg} alt="Nursery" className="absolute inset-0 w-full h-[130%] -top-[15%] object-cover about-parallax-img" />
-                </div>
-              </SectionReveal>
-              <SectionReveal delay={0.2}>
-                <h3 className="font-heading text-3xl font-bold mb-6 text-black">Droga Medicinal Plant Nursery</h3>
-                <div className="space-y-4 text-black font-medium leading-relaxed">
-                  <p>
-                    Established in Butajira to cultivate and preserve Ethiopia's rich botanical heritage. The nursery strengthens the link between traditional wisdom and modern scientific research.
-                  </p>
-                  <p>
-                    Focusing on sustainable conservation and large-scale cultivation of medicinal plants for pharmaceutical and nutraceutical applications.
-                  </p>
-                </div>
-              </SectionReveal>
-            </div>
+            */}
 
             {/* Soap & Rosemary */}
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
@@ -840,42 +911,24 @@ const About = () => {
                 </div>
               </SectionReveal>
             </div>
-          </div>
-        </div>
-      </section>
 
-      {/* Vision & Mission — Refined design with white bg */}
-      <section id="vision" className="bg-white py-24 md:py-32 relative overflow-hidden border-t border-black/10">
-        <div className="container-grid relative px-6 md:px-12">
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-16 relative z-10">
-            {/* Vision */}
-            <div className="lg:col-span-5">
+            {/* Conservation & Nursery */}
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
               <SectionReveal>
-                <div className="flex items-center gap-4 mb-6">
-                  <div className="w-12 h-px bg-black origin-left section-line" />
-                  <span className="text-sm font-bold uppercase tracking-[0.2em] text-black/60">Our Vision</span>
+                <div className="overflow-hidden rounded-sm shadow-xl aspect-[4/3] relative group">
+                  <img src={nurseryImg} alt="Nursery" className="absolute inset-0 w-full h-[130%] -top-[15%] object-cover about-parallax-img" />
                 </div>
-                <h3 className="font-heading text-3xl md:text-4xl font-semibold text-black leading-tight mb-8">
-                  Vision: To be the leading integrated healthcare ecosystem provider in Ethiopia.
-                </h3>
               </SectionReveal>
-            </div>
-
-            {/* Divider on large screens */}
-            <div className="hidden lg:block lg:col-span-2 relative">
-              <div className="absolute left-1/2 top-0 bottom-0 w-px bg-black/10" />
-            </div>
-
-            {/* Mission */}
-            <div className="lg:col-span-5">
               <SectionReveal delay={0.2}>
-                <div className="flex items-center gap-4 mb-6">
-                  <div className="w-12 h-px bg-black origin-left section-line" />
-                  <span className="text-sm font-bold uppercase tracking-[0.2em] text-black/60">Our Mission</span>
+                <h3 className="font-heading text-3xl font-bold mb-6 text-black">Droga Medicinal Plant Nursery</h3>
+                <div className="space-y-4 text-black font-medium leading-relaxed">
+                  <p>
+                    Established in Butajira to cultivate and preserve Ethiopia's rich botanical heritage. The nursery strengthens the link between traditional wisdom and modern scientific research.
+                  </p>
+                  <p>
+                    Focusing on sustainable conservation and large-scale cultivation of medicinal plants for pharmaceutical and nutraceutical applications.
+                  </p>
                 </div>
-                <h3 className="font-heading text-3xl md:text-4xl font-semibold text-black leading-tight mb-8">
-                  Mission: We provide integrated, quality, and innovative healthcare products and services that enhance the health and well-being of every community we serve.
-                </h3>
               </SectionReveal>
             </div>
           </div>

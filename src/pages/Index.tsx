@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import gsap from "gsap";
 import { useGSAP } from "@gsap/react";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
+import { motion, AnimatePresence } from "framer-motion";
 import {
   ArrowRight, FlaskConical, Microscope, Brain, HeartPulse, Leaf, Newspaper,
   Dna, Beaker, Zap, Activity, Pill, Apple, Droplet, ChevronDown, X
@@ -100,82 +101,70 @@ const heroSlidesData = [
   },
 ];
 
-// Core Research Pillars data (unchanged)
 const pillarCards = [
-  {
-    icon: FlaskConical,
-    title: "Bioequivalence & Analytics",
-    summary: "GCP-compliant bioequivalence studies and comprehensive analytical testing services.",
-    details: [
-      {
-        heading: "Bioequivalence Studies",
-        items: [
-          "GCP‑compliant clinical unit with housing capacity & ICU",
-          "Medical laboratory for sample processing",
-          "Bioanalytical laboratory: biological matrix analysis, bioavailability, PK studies, method development"
-        ]
-      },
-      {
-        heading: "Physicochemical Analysis",
-        items: [
-          "Raw material identification", "Purity determination (API & excipients)", "Assay",
-          "Dissolution testing", "Disintegration testing", "Hardness & friability",
-          "Particle size analysis", "Moisture content", "Stability studies"
-        ]
-      }
-    ]
-  },
   {
     icon: Microscope,
     title: "Drug Discovery",
-    summary: "Natural and herbal drug discovery, formulation development, and preclinical evaluation.",
+    summary: "Research of natural, herbal food and drug discovery, development and formulation.",
     details: [
       {
         heading: "Formulation Development",
-        items: [
-          "Solid oral dosage forms", "Oral liquid dosage forms",
-          "Semi‑solids & injectables", "Herbal medicine formulations",
-          "Solubility & stability enhancement", "Controlled release technologies"
-        ]
+        content: "Develops drug products through formulation studies to maximize the effectiveness and safety of API, such as improving the solubility and stability, and controlling of drug release. This wing is responsible for establishing the quality of the drug products as a continuum, from development through clinical manufacturing to commercial manufacturing. The activities under this include, but not limited to the Formulations of pharmaceuticals and Herbal medicines in forms of Solid Oral dosage forms, Oral liquid dosage forms, Semi solids & Injectable."
       },
       {
         heading: "Research Laboratory",
-        items: [
-          "Bioactive compound screening", "Extraction & characterization",
-          "Preclinical evaluation", "Mechanism of action studies",
-          "Safety & efficacy assessments", "End‑to‑end drug discovery"
-        ]
+        content: "Our Research Laboratory serves as the core of the Drug Discovery Wing within the R&D Department, dedicated to the systematic exploration and development of novel therapeutic agents. The laboratory focuses on plant based and animal derived pharmaceutical research, integrating traditional knowledge with modern scientific methodologies to identify, evaluate, and develop effective drug candidates for a wide range of diseases and health conditions. Equipped with advanced research infrastructure and operated by a multidisciplinary team of scientists, pharmacognosy, botanists, biotechnologists, and researchers, the laboratory conducts end to end drug discovery activities. \n\nThese include bioactive compound screening, extraction and characterization of natural products, preclinical evaluation, mechanism of action studies, and safety and efficacy assessments. Our research emphasizes innovation, scientific rigor, and regulatory compliance, ensuring that all discoveries meet international quality and ethical standards. By leveraging technologies and evidence-based research approaches, the laboratory aims to transform promising natural compounds into safe, effective, and affordable pharmaceutical solutions. Through continuous innovation and collaboration, the Research Laboratory plays a vital role in advancing therapeutic discoveries, addressing unmet medical needs, and contributing to improved healthcare outcomes."
       }
     ]
   },
   {
     icon: Apple,
-    title: "Food & Nutraceuticals",
-    summary: "Nutrition-based product R&D for health, wellness, and preventive care.",
+    title: "Food & Nutraceutical Sciences Research",
+    summary: "Dedicated to the research and development of nutrition-based products aimed at supporting health, wellness, and preventive care.",
     details: [
       {
-        heading: "Key Activities",
-        items: [
-          "Raw material evaluation & ingredient standardization",
-          "Formulation development for functional foods",
-          "Stability & safety assessment",
-          "Volatile & fixed oil processing",
-          "Cross‑disciplinary collaboration (pharmacy + food science)"
-        ]
+        content: "The Food and Nutritional Sciences Research Wing is dedicated to the research and development of nutrition-based products aimed at supporting health, wellness, and preventive care. This wing focuses on the development of specialized dietary formulations, pediatric food supplements, health support formulations, and volatile and fixed oils with recognized health benefits, primarily derived from natural sources.\n\nResearch activities are grounded in food science, nutrition, phytochemistry, and formulation science, ensuring scientifically sound and quality driven product development. The wing is supported by multidisciplinary teams composed of professionals with strong pharmacy backgrounds, working in close collaboration with partners and consultants from food science and nutrition backgrounds. This integrated approach ensures that all products are developed with both pharmaceutical rigor and food science expertise.\n\nThe team undertakes structured studies involving raw material evaluation, ingredient standardization, formulation development, stability assessment, and safety evaluation in alignment with applicable regulatory guidelines.\n\nThrough focused research, cross disciplinary collaboration, and rigorous quality practices, the Food and Nutritional Sciences Research Wing aim to deliver safe, effective, and evidence based nutritional solutions that contribute to improved health outcomes and overall wellbeing."
       }
     ]
   },
   {
     icon: Droplet,
-    title: "Cosmetic & Detergent R&D",
-    summary: "Formulation of medicated and non-medicated cosmetic and hygiene products.",
+    title: "Cosmetic & Detergent Research and Development",
+    summary: "Dedicated to the formulation, development, and optimization of medicated and non-medicated cosmetic, personal care, and hygiene products.",
     details: [
       {
-        heading: "Product Range",
+        content: "The Cosmetic and Detergent Research and Development Wing is dedicated to the formulation, development, and optimization of medicated and non-medicated cosmetic, personal care, and hygiene products. This wing focuses on creating safe, effective, and high-quality products that meet consumer needs as well as applicable regulatory standards.\n\nThe research and development scope includes a wide range of products such as soaps, face washes, creams, lotions, serums, hair oils, hair growth serums, antiseptic formulations, and other cosmetic and detergent-based products. Emphasis is placed on scientific formulation design, ingredient compatibility, product stability, performance evaluation, and safety assessment.\n\nThe wing is supported by pilot scale development facilities, enabling formulation optimization, process standardization, and scale up studies for seamless transition from laboratory development to commercial manufacturing. Robust standard operating procedures (SOPs) are established to ensure product consistency, quality assurance, and reproducibility during scale-up and production.\n\nThrough structured research, formulation expertise, and pilot scale capabilities, the Cosmetic and Detergent Research and Development Wing plays a key role in delivering reliable, effective, and market-ready cosmetic, hair care, and hygiene products."
+      }
+    ]
+  },
+  {
+    icon: FlaskConical,
+    title: "Bioequivalence & Analytical Laboratory",
+    summary: "Providing bioequivalence (BE) studies, pharmacokinetic studies, and comprehensive analytical testing services.",
+    details: [
+      {
+        heading: "Bioequivalence studies",
+        content: "The center will provide BE studies under the following units:",
         items: [
-          "Soaps & face washes", "Creams & lotions", "Serums & hair oils",
-          "Hair growth serums", "Antiseptic formulations",
-          "Pilot‑scale development & process standardization"
+          "Clinical unit: the center will have a GCP compliant an independent clinical unit with all necessary instruments and housing capacity for large number of volunteers. It will also include a well-equipped ICU facility and pharmacy for storing different investigational drugs at various temperature limits.",
+          "Medical laboratory: focus on sample processing and analysis.",
+          "Bioanalytical laboratory: It offers services including Analysis of biological matrix, Bioavailability studies, Pharmacokinetic studies, Method development and validation."
+        ]
+      },
+      {
+        heading: "Physicochemical analysis",
+        content: "Analysis of pharmaceutical ingredients and products (including OSD, OLD and Semisolid products). It includes:",
+        items: [
+          "Raw Material Identification",
+          "Purity Determination for API and excipients",
+          "Assay",
+          "Dissolution Testing",
+          "Disintegration Testing",
+          "Hardness Testing",
+          "Friability Testing",
+          "Particle size analysis",
+          "Moisture Content Analysis",
+          "Stability Studies"
         ]
       }
     ]
@@ -223,6 +212,18 @@ const featuredProjectsData = [
     imageFirst: false, // Right image by default
   },
   {
+    id: 4,
+    title: "Project II: Butajira Rosmary Manufacturing Plant",
+    image: project4Img,
+    description: "The Butajira Rosemary Processing Plant aims to improve the livelihood of farmers in Meskan Woreda, Eastern Gurage Zone, through sustainable rosemary cultivation and market integration. The initiative covers 20 hectares of investment land and 40 hectares of partner farms, engaging 160 local farmers in modern rosemary production supported by training, technology transfer, and cooperative formation.",
+    paragraphs: [
+      "With a total investment of ETB 77.24 million, the project focuses on producing high-quality rosemary for essential oil extraction used in pharmaceutical, cosmetic, and food industries. It combines scientific cultivation practices with irrigation technology to yield over 20,000 quintals of rosemary twice a year, ensuring consistent supply and export potential."
+    ],
+    footer: "Beyond its economic impact, the project promotes environmental sustainability, job creation (11 permanent and 60 temporary positions), and community empowerment. By linking farmers to formal markets and improving production standards, Droga Pharma PLC is positioning Meskan Woreda as a center of excellence for essential oil-bearing crops and contributing to Ethiopia's growing natural product industry.",
+    imageFirst: true,
+  },
+  /* 
+  {
     id: 2,
     title: "Project II: Droga Oil Manufacturing Plant",
     image: project1Img,
@@ -252,17 +253,7 @@ const featuredProjectsData = [
     ],
     imageFirst: false,
   },
-  {
-    id: 4,
-    title: "Project IV: Butajira Rosmary Manufacturing Plant",
-    image: project4Img,
-    description: "The Butajira Rosemary Processing Plant aims to improve the livelihood of farmers in Meskan Woreda, Eastern Gurage Zone, through sustainable rosemary cultivation and market integration. The initiative covers 20 hectares of investment land and 40 hectares of partner farms, engaging 160 local farmers in modern rosemary production supported by training, technology transfer, and cooperative formation.",
-    paragraphs: [
-      "With a total investment of ETB 77.24 million, the project focuses on producing high-quality rosemary for essential oil extraction used in pharmaceutical, cosmetic, and food industries. It combines scientific cultivation practices with irrigation technology to yield over 20,000 quintals of rosemary twice a year, ensuring consistent supply and export potential."
-    ],
-    footer: "Beyond its economic impact, the project promotes environmental sustainability, job creation (11 permanent and 60 temporary positions), and community empowerment. By linking farmers to formal markets and improving production standards, Droga Pharma PLC is positioning Meskan Woreda as a center of excellence for essential oil-bearing crops and contributing to Ethiopia's growing natural product industry.",
-    imageFirst: true,
-  }
+  */
 ];
 
 const RevealText = ({ text, className = "", showCovers = true }: { text: string, className?: string, showCovers?: boolean }) => {
@@ -415,12 +406,12 @@ const Index = () => {
 
       const tl = gsap.timeline();
       tl.addLabel("startCover");
-      tl.to(subtitleBlocks, { scaleY: 1, transformOrigin: coverOrigin, duration: 0.5, ease: "power2.inOut" }, "startCover");
-      tl.to(descBoxes, { scaleY: 1, transformOrigin: coverOrigin, duration: 0.5, ease: "power2.inOut", stagger: 0.15 }, "startCover");
+      tl.to(subtitleBlocks, { scaleY: 1, transformOrigin: coverOrigin, duration: 0.6, ease: "power2.inOut" }, "startCover");
+      tl.to(descBoxes, { scaleY: 1, transformOrigin: coverOrigin, duration: 0.6, ease: "power2.inOut", stagger: 0.1 }, "startCover");
       tl.call(() => { setDisplayIndex(currentSlide); });
       tl.addLabel("startReveal");
-      tl.to(subtitleBlocks, { scaleY: 0, transformOrigin: revealOrigin, duration: 0.5, ease: "power2.inOut" }, "startReveal");
-      tl.to(descBoxes, { scaleY: 0, transformOrigin: revealOrigin, duration: 0.5, ease: "power2.inOut", stagger: 0.15 }, "startReveal");
+      tl.to(subtitleBlocks, { scaleY: 0, transformOrigin: revealOrigin, duration: 0.6, ease: "power2.inOut" }, "startReveal");
+      tl.to(descBoxes, { scaleY: 0, transformOrigin: revealOrigin, duration: 0.6, ease: "power2.inOut", stagger: 0.1 }, "startReveal");
     }
   }, [currentSlide, displayIndex]);
 
@@ -747,15 +738,18 @@ const Index = () => {
             Droga Research And <br className="hidden lg:block" /> Development Center
           </h1>
           <div className="mt-6 md:mt-8 min-h-[100px] md:min-h-[120px] relative w-full overflow-hidden">
-            <p className="block text-base md:text-lg font-body text-muted-foreground max-w-xl leading-relaxed">
-              {heroSlidesData[displayIndex].desc}
-            </p>
-            {/* 3 Fixed Yellow Bar Overlays aligned to line-height */}
-            <div className="absolute inset-x-0 top-0 bottom-0 pointer-events-none z-10 flex flex-col text-base md:text-lg leading-relaxed font-body max-w-xl">
-              {[0, 1, 2].map((i) => (
-                <div key={i} className="desc-reveal-box w-full bg-black" style={{ height: 'calc(1.625em - 4px)', marginBottom: '4px', transformOrigin: 'bottom', transform: 'scaleY(0)' }}></div>
-              ))}
-            </div>
+            <AnimatePresence mode="wait">
+              <motion.p
+                key={displayIndex}
+                initial={{ opacity: 0, y: 30 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -30 }}
+                transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
+                className="block text-base md:text-lg font-body text-muted-foreground max-w-xl leading-relaxed absolute inset-0"
+              >
+                {heroSlidesData[displayIndex].desc}
+              </motion.p>
+            </AnimatePresence>
           </div>
           <div className="flex gap-2 md:flex-wrap md:gap-4">
             <Button variant="default" size="lg" asChild className="flex-1 md:flex-none bg-black text-white hover:bg-[#FFF200] hover:text-black transition-all duration-300 border-none text-xs md:text-base px-3 md:px-6">
@@ -780,11 +774,11 @@ const Index = () => {
             if (isCurrent) {
               transform = 'translateY(0) scale(1)';
               zIndex = 2;
-              transition = 'transform 1.2s cubic-bezier(0.77, 0, 0.175, 1)';
+              transition = 'transform 1.5s cubic-bezier(0.77, 0, 0.175, 1)';
             } else if (isPrev) {
               transform = isMobile ? 'translateY(15%) scale(0.95)' : 'translateY(-15%) scale(0.95)';
               zIndex = 1;
-              transition = 'transform 1.2s cubic-bezier(0.77, 0, 0.175, 1)';
+              transition = 'transform 1.5s cubic-bezier(0.77, 0, 0.175, 1)';
             } else {
               transform = isMobile ? 'translateY(-100%) scale(1)' : 'translateY(100%) scale(1)';
             }
@@ -924,7 +918,7 @@ const Index = () => {
                   >
                     <div
                       className={`pillar-card relative rounded-[0.3rem] overflow-hidden border border-[#DBDBDB] bg-white/50 backdrop-blur-lg shadow-[0_8px_30px_rgb(0,0,0,0.04)] transition-all duration-700 flex flex-col items-center p-4 md:p-8
-                        ${isMobile ? (isActive ? 'h-auto min-h-[260px]' : 'h-[200px]') : `h-[550px] ${isActive ? 'shadow-[0_20px_40px_rgb(0,0,0,0.08)] -translate-y-2' : ''}`}`}
+                        ${isMobile ? (isActive ? 'h-auto min-h-[260px]' : 'h-[200px]') : `h-[550px] ${isActive ? 'shadow-[0_20px_40px_rgb(0,0,0,0.08)]' : ''}`}`}
                     >
                       {/* Title */}
                       <div className={`w-full text-center transition-all duration-700 ${!isMobile && isActive ? '-translate-y-4' : ''} ${isCompressed ? 'opacity-0 scale-75 pointer-events-none' : 'opacity-100 scale-100'}`}>
@@ -940,7 +934,7 @@ const Index = () => {
 
                       {/* Compressed State: Vertical Title (desktop only) */}
                       <div className={`hidden md:flex absolute inset-0 items-center justify-center transition-all duration-700 pointer-events-none ${isCompressed ? 'opacity-100 delay-200' : 'opacity-0'}`}>
-                        <h3 className="font-heading text-2xl font-bold text-black tracking-widest whitespace-nowrap -rotate-90">
+                        <h3 className="font-heading text-sm font-black text-black tracking-widest whitespace-nowrap -rotate-90">
                           {pillar.title}
                         </h3>
                       </div>
@@ -951,7 +945,7 @@ const Index = () => {
                       </div>
 
                       {/* Button */}
-                      <div className={`${isMobile ? 'mt-2 flex justify-center' : 'absolute bottom-6 left-0 right-0 flex justify-center'} transition-all duration-700 z-10 ${isCompressed ? 'opacity-0 pointer-events-none' : 'opacity-100'}`}>
+                      <div className={`${isMobile ? 'mt-2 flex justify-center' : 'absolute bottom-6 left-0 right-0 flex justify-center'} transition-all duration-700 z-10 opacity-100`}>
                         <Button
                           variant="outline"
                           className="rounded-full border-black/20 text-[10px] md:text-xs text-black uppercase tracking-wider bg-white/50 backdrop-blur hover:bg-[#FFF200] hover:text-black hover:border-[#FFF200] transition-colors px-3 py-1 md:px-4 md:py-2"
@@ -966,21 +960,32 @@ const Index = () => {
 
                       {/* Details panel */}
                       <div className={`${isMobile ? 'w-full mt-3 border-t border-black/10 pt-3' : 'absolute inset-x-0 bottom-0 h-[75%] border-t border-white/30'} transition-all duration-700 ease-in-out bg-white/95 backdrop-blur-2xl p-3 md:p-6 overflow-y-auto custom-scrollbar ${isMobile ? (isActive ? 'block' : 'hidden') : (isActive ? 'translate-y-0 opacity-100 pointer-events-auto' : 'translate-y-full opacity-0 pointer-events-none')}`}>
-                        <div className="grid grid-cols-1 gap-3">
+                        <div className="flex flex-col gap-6">
                           {pillar.details.map((detail, i) => (
                             <div key={i}>
-                              <h4 className="font-heading text-xs font-bold text-black mb-2 uppercase tracking-wide border-b border-black/10 pb-1">{detail.heading}</h4>
-                              <ul className="space-y-1">
-                                {detail.items.map((item, j) => (
-                                  <li key={j} className="flex items-start gap-2 text-[11px] text-black/80 font-medium">
-                                    <span className="text-[#FFF200] font-bold mt-0.5">•</span>
-                                    <span>{item}</span>
-                                  </li>
-                                ))}
-                              </ul>
+                              {detail.heading && <h4 className="font-heading text-xs font-bold text-black mb-2 uppercase tracking-wide border-b border-black/10 pb-1">{detail.heading}</h4>}
+                              {detail.content && (
+                                <div className="space-y-3 mb-3">
+                                  {detail.content.split('\n\n').map((paragraph, k) => (
+                                    <p key={k} className="text-[11px] text-black/80 font-medium leading-relaxed">{paragraph}</p>
+                                  ))}
+                                </div>
+                              )}
+                              {detail.items && detail.items.length > 0 && (
+                                <ul className="space-y-2">
+                                  {detail.items.map((item, j) => (
+                                    <li key={j} className="flex items-start gap-2 text-[11px] text-black/80 font-medium leading-relaxed">
+                                      <span className="text-[#FFF200] font-bold mt-0.5">•</span>
+                                      <span>{item}</span>
+                                    </li>
+                                  ))}
+                                </ul>
+                              )}
                             </div>
                           ))}
                         </div>
+                        {/* Bottom spacer to prevent button overlap */}
+                        <div className="h-12 w-full" />
                       </div>
                     </div>
                   </div>
@@ -1265,7 +1270,7 @@ const Index = () => {
               </p>
               <div className="mt-10 flex flex-wrap justify-center gap-4">
                 <Button variant="default" size="lg" asChild>
-                  <Link to="/droga-science/grants">Apply for Grant</Link>
+                  <Link to="/droga-science/grants">Collaborate With Us</Link>
                 </Button>
                 <Button variant="outline" size="lg" asChild>
                   <Link to="/contact">Contact Us</Link>
