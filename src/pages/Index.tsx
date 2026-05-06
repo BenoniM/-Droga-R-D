@@ -615,36 +615,44 @@ const Index = () => {
         start: "bottom bottom",
         pin: true,
         pinSpacing: false,
+        anticipatePin: 1, // Fixes jitter during the pinning transition
       });
     }
 
-    // Latest News 3-Segment Reveal — Restored original design with performance optimizations
+    // Latest News 3-Segment Reveal — Restored original design with maximum performance optimizations
     const newsSegments = gsap.utils.toArray<HTMLElement>('.news-segment');
     const newsCols = gsap.utils.toArray<HTMLElement>('.news-content-col');
     if (newsSegments.length === 3 && newsCols.length === 3 && window.innerWidth >= 768) {
       const getNewsSegs = (indices: number[]) => indices.map(i => newsSegments[i]);
       const getNewsCols = (indices: number[]) => indices.map(i => newsCols[i]);
 
+      // Set initial states in GSAP instead of CSS to avoid transform clashes
+      gsap.set(newsSegments, { yPercent: 100 });
+      gsap.set(newsCols, { yPercent: 100 });
+
       const tl = gsap.timeline({
         scrollTrigger: {
           trigger: ".latest-news-section",
           start: "top bottom", 
           end: "+=800",
-          scrub: 0.8, // Slightly tighter scrub for better performance
+          scrub: 0.5, // Perfect balance between 1:1 tracking and smoothing
+          anticipatePin: 1,
         }
       });
 
       tl.to([...getNewsSegs([1]), ...getNewsCols([1])], { 
-        y: 0, 
+        yPercent: 0, 
         duration: 1, 
         ease: "none",
-        force3D: true 
+        force3D: true,
+        lazy: false
       }, 0)
         .to([...getNewsSegs([0, 2]), ...getNewsCols([0, 2])], { 
-          y: 0, 
+          yPercent: 0, 
           duration: 0.5, 
           ease: "none",
-          force3D: true 
+          force3D: true,
+          lazy: false
         }, 0.5);
     }
 
@@ -881,7 +889,7 @@ const Index = () => {
       </section>
 
       {/* Wrapping the rest of the page to perfectly cover the pinned hero */}
-      <div className="relative z-20 bg-white main-content-wrapper">
+      <div className="relative z-20 bg-white main-content-wrapper" style={{ willChange: 'transform' }}>
         {/* Our Core Research Pillars - Glassmorphism Grid */}
         <section className="relative overflow-hidden bg-background pillars-section">
           <div className="section-padding relative w-full h-full pillars-pin-target">
@@ -1195,13 +1203,13 @@ const Index = () => {
         {/* DESKTOP: Latest News — complex wipe animation */}
         <section className="hidden md:block relative z-20 min-h-screen section-padding latest-news-section overflow-hidden pointer-events-none">
           {/* Solid grey for anything below the 100vh overlap to prevent white gaps! */}
-          <div className="absolute inset-x-0 bottom-0 top-[100vh] bg-white z-0 pointer-events-auto"></div>
+          <div className="absolute inset-x-0 bottom-0 top-full bg-white z-0 pointer-events-auto"></div>
 
           {/* 3-segment wipe over the frozen 100vh page */}
           <div className="absolute inset-x-0 top-0 h-[100vh] flex z-0">
-            <div className="w-1/3 h-full bg-white translate-y-full news-segment pointer-events-auto" style={{ willChange: 'transform' }}></div>
-            <div className="w-1/3 h-full bg-white translate-y-full news-segment pointer-events-auto" style={{ willChange: 'transform' }}></div>
-            <div className="w-1/3 h-full bg-white translate-y-full news-segment pointer-events-auto" style={{ willChange: 'transform' }}></div>
+            <div className="w-1/3 h-full bg-white news-segment pointer-events-auto" style={{ willChange: 'transform' }}></div>
+            <div className="w-1/3 h-full bg-white news-segment pointer-events-auto" style={{ willChange: 'transform' }}></div>
+            <div className="w-1/3 h-full bg-white news-segment pointer-events-auto" style={{ willChange: 'transform' }}></div>
           </div>
 
           {/* 100vh Window that clips the content while translated down */}
@@ -1209,7 +1217,7 @@ const Index = () => {
             <div className="w-[94%] mx-auto h-full pt-[20vh] pb-[10vh] flex gap-10 pointer-events-auto">
 
               {/* Left Column */}
-              <div className="flex-1 flex flex-col justify-between translate-y-[100vh] news-content-col h-full" style={{ willChange: 'transform' }}>
+              <div className="flex-1 flex flex-col justify-between news-content-col h-full" style={{ willChange: 'transform' }}>
                 <div className="pt-2">
                   <span className="text-base font-bold uppercase tracking-[0.2em] text-black">Latest News</span>
                 </div>
@@ -1227,7 +1235,7 @@ const Index = () => {
               </div>
 
               {/* Middle Column */}
-              <div className="flex-1 flex flex-col justify-end translate-y-[100vh] news-content-col h-full" style={{ willChange: 'transform' }}>
+              <div className="flex-1 flex flex-col justify-end news-content-col h-full" style={{ willChange: 'transform' }}>
                 <div className="mt-auto">
                   <article className="group cursor-pointer overflow-hidden rounded-sm bg-card transition-all duration-300 hover:bg-highlight hover:-translate-y-1.5 shadow-sm">
                     <div className="aspect-[16/10] bg-surface-subtle overflow-hidden">
@@ -1242,7 +1250,7 @@ const Index = () => {
               </div>
 
               {/* Right Column */}
-              <div className="flex-1 flex flex-col justify-between translate-y-[100vh] news-content-col h-full" style={{ willChange: 'transform' }}>
+              <div className="flex-1 flex flex-col justify-between news-content-col h-full" style={{ willChange: 'transform' }}>
                 <div className="flex justify-end pt-2">
                   <Link to="/news" className="flex items-center gap-2 text-base font-heading font-medium text-foreground transition-colors border-2 rounded-full px-6 py-3 border-black hover:bg-highlight hover:text-black">
                     View All <ArrowRight className="w-4 h-4" />

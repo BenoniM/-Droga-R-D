@@ -659,7 +659,7 @@ const About = () => {
             <div className="flex items-center gap-4 mb-2">
               <span className="text-lg font-bold uppercase tracking-[0.2em] text-muted-foreground">Infrastructure</span>
             </div>
-            <h2 className="font-heading text-4xl md:text-5xl font-bold tracking-tight mt-4 text-foreground leading-tight">Our Facilities</h2>
+            <h2 className="font-heading text-4xl md:text-5xl font-bold tracking-tight mt-4 text-foreground leading-tight">Our Laboratories</h2>
           </SectionReveal>
 
           <div className="mt-20 space-y-32">
@@ -692,11 +692,6 @@ const About = () => {
                         Our bioanalytical laboratory focuses on studying drugs within biological systems to support research and development through analysis of biological matrices.
                       </p>
                     </div>
-                    <div className="mt-8">
-                      <Button className="bg-white text-black hover:bg-black hover:text-white transition-all font-bold rounded-none px-8 py-6 tracking-widest text-xs uppercase">
-                        Learn More
-                      </Button>
-                    </div>
                   </SectionReveal>
                 </div>
               </div>
@@ -725,11 +720,6 @@ const About = () => {
                       <p>
                         Equipped with advanced infrastructure and a multidisciplinary team, it transforms promising natural compounds into safe pharmaceutical solutions.
                       </p>
-                    </div>
-                    <div className="mt-8">
-                      <Button asChild className="bg-white text-black hover:bg-black hover:text-white transition-all font-bold rounded-none px-8 py-6 tracking-widest text-xs uppercase">
-                        <Link to="/droga-science/labs">Learn More</Link>
-                      </Button>
                     </div>
                   </SectionReveal>
                 </div>
