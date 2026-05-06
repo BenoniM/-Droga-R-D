@@ -492,8 +492,8 @@ const About = () => {
                   <div className="w-12 h-px bg-black origin-left section-line" />
                   <span className="text-sm font-bold uppercase tracking-[0.2em] text-black/60">Our Vision</span>
                 </div>
-                <h3 className="font-heading text-3xl md:text-4xl font-semibold text-black leading-tight mb-8">
-                  Vision: To be the leading integrated healthcare ecosystem provider in Ethiopia.
+                <h3 className="font-heading tracking-wide text-3xl md:text-3xl font-base text-black leading-tight mb-8">
+                 <span className="font-semibold"> Vision:</span> To be the leading integrated healthcare ecosystem provider in Ethiopia.
                 </h3>
               </SectionReveal>
             </div>
@@ -510,8 +510,9 @@ const About = () => {
                   <div className="w-12 h-px bg-black origin-left section-line" />
                   <span className="text-sm font-bold uppercase tracking-[0.2em] text-black/60">Our Mission</span>
                 </div>
-                <h3 className="font-heading text-3xl md:text-4xl font-semibold text-black leading-tight mb-8">
-                  Mission: We provide integrated, quality, and innovative healthcare products and services that enhance the health and well-being of every community we serve.
+                <h3 className="font-heading tracking-wide text-3xl md:text-3xl font-base text-black leading-tight mb-8">
+                  <span 
+                  className="font-semibold"> Mission:</span> We provide integrated, quality, and innovative healthcare products and services that enhance the health and well-being of every community we serve.
                 </h3>
               </SectionReveal>
             </div>
