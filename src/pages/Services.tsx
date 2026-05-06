@@ -19,6 +19,12 @@ import facilityImg from "@/assets/Images/IMG_4514.jpg";
 import labImg from "@/assets/Images/IMG_4528.jpg";
 import logoImg from "@/assets/logo.png";
 
+import chooseAccuracy from "@/assets/choose/Accuracy.jpg";
+import chooseAdvanced from "@/assets/choose/Advanced.jpg";
+import chooseFast from "@/assets/choose/Fast.jpg";
+import chooseQC from "@/assets/choose/QC.jpg";
+import chooseRegulatory from "@/assets/choose/Regulatory.jpg";
+
 import shimadzuLogo from "@/assets/Partners/Shimadzu.png";
 import electroLabLogo from "@/assets/Partners/Electrolab.png";
 import lotusLogo from "@/assets/Partners/Lotus.png";
@@ -95,31 +101,31 @@ const whyChooseUs = [
     icon: Building2,
     title: "Segregated QC Facilities",
     desc: "Dedicated and controlled QC areas ensure secure, unbiased, and reliable testing.",
-    img: "https://images.pexels.com/photos/18471462/pexels-photo-18471462.jpeg"
+    img: chooseQC
   },
   {
     icon: CheckCircle,
     title: "Accuracy & Reliability",
     desc: "Analytical processes designed to deliver precise, consistent, and reproducible results.",
-    img: "https://images.unsplash.com/photo-1554475901-4538ddfbccc2?w=900&q=80"
+    img: chooseAccuracy
   },
   {
     icon: ClipboardCheck,
     title: "Regulatory-Ready Reports",
     desc: "Comprehensive documentation prepared to meet applicable regulatory and compliance requirements.",
-    img: "https://images.unsplash.com/photo-1450101499163-c8848c66ca85?w=900&q=80"
+    img: chooseRegulatory
   },
   {
     icon: Clock,
     title: "Fast Turnaround Times",
     desc: "Efficient workflows and skilled teams enable timely analysis without compromising quality.",
-    img: "https://images.pexels.com/photos/1178684/pexels-photo-1178684.jpeg"
+    img: chooseFast
   },
   {
     icon: Microscope,
     title: "Advanced Infrastructure",
     desc: "Modern, well-maintained laboratory equipment supports high-quality research and testing outcomes.",
-    img: "https://images.pexels.com/photos/8940470/pexels-photo-8940470.jpeg"
+    img: chooseAdvanced
   },
 ];
 
