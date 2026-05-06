@@ -262,10 +262,10 @@ const About = () => {
     const generateSpots = () => {
       const spots: any[] = [];
       const numSpots = 4;
-      const minDistance = 0.30;
+      const minDistance = 0.28;
 
       const section = document.querySelector('.mfg-section');
-      const restrictedEls = section ? Array.from(section.querySelectorAll('.mfg-content h2, .mfg-content h3, .mfg-content p, .mfg-content img')) : [];
+      const restrictedEls = section ? Array.from(section.querySelectorAll('.mfg-content h2, .mfg-content h3, .mfg-content p, .mfg-content img, .mfg-content button')) : [];
       const sectionRect = section?.getBoundingClientRect();
 
       const forbiddenZones = sectionRect ? restrictedEls.map(el => {
@@ -273,14 +273,14 @@ const About = () => {
         return {
           x: (r.left + r.width / 2 - sectionRect.left) / sectionRect.width,
           y: (r.top + r.height / 2 - sectionRect.top) / sectionRect.height,
-          radiusX: (r.width / 2 + 80) / sectionRect.width,
-          radiusY: (r.height / 2 + 80) / sectionRect.height
+          radiusX: (r.width / 2 + 40) / sectionRect.width,
+          radiusY: (r.height / 2 + 40) / sectionRect.height
         };
       }) : [];
 
-      for (let attempts = 0; attempts < 200 && spots.length < numSpots; attempts++) {
-        const x = 0.05 + Math.random() * 0.9;
-        const y = 0.05 + Math.random() * 0.9;
+      for (let attempts = 0; attempts < 400 && spots.length < numSpots; attempts++) {
+        const x = 0.02 + Math.random() * 0.96;
+        const y = 0.02 + Math.random() * 0.96;
 
         let tooClose = false;
         for (const spot of spots) {
@@ -305,8 +305,8 @@ const About = () => {
           spots.push({
             xFrac: x,
             yFrac: y,
-            radius: 3.5 + Math.random() * 2.0,
-            radiusY: 2.5 + Math.random() * 1.0,
+            radius: 3.0 + Math.random() * 1.5,
+            radiusY: 2.0 + Math.random() * 1.0,
           });
         }
       }
@@ -315,7 +315,7 @@ const About = () => {
 
     const timer = setTimeout(() => {
       setHexSpots(generateSpots());
-    }, 100);
+    }, 500);
     return () => clearTimeout(timer);
   }, []);
 

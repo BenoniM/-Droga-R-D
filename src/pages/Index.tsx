@@ -306,12 +306,11 @@ const Index = () => {
     // Randomize spots per segment on refresh
     const generateSpots = () => {
       const spots: any[] = [];
-      const numSpots = 8;
-      const minDistance = 0.35; // Min distance between cluster centers
+      const numSpots = 4;
+      const minDistance = 0.28;
 
-      // Query for restricted zones to avoid them entirely
       const section = document.querySelector('.featured-projects-section');
-      const restrictedEls = section ? Array.from(section.querySelectorAll('.projects-content h2, .projects-content p, .projects-content button, .project-img-container')) : [];
+      const restrictedEls = section ? Array.from(section.querySelectorAll('.projects-content h2, .projects-content h3, .projects-content p, .projects-content button, .project-img-container')) : [];
       const sectionRect = section?.getBoundingClientRect();
 
       const forbiddenZones = sectionRect ? restrictedEls.map(el => {
@@ -319,16 +318,15 @@ const Index = () => {
         return {
           x: (r.left + r.width / 2 - sectionRect.left) / sectionRect.width,
           y: (r.top + r.height / 2 - sectionRect.top) / sectionRect.height,
-          radiusX: (r.width / 2 + 100) / sectionRect.width, // Padding for avoidance
-          radiusY: (r.height / 2 + 100) / sectionRect.height
+          radiusX: (r.width / 2 + 60) / sectionRect.width,
+          radiusY: (r.height / 2 + 60) / sectionRect.height
         };
       }) : [];
 
-      for (let attempts = 0; attempts < 100 && spots.length < numSpots; attempts++) {
-        const x = 0.05 + Math.random() * 0.9;
-        const y = 0.05 + Math.random() * 0.9;
-        
-        // 1. Check distance from other spots
+      for (let attempts = 0; attempts < 400 && spots.length < numSpots; attempts++) {
+        const x = 0.02 + Math.random() * 0.96;
+        const y = 0.02 + Math.random() * 0.96;
+
         let tooClose = false;
         for (const spot of spots) {
           if (Math.sqrt(Math.pow(spot.xFrac - x, 2) + Math.pow(spot.yFrac - y, 2)) < minDistance) {
@@ -338,7 +336,6 @@ const Index = () => {
         }
         if (tooClose) continue;
 
-        // 2. Check avoidance zones (don't generate near text/images)
         let inForbiddenZone = false;
         for (const zone of forbiddenZones) {
           const dx = Math.abs(x - zone.x);
@@ -348,13 +345,13 @@ const Index = () => {
             break;
           }
         }
-        
+
         if (!inForbiddenZone) {
           spots.push({
             xFrac: x,
             yFrac: y,
-            radius: 3.5 + Math.random() * 2.0,
-            radiusY: 2.5 + Math.random() * 1.0,
+            radius: 3.0 + Math.random() * 1.5,
+            radiusY: 2.0 + Math.random() * 1.0,
           });
         }
       }
@@ -364,7 +361,7 @@ const Index = () => {
     // Use a small timeout to ensure DOM is ready for getBoundingClientRect
     const timer = setTimeout(() => {
       setHexSpots(generateSpots());
-    }, 100);
+    }, 500);
     return () => clearTimeout(timer);
   }, []);
 
@@ -481,7 +478,7 @@ const Index = () => {
           scrub: 1.5,
         }
       });
-      
+
       const updateTextMob = (index: number, val: number) => {
         const col = mobileImpactCols[index];
         const textEl = col.querySelector('.count-text');
@@ -491,11 +488,11 @@ const Index = () => {
 
       mobileImpactCols.forEach((col, i) => {
         const c = { val: 0 };
-        tl.to(c, { 
-          val: parseInt(col.dataset.end || "0"), 
-          duration: 1, 
-          ease: "none", 
-          onUpdate: () => updateTextMob(i, c.val) 
+        tl.to(c, {
+          val: parseInt(col.dataset.end || "0"),
+          duration: 1,
+          ease: "none",
+          onUpdate: () => updateTextMob(i, c.val)
         }, 0);
       });
     }
@@ -621,7 +618,7 @@ const Index = () => {
       });
     }
 
-    // Latest News 3-Segment Reveal
+    // Latest News 3-Segment Reveal — Restored original design with performance optimizations
     const newsSegments = gsap.utils.toArray<HTMLElement>('.news-segment');
     const newsCols = gsap.utils.toArray<HTMLElement>('.news-content-col');
     if (newsSegments.length === 3 && newsCols.length === 3 && window.innerWidth >= 768) {
@@ -631,14 +628,24 @@ const Index = () => {
       const tl = gsap.timeline({
         scrollTrigger: {
           trigger: ".latest-news-section",
-          start: "top bottom", // Starts as soon as it begins scrolling over the frozen page
+          start: "top bottom", 
           end: "+=800",
-          scrub: 1.5,
+          scrub: 0.8, // Slightly tighter scrub for better performance
         }
       });
 
-      tl.to([...getNewsSegs([1]), ...getNewsCols([1])], { y: 0, duration: 1, ease: "none" }, 0)
-        .to([...getNewsSegs([0, 2]), ...getNewsCols([0, 2])], { y: 0, duration: 0.5, ease: "none" }, 0.5);
+      tl.to([...getNewsSegs([1]), ...getNewsCols([1])], { 
+        y: 0, 
+        duration: 1, 
+        ease: "none",
+        force3D: true 
+      }, 0)
+        .to([...getNewsSegs([0, 2]), ...getNewsCols([0, 2])], { 
+          y: 0, 
+          duration: 0.5, 
+          ease: "none",
+          force3D: true 
+        }, 0.5);
     }
 
 
@@ -896,8 +903,9 @@ const Index = () => {
                 <span className="block text-center text-sm md:text-base font-bold uppercase tracking-[0.2em] text-white">
                   In‑Depth Capabilities
                 </span>
+                <div className="w-80 h-[1.5px] bg-black md:bg-white mx-auto mt-4" />
                 <h2 className="font-heading text-4xl md:text-5xl font-semibold tracking-tight mt-4 text-white text-center">
-                  Our Core Research Pillars
+                  Our Major Units
                 </h2>
                 <p className="mt-4 text-lg text-white max-w-2xl mx-auto text-center">
                   End‑to‑end services spanning bioequivalence, drug discovery, nutraceuticals, and cosmetic science.
@@ -1149,17 +1157,16 @@ const Index = () => {
                 Our integrated research campus houses laboratories, bioequivalence units, and quality control centers.
               </p>
               <Button variant="default" size="lg" className="mt-8 bg-white text-black hover:bg-[#FFF200] hover:text-black" asChild>
-                <Link to="/droga-science/labs">Explore Facilities</Link>
+                <Link to="/about">Explore Facilities</Link>
               </Button>
             </SectionReveal>
           </div>
         </section>
       </div> {/* End main-content-wrapper */}
 
-      <div className="relative z-30">
-
+      <div className="relative z-30 pointer-events-none">
         {/* MOBILE: Latest News — simple stacked layout */}
-        <section className="md:hidden bg-white py-14 px-5">
+        <section className="md:hidden bg-white py-14 px-5 pointer-events-auto">
           <div className="flex items-center justify-between mb-8">
             <div>
               <span className="text-xs font-bold uppercase tracking-[0.2em] text-muted-foreground block">Latest News</span>
@@ -1186,15 +1193,15 @@ const Index = () => {
         </section>
 
         {/* DESKTOP: Latest News — complex wipe animation */}
-        <section className="hidden md:block relative z-20 min-h-screen section-padding latest-news-section overflow-hidden">
+        <section className="hidden md:block relative z-20 min-h-screen section-padding latest-news-section overflow-hidden pointer-events-none">
           {/* Solid grey for anything below the 100vh overlap to prevent white gaps! */}
-          <div className="absolute inset-x-0 bottom-0 top-[100vh] bg-white z-0"></div>
+          <div className="absolute inset-x-0 bottom-0 top-[100vh] bg-white z-0 pointer-events-auto"></div>
 
           {/* 3-segment wipe over the frozen 100vh page */}
           <div className="absolute inset-x-0 top-0 h-[100vh] flex z-0">
-            <div className="w-1/3 h-full bg-white translate-y-full news-segment"></div>
-            <div className="w-1/3 h-full bg-white translate-y-full news-segment"></div>
-            <div className="w-1/3 h-full bg-white translate-y-full news-segment"></div>
+            <div className="w-1/3 h-full bg-white translate-y-full news-segment pointer-events-auto" style={{ willChange: 'transform' }}></div>
+            <div className="w-1/3 h-full bg-white translate-y-full news-segment pointer-events-auto" style={{ willChange: 'transform' }}></div>
+            <div className="w-1/3 h-full bg-white translate-y-full news-segment pointer-events-auto" style={{ willChange: 'transform' }}></div>
           </div>
 
           {/* 100vh Window that clips the content while translated down */}
@@ -1202,7 +1209,7 @@ const Index = () => {
             <div className="w-[94%] mx-auto h-full pt-[20vh] pb-[10vh] flex gap-10 pointer-events-auto">
 
               {/* Left Column */}
-              <div className="flex-1 flex flex-col justify-between translate-y-[100vh] news-content-col h-full">
+              <div className="flex-1 flex flex-col justify-between translate-y-[100vh] news-content-col h-full" style={{ willChange: 'transform' }}>
                 <div className="pt-2">
                   <span className="text-base font-bold uppercase tracking-[0.2em] text-black">Latest News</span>
                 </div>
@@ -1220,7 +1227,7 @@ const Index = () => {
               </div>
 
               {/* Middle Column */}
-              <div className="flex-1 flex flex-col justify-end translate-y-[100vh] news-content-col h-full">
+              <div className="flex-1 flex flex-col justify-end translate-y-[100vh] news-content-col h-full" style={{ willChange: 'transform' }}>
                 <div className="mt-auto">
                   <article className="group cursor-pointer overflow-hidden rounded-sm bg-card transition-all duration-300 hover:bg-highlight hover:-translate-y-1.5 shadow-sm">
                     <div className="aspect-[16/10] bg-surface-subtle overflow-hidden">
@@ -1235,7 +1242,7 @@ const Index = () => {
               </div>
 
               {/* Right Column */}
-              <div className="flex-1 flex flex-col justify-between translate-y-[100vh] news-content-col h-full">
+              <div className="flex-1 flex flex-col justify-between translate-y-[100vh] news-content-col h-full" style={{ willChange: 'transform' }}>
                 <div className="flex justify-end pt-2">
                   <Link to="/news" className="flex items-center gap-2 text-base font-heading font-medium text-foreground transition-colors border-2 rounded-full px-6 py-3 border-black hover:bg-highlight hover:text-black">
                     View All <ArrowRight className="w-4 h-4" />
@@ -1259,7 +1266,7 @@ const Index = () => {
         </section>
 
         {/* CTA */}
-        <section className="relative z-20 section-padding bg-white">
+        <section className="relative z-20 section-padding bg-white pointer-events-auto">
           <div className="container-grid text-center">
             <SectionReveal>
               <h2 className="font-heading text-3xl md:text-5xl font-bold tracking-tight text-foreground">

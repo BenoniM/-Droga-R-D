@@ -128,9 +128,11 @@
     .pillar-flex-active {
       flex: 4 1 0% !important;
     }
+
     .pillar-flex-compressed {
       flex: 1 1 0% !important;
     }
+
     .pillar-flex-default {
       flex: 2 1 0% !important;
     }
@@ -139,15 +141,26 @@
   .custom-scrollbar::-webkit-scrollbar {
     width: 16px !important;
   }
+
   .custom-scrollbar::-webkit-scrollbar-track {
     background: transparent !important;
   }
+
   .custom-scrollbar::-webkit-scrollbar-thumb {
     background: #000000 !important;
     border-radius: 20px !important;
   }
+
   .custom-scrollbar {
     scrollbar-width: auto !important;
     scrollbar-color: #000000 transparent !important;
+  }
+
+  /* GSAP pin spacer must never block clicks on the pinned content */
+  .gsap-pin-spacer {
+    pointer-events: none !important;
+  }
+  .gsap-pin-spacer > * {
+    pointer-events: auto !important;
   }
 }
