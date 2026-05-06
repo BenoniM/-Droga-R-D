@@ -16,7 +16,7 @@ const navItems = [
       { label: "Droga Seminar", path: "/droga-science" },
       { label: "Droga Research Grant", path: "/droga-science/grants" },
       { label: "Publications", path: "/droga-science/publications" },
-      { label: "Labs & Facilities", path: "/droga-science/labs" },
+      
     ],
   },
   { label: "News", path: "/news" },

@@ -310,15 +310,7 @@ const Services = () => {
       <section className="section-padding relative overflow-hidden bg-white">
         <div className="container-grid relative">
           <div className="absolute -left-4 top-0 font-heading text-[10rem] md:text-[14rem] font-black text-black/[0.04] leading-none select-none pointer-events-none section-number">01</div>
-          <SectionReveal>
-            <div className="flex items-center gap-4 mb-2">
-              <span className="text-sm md:text-base font-bold uppercase tracking-[0.2em] text-muted-foreground">Phase I Services</span>
-            </div>
-            <h2 className="font-heading text-4xl md:text-5xl font-bold tracking-tight mt-4 text-foreground leading-tight">Analytical Testing Services</h2>
-            <p className="mt-6 text-lg text-muted-foreground max-w-2xl leading-relaxed">
-              Droga bioanalytical & analytical laboratory in phase I offers diversified quality control testing.
-            </p>
-          </SectionReveal>
+     
 
           <div className="mt-16 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 stagger-container">
             {services.map((service) => (
@@ -342,10 +334,15 @@ const Services = () => {
         <div className="container-grid relative">
           <div className="absolute -left-4 top-0 font-heading text-[10rem] md:text-[14rem] font-black text-black/[0.04] leading-none select-none pointer-events-none section-number">02</div>
           <SectionReveal>
+                 
             <div className="flex items-center gap-4 mb-2">
-              <span className="text-sm md:text-base font-bold uppercase tracking-[0.2em] text-muted-foreground">Test Parameters</span>
+              <span className="text-sm md:text-base font-bold uppercase tracking-[0.2em] text-muted-foreground">Phase I Services</span>
             </div>
-            <h2 className="font-heading text-4xl md:text-5xl font-bold tracking-tight mt-4 text-foreground leading-tight">Type of Tests in Phase I</h2>
+            <h2 className="font-heading text-4xl md:text-5xl font-bold tracking-tight mt-4 text-foreground leading-tight">Analytical Testing Services</h2>
+            <p className="mt-6 text-lg text-muted-foreground max-w-2xl leading-relaxed">
+              Droga bioanalytical & analytical laboratory in phase I offers diversified quality control testing.
+            </p>
+          
           </SectionReveal>
 
           <div className="mt-12 md:mt-20 space-y-16 md:space-y-32">
@@ -396,9 +393,7 @@ const Services = () => {
                 {/* Content Box */}
                 <div className="w-[90%] mx-auto lg:w-[45%] lg:absolute lg:left-0 lg:top-1/2 lg:-translate-y-1/2 z-10 bg-white p-8 md:p-12 shadow-xl border border-black/5 -mt-8 md:-mt-16 lg:mt-0 relative order-2 lg:order-1 facility-info-box">
                   <SectionReveal delay={0.2}>
-                    <h4 className="font-heading text-2xl md:text-3xl font-black text-black mb-6 uppercase leading-tight tracking-tight">
-                      Comprehensive Validation
-                    </h4>
+                  
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                       {["Assay", "Identification", "Content Uniformity", "Dissolution", "Disintegration", "Hardness", "Friability", "pH Measurement"].map((item) => (
                         <div key={item} className="flex items-center gap-2 text-base text-black/80 font-medium">
