@@ -77,6 +77,7 @@ const unitPillars = [
   {
     icon: Microscope,
     title: "Drug Discovery",
+    color: "#ffdf22",
     summary: "Research of natural, herbal food and drug discovery, development and formulation.",
     details: [
       {
@@ -92,6 +93,7 @@ const unitPillars = [
   {
     icon: Apple,
     title: "Food & Nutraceutical Sciences Research",
+    color: "#C7372F",
     summary: "Dedicated to the research and development of nutrition-based products aimed at supporting health, wellness, and preventive care.",
     details: [
       {
@@ -102,6 +104,7 @@ const unitPillars = [
   {
     icon: Droplet,
     title: "Cosmetic & Detergent Research and Development",
+    color: "#006994",
     summary: "Dedicated to the formulation, development, and optimization of medicated and non-medicated cosmetic, personal care, and hygiene products.",
     details: [
       {
@@ -112,6 +115,7 @@ const unitPillars = [
   {
     icon: FlaskConical,
     title: "Bioequivalence & Analytical Laboratory",
+    color: "#507d2a",
     summary: "Providing bioequivalence (BE) studies, pharmacokinetic studies, and comprehensive analytical testing services.",
     details: [
       {
@@ -142,6 +146,7 @@ const unitPillars = [
     ]
   }
 ];
+
 
 const HexagonalPartnersGrid = () => {
   const [activePartner, setActivePartner] = useState<number | null>(null);
@@ -174,8 +179,8 @@ const HexagonalPartnersGrid = () => {
   return (
     <div className="w-full max-w-6xl mx-auto py-4 md:py-12 relative" ref={gridRef}>
       {activePartner !== null && (
-        <div 
-          className="absolute inset-0 z-30 cursor-pointer" 
+        <div
+          className="absolute inset-0 z-30 cursor-pointer"
           onClick={() => setActivePartner(null)}
         />
       )}
@@ -480,7 +485,7 @@ const About = () => {
           </div>
         </div>
       </section>
-      
+
       {/* Vision & Mission — Refined design with white bg */}
       <section id="vision" className="bg-white py-24 md:py-32 relative overflow-hidden border-t border-black/10">
         <div className="container-grid relative px-6 md:px-12">
@@ -493,7 +498,7 @@ const About = () => {
                   <span className="text-sm font-bold uppercase tracking-[0.2em] text-black/60">Our Vision</span>
                 </div>
                 <h3 className="font-heading tracking-wide text-3xl md:text-3xl font-base text-black leading-tight mb-8">
-                 <span className="font-semibold"> Vision:</span> To be the leading integrated healthcare ecosystem provider in Ethiopia.
+                  <span className="font-semibold"> Vision:</span> To be the leading integrated healthcare ecosystem provider in Ethiopia.
                 </h3>
               </SectionReveal>
             </div>
@@ -511,8 +516,8 @@ const About = () => {
                   <span className="text-sm font-bold uppercase tracking-[0.2em] text-black/60">Our Mission</span>
                 </div>
                 <h3 className="font-heading tracking-wide text-3xl md:text-3xl font-base text-black leading-tight mb-8">
-                  <span 
-                  className="font-semibold"> Mission:</span> We provide integrated, quality, and innovative healthcare products and services that enhance the health and well-being of every community we serve.
+                  <span
+                    className="font-semibold"> Mission:</span> We provide integrated, quality, and innovative healthcare products and services that enhance the health and well-being of every community we serve.
                 </h3>
               </SectionReveal>
             </div>
@@ -583,7 +588,12 @@ const About = () => {
                       </div>
 
                       <div className={`${isMobile ? 'flex-1 flex' : 'absolute inset-0 flex'} items-center justify-center transition-all duration-700 ${!isMobile && isActive ? 'scale-75 -translate-y-8 opacity-20' : ''} ${isCompressed ? 'opacity-0 scale-50 pointer-events-none' : 'opacity-100'}`}>
-                        <pillar.icon className="w-10 h-10 md:w-20 md:h-20 lg:w-24 lg:h-24 text-[#FFF200]" strokeWidth={1} />
+                        <pillar.icon 
+                          className="w-10 h-10 md:w-20 md:h-20 lg:w-24 lg:h-24" 
+                          style={{ color: pillar.color }} 
+                          fill={pillar.title === "Drug Discovery" ? "none" : pillar.color} 
+                          strokeWidth={1} 
+                        />
                       </div>
 
                       {/* Compressed State: Vertical Title */}
@@ -600,11 +610,14 @@ const About = () => {
                         </p>
                       </div>
 
-                      {/* Button to show detail */}
                       <div className={`${isMobile ? 'mt-2 flex justify-center' : 'absolute bottom-6 left-0 right-0 flex justify-center'} transition-all duration-700 z-10 opacity-100`}>
                         <Button
                           variant="outline"
-                          className="rounded-full border-black/20 text-[10px] md:text-xs text-black uppercase tracking-wider bg-white/50 backdrop-blur hover:bg-[#FFF200] hover:text-black hover:border-[#FFF200] transition-colors px-3 py-1 md:px-4 md:py-2"
+                          className="rounded-full border-black/20 text-[10px] md:text-xs text-black uppercase tracking-wider bg-white/50 backdrop-blur hover:bg-[var(--pillar-color)] hover:text-[var(--pillar-text)] hover:border-[var(--pillar-color)] transition-colors px-3 py-1 md:px-4 md:py-2"
+                          style={{ 
+                            '--pillar-color': pillar.color,
+                            '--pillar-text': pillar.title === "Drug Discovery" ? "black" : "white"
+                          } as React.CSSProperties}
                           onClick={(e) => {
                             e.stopPropagation();
                             setActiveUnit(isActive ? null : index);
@@ -862,7 +875,7 @@ const About = () => {
             </div>
 
             {/* Oil Manufacturing */}
-{/* 
+            {/* 
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
               <SectionReveal className="lg:order-1">
                 <h3 className="font-heading text-3xl font-bold mb-6 text-black">Droga Oil Manufacturing Plant</h3>

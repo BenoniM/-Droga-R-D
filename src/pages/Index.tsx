@@ -105,6 +105,7 @@ const pillarCards = [
   {
     icon: Microscope,
     title: "Drug Discovery",
+    color: "#ffdf22",
     summary: "Research of natural, herbal food and drug discovery, development and formulation.",
     details: [
       {
@@ -120,6 +121,7 @@ const pillarCards = [
   {
     icon: Apple,
     title: "Food & Nutraceutical Sciences Research",
+    color: "#C7372F",
     summary: "Dedicated to the research and development of nutrition-based products aimed at supporting health, wellness, and preventive care.",
     details: [
       {
@@ -130,6 +132,7 @@ const pillarCards = [
   {
     icon: Droplet,
     title: "Cosmetic & Detergent Research and Development",
+    color: "#006994",
     summary: "Dedicated to the formulation, development, and optimization of medicated and non-medicated cosmetic, personal care, and hygiene products.",
     details: [
       {
@@ -140,6 +143,7 @@ const pillarCards = [
   {
     icon: FlaskConical,
     title: "Bioequivalence & Analytical Laboratory",
+    color: "#507d2a",
     summary: "Providing bioequivalence (BE) studies, pharmacokinetic studies, and comprehensive analytical testing services.",
     details: [
       {
@@ -170,6 +174,7 @@ const pillarCards = [
     ]
   }
 ];
+
 
 // Active Projects data
 const activeProjects = [
@@ -633,23 +638,23 @@ const Index = () => {
       const tl = gsap.timeline({
         scrollTrigger: {
           trigger: ".latest-news-section",
-          start: "top bottom", 
+          start: "top bottom",
           end: "+=800",
           scrub: 0.5, // Perfect balance between 1:1 tracking and smoothing
           anticipatePin: 1,
         }
       });
 
-      tl.to([...getNewsSegs([1]), ...getNewsCols([1])], { 
-        yPercent: 0, 
-        duration: 1, 
+      tl.to([...getNewsSegs([1]), ...getNewsCols([1])], {
+        yPercent: 0,
+        duration: 1,
         ease: "none",
         force3D: true,
         lazy: false
       }, 0)
-        .to([...getNewsSegs([0, 2]), ...getNewsCols([0, 2])], { 
-          yPercent: 0, 
-          duration: 0.5, 
+        .to([...getNewsSegs([0, 2]), ...getNewsCols([0, 2])], {
+          yPercent: 0,
+          duration: 0.5,
           ease: "none",
           force3D: true,
           lazy: false
@@ -945,7 +950,12 @@ const Index = () => {
 
                       {/* Icon */}
                       <div className={`${isMobile ? 'flex-1 flex' : 'absolute inset-0 flex'} items-center justify-center transition-all duration-700 ${!isMobile && isActive ? 'scale-75 -translate-y-8 opacity-20' : ''} ${isCompressed ? 'opacity-0 scale-50 pointer-events-none' : 'opacity-100'}`}>
-                        <pillar.icon className="w-10 h-10 md:w-24 md:h-24 text-[#FFF200]" strokeWidth={1} />
+                        <pillar.icon 
+                          className="w-10 h-10 md:w-24 md:h-24" 
+                          style={{ color: pillar.color }} 
+                          fill={pillar.title === "Drug Discovery" ? "none" : pillar.color} 
+                          strokeWidth={1} 
+                        />
                       </div>
 
                       {/* Compressed State: Vertical Title (desktop only) */}
@@ -964,7 +974,11 @@ const Index = () => {
                       <div className={`${isMobile ? 'mt-2 flex justify-center' : 'absolute bottom-6 left-0 right-0 flex justify-center'} transition-all duration-700 z-10 opacity-100`}>
                         <Button
                           variant="outline"
-                          className="rounded-full border-black/20 text-[10px] md:text-xs text-black uppercase tracking-wider bg-white/50 backdrop-blur hover:bg-[#FFF200] hover:text-black hover:border-[#FFF200] transition-colors px-3 py-1 md:px-4 md:py-2"
+                          className="rounded-full border-black/20 text-[10px] md:text-xs text-black uppercase tracking-wider bg-white/50 backdrop-blur hover:bg-[var(--pillar-color)] hover:text-[var(--pillar-text)] hover:border-[var(--pillar-color)] transition-colors px-3 py-1 md:px-4 md:py-2"
+                          style={{ 
+                            '--pillar-color': pillar.color,
+                            '--pillar-text': pillar.title === "Drug Discovery" ? "black" : "white"
+                          } as React.CSSProperties}
                           onClick={(e) => {
                             e.stopPropagation();
                             setActivePillar(isActive ? null : index);
