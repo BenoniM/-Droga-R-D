@@ -20,13 +20,18 @@ import labImg from "@/assets/Images/IMG_4528.jpg";
 import heroImg from "@/assets/Images/IMG_4582.jpg";
 import moleculesImg from "@/assets/Images/IMG_4543.jpg";
 import plantsImg from "@/assets/Images/IMG_4565.jpg";
-import nurseryImg from "@/assets/Project/pexels-hson-10636409.jpg";
-import pillarVideo from "@/assets/pillar/4909887-hd_1080_1920_30fps.mp4";
+import nurseryImg from "@/assets/new-imgs/Plant Nursery.jpg";
+import pillarVideo from "@/assets/pillar/MVI_4634.mp4";
+
+import labVideo1 from "@/assets/labs/MVI_4536.mp4";
+import labVideo2 from "@/assets/labs/MVI_4559.mp4";
+import labVideo3 from "@/assets/labs/MVI_4697.mp4";
+import labVideo4 from "@/assets/labs/MVI_4760.mp4";
 
 import project1Img from "@/assets/Project/Droga Oil Manufacturing Plant.jpg";
 import project2Img from "@/assets/Project/droga-manufacture.png";
-import project3Img from "@/assets/Project/Soap Manufacturing.jpg";
-import project4Img from "@/assets/Project/Rosmary Manufacturing Plant.jpg";
+import project3Img from "@/assets/new-imgs/Soap.jpg";
+import project4Img from "@/assets/new-imgs/Rosmary.jpg";  
 
 import shimadzuLogo from "@/assets/Partners/Shimadzu.png";
 import electroLabLogo from "@/assets/Partners/Electrolab.png";
@@ -689,7 +694,7 @@ const About = () => {
 
                 {/* Image Container */}
                 <div className="w-full lg:w-[70%] h-[250px] md:h-[400px] lg:h-[550px] relative overflow-hidden mt-12 lg:mt-0">
-                  <img src={facilityImg} alt="Bioanalytical Lab" className="w-full h-[130%] -top-[15%] absolute object-cover about-parallax-img" />
+                  <video src={labVideo1} autoPlay loop muted playsInline className="w-full h-[130%] -top-[15%] absolute object-cover about-parallax-img" />
                 </div>
 
                 {/* Content Box */}
@@ -740,7 +745,7 @@ const About = () => {
 
                 {/* Image Container */}
                 <div className="w-full lg:w-[70%] h-[250px] md:h-[400px] lg:h-[550px] relative overflow-hidden mt-12 lg:mt-0 order-1 lg:order-2">
-                  <img src={labImg} alt="Research Lab" className="w-full h-[130%] -top-[15%] absolute object-cover about-parallax-img" />
+                  <video src={labVideo2} autoPlay loop muted playsInline className="w-full h-[130%] -top-[15%] absolute object-cover about-parallax-img" />
                 </div>
               </div>
             </div>
@@ -757,7 +762,7 @@ const About = () => {
 
                 {/* Image Container */}
                 <div className="w-full lg:w-[70%] h-[250px] md:h-[400px] lg:h-[550px] relative overflow-hidden mt-12 lg:mt-0">
-                  <img src={moleculesImg} alt="Quality Control Units" className="w-full h-[130%] -top-[15%] absolute object-cover about-parallax-img" />
+                  <video src={labVideo3} autoPlay loop muted playsInline className="w-full h-[130%] -top-[15%] absolute object-cover about-parallax-img" />
                 </div>
 
                 {/* Content Box */}
@@ -808,7 +813,7 @@ const About = () => {
 
                 {/* Image Container */}
                 <div className="w-full lg:w-[70%] h-[250px] md:h-[400px] lg:h-[550px] relative overflow-hidden mt-12 lg:mt-0 order-1 lg:order-2">
-                  <img src={plantsImg} alt="Pilot Formulation" className="w-full h-[130%] -top-[15%] absolute object-cover about-parallax-img" />
+                  <video src={labVideo4} autoPlay loop muted playsInline className="w-full h-[130%] -top-[15%] absolute object-cover about-parallax-img" />
                 </div>
               </div>
             </div>

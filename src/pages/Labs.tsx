@@ -17,13 +17,13 @@ import facilityImg from "@/assets/Images/IMG_4514.jpg";
 import labImg from "@/assets/Images/IMG_4528.jpg";
 import moleculesImg from "@/assets/Images/IMG_4543.jpg";
 import plantsImg from "@/assets/Images/IMG_4565.jpg";
-import plantsImg2 from "@/assets/Project/pexels-hson-10636409.jpg";
+import plantsImg2 from "@/assets/new-imgs/Plant Nursery.jpg";
 
 
 import project1Img from "@/assets/Project/droga-manufacture.png";
 import project2Img from "@/assets/Project/Droga Oil Manufacturing Plant.jpg";
-import project3Img from "@/assets/Project/Soap Manufacturing.jpg";
-import project4Img from "@/assets/Project/Rosmary Manufacturing Plant.jpg";
+import project3Img from "@/assets/new-imgs/Soap.jpg";
+import project4Img from "@/assets/new-imgs/Rosmary.jpg";
 
 const Labs = () => {
   const pageRef = useRef<HTMLDivElement>(null);

@@ -18,12 +18,13 @@ import labImg from "@/assets/Images/IMG_4528.jpg";
 import facilityImg from "@/assets/Images/IMG_4514.jpg";
 import moleculesImg from "@/assets/Images/IMG_4543.jpg";
 import plantsImg from "@/assets/Images/IMG_4565.jpg";
-import pillarVideo from "@/assets/pillar/4909887-hd_1080_1920_30fps.mp4";
+import pillarVideo from "@/assets/pillar/MVI_4634.mp4";
 
 import project1Img from "@/assets/Project/Droga Oil Manufacturing Plant.jpg";
 import project2Img from "@/assets/Project/droga-manufacture.png";
-import project3Img from "@/assets/Project/Soap Manufacturing.jpg";
-import project4Img from "@/assets/Project/Rosmary Manufacturing Plant.jpg";
+import project3Img from "@/assets/new-imgs/Soap.jpg";
+import project4Img from "@/assets/new-imgs/Rosmary.jpg";
+import nurseryNewImg from "@/assets/new-imgs/Plant Nursery.jpg";
 
 import heroImg1 from "@/assets/Images/IMG_4565.jpg";
 import heroImg2 from "@/assets/Images/IMG_4582.jpg";
@@ -187,7 +188,7 @@ const activeProjects = [
 const newsItems = [
   { title: "New Bioequivalence Study Center Opens", date: "March 2026", excerpt: "State-of-the-art facility at Kilinto Industrial Park begins operations.", image: facilityImg },
   { title: "DRG Grant Applications Now Open", date: "January 2026", excerpt: "Droga Research Grant accepting proposals across pharmaceutical sciences.", image: labImg },
-  { title: "Medicinal Plant Nursery Established", date: "December 2025", excerpt: "Butajira nursery to cultivate indigenous medicinal plant species.", image: plantsImg },
+  { title: "Medicinal Plant Nursery Established", date: "December 2025", excerpt: "Butajira nursery to cultivate indigenous medicinal plant species.", image: nurseryNewImg },
 ];
 
 // Featured Projects Detail Data
