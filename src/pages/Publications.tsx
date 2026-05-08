@@ -3,7 +3,7 @@ import Footer from "@/components/Footer";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { ExternalLink, BookOpen, ArrowRight } from "lucide-react";
 import { motion } from "framer-motion";
-import heroImg from "@/assets/Images/IMG_4582.jpg"; 
+import heroImg from "@/assets/Images/IMG_4713.jpg"; 
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { useGSAP } from "@gsap/react";

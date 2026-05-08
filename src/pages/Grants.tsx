@@ -12,7 +12,7 @@ import { Button } from "@/components/ui/button";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import SectionReveal from "@/components/SectionReveal";
-import heroImg from "@/assets/Images/IMG_4582.jpg";
+import heroImg from "@/assets/Images/IMG_4565.jpg";
 import grantImg1 from "@/assets/Grant/hgfj.png";
 import grantImg2 from "@/assets/Grant/jy.png";
 import grantImg3 from "@/assets/Grant/tyte.png";

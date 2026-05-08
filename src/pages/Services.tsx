@@ -17,7 +17,7 @@ import SectionReveal from "@/components/SectionReveal";
 import { Button } from "@/components/ui/button";
 
 import facilityImg from "@/assets/Images/IMG_4514.jpg";
-import labImg from "@/assets/Images/IMG_4528.jpg";
+import labImg from "@/assets/Images/IMG_4555.jpg";
 import logoImg from "@/assets/logo.png";
 
 import chooseAccuracy from "@/assets/choose/Accuracy.jpg";
