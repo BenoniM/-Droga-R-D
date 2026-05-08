@@ -21,7 +21,7 @@ import heroImg from "@/assets/Images/IMG_4582.jpg";
 import moleculesImg from "@/assets/Images/IMG_4543.jpg";
 import plantsImg from "@/assets/Images/IMG_4565.jpg";
 import nurseryImg from "@/assets/new-imgs/Plant Nursery.jpg";
-import pillarVideo from "@/assets/pillar/MVI_4634.mp4";
+import pillarVideo from "@/assets/pillar/MVI_4700.mp4";
 
 import labVideo1 from "@/assets/labs/MVI_4536.mp4";
 import labVideo2 from "@/assets/labs/MVI_4559.mp4";
@@ -31,7 +31,7 @@ import labVideo4 from "@/assets/labs/MVI_4760.mp4";
 import project1Img from "@/assets/Project/Droga Oil Manufacturing Plant.jpg";
 import project2Img from "@/assets/Project/droga-manufacture.png";
 import project3Img from "@/assets/new-imgs/Soap.jpg";
-import project4Img from "@/assets/new-imgs/Rosmary.jpg";  
+import project4Img from "@/assets/new-imgs/Rosmary.jpg";
 
 import shimadzuLogo from "@/assets/Partners/Shimadzu.png";
 import electroLabLogo from "@/assets/Partners/Electrolab.png";
@@ -392,6 +392,8 @@ const About = () => {
     const videos = gsap.utils.toArray<HTMLElement>('.pillar-video');
     const video = videos[0];
 
+    const pillarText = document.querySelector('.pillars-text-wrapper');
+
     if (wrappers.length === 4 && video && window.innerWidth >= 768) {
       const tl = gsap.timeline({
         scrollTrigger: {
@@ -402,7 +404,7 @@ const About = () => {
         }
       });
 
-      tl.fromTo(video, { y: 600 }, { y: 0, duration: 1, ease: "power2.out" })
+      tl.fromTo([video, pillarText], { y: 600 }, { y: 0, duration: 1, ease: "power2.out" })
         .fromTo([wrappers[1], wrappers[2]], { y: 600 }, { y: 35, duration: 1, ease: "power2.out" }, "+=0.1")
         .fromTo([wrappers[0], wrappers[3]], { y: 600 }, { y: 35, duration: 1, ease: "power2.out" }, "-=0.1");
     }
@@ -534,39 +536,42 @@ const About = () => {
       <section className="relative overflow-hidden bg-white pillars-section">
         <div className="section-padding relative w-full h-full pillars-pin-target">
 
-          {/* Background Video — normal flow on mobile (above cards), absolute on desktop */}
-          <div className="hidden md:flex absolute inset-x-0 top-0 mt-8 justify-center pointer-events-none z-0 overflow-hidden">
-            <div className="w-[45%] lg:w-[23%] h-[550px] relative rounded-[0.3rem] overflow-hidden opacity-90 pillar-video border border-black/10">
-              <video
-                src={pillarVideo}
-                autoPlay
-                loop
-                muted
-                playsInline
-                className="w-full h-full object-cover"
-              />
+          {/* Split layout: Text Left, Video Right, both absolute/moving together */}
+          <div className="hidden md:flex absolute inset-x-0 top-0 mt-8 px-[10%] justify-between items-start pointer-events-none z-0">
+            
+            {/* Text (Left) - Moving with GSAP */}
+            <div className="w-1/2 pillars-text-wrapper">
+              <SectionReveal>
+                <div className="flex flex-col items-start justify-center mb-2">
+                  <span className="block text-sm md:text-base font-bold uppercase tracking-[0.2em] text-black">
+                    Scientific Focus
+                  </span>
+                  <div className="w-60 h-px bg-black mt-4" />
+                </div>
+                <h2 className="font-heading text-4xl md:text-5xl lg:text-5xl font-semibold tracking-tight mt-6 text-black leading-tight">
+                  Major Research <br className="hidden lg:block" /> Units
+                </h2>
+                <p className="mt-8 text-base text-black/70 max-w-xl leading-relaxed">
+                  Our department is organized into four specialized units, each focusing on critical areas of pharmaceutical and nutritional research. We integrate traditional knowledge with modern science to deliver innovative solutions.
+                </p>
+              </SectionReveal>
             </div>
-          </div>
 
-          {/* Mobile video — in normal flow, above cards */}
-          <div className="md:hidden flex justify-center pointer-events-none mb-8">
-            <div className="w-[90%] h-[240px] relative rounded-[0.3rem] overflow-hidden opacity-90 pillar-video border border-black/10">
+            {/* Thinner Video (Right) */}
+            <div className="w-[60%] lg:w-[35%] h-[420px] relative rounded-[0.3rem] border border-black overflow-hidden opacity-90 pillar-video">
               <video src={pillarVideo} autoPlay loop muted playsInline className="w-full h-full object-cover" />
             </div>
           </div>
 
-          <div className="w-full max-w-[96%] mx-auto px-4 relative z-10 md:mix-blend-difference pt-4 md:pt-12">
-            <SectionReveal>
-              <div className="flex flex-col items-center justify-center mb-2">
-                <span className="block text-center text-sm md:text-base font-bold uppercase tracking-[0.2em] text-black md:text-white">
-                  Scientific Focus
-                </span>
-                <div className="w-12 h-px bg-black md:bg-white mt-4" />
-              </div>
-              <h2 className="font-heading text-4xl md:text-5xl font-semibold tracking-tight mt-4 text-black md:text-white text-center">
-                Major Units
-              </h2>
-            </SectionReveal>
+          {/* Mobile video & text — in normal flow */}
+          <div className="md:hidden flex flex-col items-center mb-8">
+            <div className="w-[90%] h-[240px] relative rounded-[0.3rem] border border-black overflow-hidden opacity-90 mb-8">
+              <video src={pillarVideo} autoPlay loop muted playsInline className="w-full h-full object-cover" />
+            </div>
+            <div className="px-4 text-center">
+              <span className="block text-xs font-bold uppercase tracking-[0.2em] text-black">Scientific Focus</span>
+              <h2 className="font-heading text-3xl font-semibold mt-2 text-black">Major Units</h2>
+            </div>
           </div>
 
           <div className="w-full max-w-[96%] mx-auto px-4 relative z-10">
@@ -593,11 +598,11 @@ const About = () => {
                       </div>
 
                       <div className={`${isMobile ? 'flex-1 flex' : 'absolute inset-0 flex'} items-center justify-center transition-all duration-700 ${!isMobile && isActive ? 'scale-75 -translate-y-8 opacity-20' : ''} ${isCompressed ? 'opacity-0 scale-50 pointer-events-none' : 'opacity-100'}`}>
-                        <pillar.icon 
-                          className="w-10 h-10 md:w-20 md:h-20 lg:w-24 lg:h-24" 
-                          style={{ color: pillar.color }} 
-                          fill={pillar.title === "Drug Discovery" ? "none" : pillar.color} 
-                          strokeWidth={1} 
+                        <pillar.icon
+                          className="w-10 h-10 md:w-20 md:h-20 lg:w-24 lg:h-24"
+                          style={{ color: "#FFF200" }}
+                          fill={pillar.title === "Drug Discovery" ? "none" : "#FFF200"}
+                          strokeWidth={1}
                         />
                       </div>
 
@@ -619,7 +624,7 @@ const About = () => {
                         <Button
                           variant="outline"
                           className="rounded-full border-black/20 text-[10px] md:text-xs text-black uppercase tracking-wider bg-white/50 backdrop-blur hover:bg-[var(--pillar-color)] hover:text-[var(--pillar-text)] hover:border-[var(--pillar-color)] transition-colors px-3 py-1 md:px-4 md:py-2"
-                          style={{ 
+                          style={{
                             '--pillar-color': pillar.color,
                             '--pillar-text': pillar.title === "Drug Discovery" ? "black" : "white"
                           } as React.CSSProperties}
@@ -835,7 +840,7 @@ const About = () => {
       {/* 04 Manufacturing & Conservation — 5-segment reveal */}
       <section className="relative section-padding overflow-hidden mfg-section">
         {/* Hexagonal Background for Coming Soon section */}
-        <div className="absolute inset-0 z-[1] pointer-events-none mfg-hex-canvas-wrapper invisible opacity-0">
+        {/* <div className="absolute inset-0 z-[1] pointer-events-none mfg-hex-canvas-wrapper invisible opacity-0">
           <HexagonalBackground
             active={hexActive}
             flipCount={3}
@@ -844,7 +849,7 @@ const About = () => {
             gap={0}
             spots={hexSpots}
           />
-        </div>
+        </div> */}
         <div className="absolute inset-0 flex z-0">
           {[0, 1, 2, 3, 4].map(i => <div key={i} className="w-1/5 h-full bg-[#FFF200] translate-y-full mfg-segment" />)}
         </div>
