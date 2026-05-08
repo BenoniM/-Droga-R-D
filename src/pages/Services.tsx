@@ -3,6 +3,7 @@ import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { useGSAP } from "@gsap/react";
 import useEmblaCarousel from "embla-carousel-react";
+import { motion } from "framer-motion";
 import {
   FlaskConical, Microscope, ArrowRight,
   CheckCircle, Beaker, ClipboardCheck, Gauge, ShieldCheck, Clock, Building2,
@@ -255,6 +256,14 @@ const Services = () => {
       });
     });
 
+    // Parallax on all about-parallax-img elements
+    gsap.utils.toArray<HTMLElement>('.about-parallax-img').forEach((img) => {
+      gsap.fromTo(img, { yPercent: -15 }, {
+        yPercent: 15, ease: "none",
+        scrollTrigger: { trigger: img.parentElement, start: "top bottom", end: "bottom top", scrub: true }
+      });
+    });
+
     // Parallax on images
     gsap.utils.toArray<HTMLElement>('.svc-parallax-img').forEach((img) => {
       gsap.fromTo(img, { yPercent: -15 }, {
@@ -297,18 +306,29 @@ const Services = () => {
     <div className="min-h-screen bg-background" ref={pageRef}>
       <Navbar />
 
-      {/* Hero Section - Left aligned */}
-      <section className="pt-32 pb-20 px-6 bg-highlight relative overflow-hidden">
-        <div className="container-grid">
-          <div className="max-w-3xl text-left hero-content opacity-0">
-            <span className="text-sm md:text-base font-bold uppercase tracking-[0.3em] text-foreground/60">Our Services</span>
-            <h1 className="font-heading text-5xl md:text-7xl font-bold tracking-tighter text-foreground mt-4">
-              Droga Bioanalytical & Analytical Laboratory
+      {/* Hero Section - Standardized Premium Hero */}
+      <section className="relative h-[70vh] md:h-[80vh] flex items-center overflow-hidden">
+        <div className="absolute inset-0 overflow-hidden">
+          <motion.img
+            src={labImg}
+            alt="Services Hero"
+            className="absolute inset-0 w-full h-[120%] -top-[10%] object-cover about-parallax-img"
+            initial={{ scale: 1.08 }}
+            animate={{ scale: 1 }}
+            transition={{ duration: 1.8, ease: [0.22, 1, 0.36, 1] }}
+          />
+        </div>
+        <div className="absolute inset-0 bg-gradient-to-r from-black/80 via-black/50 to-black/30" />
+        <div className="relative container-grid px-6 z-10">
+          <motion.div initial={{ opacity: 0, y: 40 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.9, delay: 0.2 }}>
+            <span className="text-sm font-bold uppercase tracking-[0.3em] text-[#FFF200]">Comprehensive Solutions</span>
+            <h1 className="font-heading text-5xl md:text-7xl lg:text-8xl font-bold tracking-tighter text-white mt-4 leading-tight">
+              Our Services
             </h1>
-            <p className="mt-6 text-xl text-foreground/70 max-w-2xl font-body leading-relaxed">
-              Aimed at providing bioequivalence (BE) studies, pharmacokinetic studies and a comprehensive analytical testing services in compliance with national and international guidelines.
+            <p className="mt-6 text-lg md:text-xl text-white/80 max-w-2xl leading-relaxed">
+              Aimed at providing bioequivalence (BE) studies, pharmacokinetic studies and comprehensive analytical testing services.
             </p>
-          </div>
+          </motion.div>
         </div>
       </section>
 

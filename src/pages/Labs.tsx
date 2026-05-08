@@ -56,37 +56,38 @@ const Labs = () => {
     <div className="min-h-screen bg-background" ref={pageRef}>
       <Navbar />
 
-      {/* Hero Section */}
-      <section className="relative pt-32 pb-24 px-6 overflow-hidden">
-        <motion.img
-          src={facilityImg}
-          alt="Labs Hero"
-          className="absolute inset-0 w-full h-full object-cover"
-          initial={{ scale: 1.1 }}
-          animate={{ scale: 1 }}
-          transition={{ duration: 1.4, ease: [0.22, 1, 0.36, 1] }}
-        />
-        <div className="absolute inset-0 bg-foreground/70" />
-        <div className="relative container-grid z-10">
+      {/* Hero Section - Standardized Premium Hero */}
+      <section className="relative h-[70vh] md:h-[80vh] flex items-center overflow-hidden">
+        <div className="absolute inset-0 overflow-hidden">
+          <motion.img
+            src={facilityImg}
+            alt="Labs Hero"
+            className="absolute inset-0 w-full h-[120%] -top-[10%] object-cover about-parallax-img"
+            initial={{ scale: 1.1 }}
+            animate={{ scale: 1 }}
+            transition={{ duration: 1.4, ease: [0.22, 1, 0.36, 1] }}
+          />
+        </div>
+        <div className="absolute inset-0 bg-gradient-to-r from-black/80 via-black/50 to-black/30" />
+        <div className="relative container-grid px-6 z-10">
           <motion.div
-            initial={{ opacity: 0, y: 30 }}
+            initial={{ opacity: 0, y: 40 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8 }}
-            className="text-center max-w-4xl mx-auto"
+            transition={{ duration: 0.9, delay: 0.2 }}
           >
-            <div className="flex items-center justify-center gap-3 mb-6">
+            <div className="flex items-center gap-3 mb-6">
               <motion.div
                 animate={{ rotate: [0, 5, -5, 0] }}
                 transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
               >
-                <Microscope className="w-10 h-10 text-highlight" strokeWidth={1.5} />
+                <Microscope className="w-10 h-10 text-[#FFF200]" strokeWidth={1.5} />
               </motion.div>
-              <span className="text-xs font-bold uppercase tracking-[0.3em] text-highlight">Infrastructure</span>
+              <span className="text-sm font-bold uppercase tracking-[0.3em] text-[#FFF200]">Infrastructure</span>
             </div>
-            <h1 className="font-heading text-5xl md:text-7xl font-bold tracking-tighter text-surface-dark-foreground mt-4">
+            <h1 className="font-heading text-5xl md:text-7xl lg:text-8xl font-bold tracking-tighter text-white mt-4 leading-tight">
               Labs & Facilities
             </h1>
-            <p className="mt-6 text-lg text-surface-dark-foreground/70 max-w-2xl mx-auto font-body leading-relaxed">
+            <p className="mt-6 text-lg md:text-xl text-white/80 max-w-2xl leading-relaxed">
               Explore our state-of-the-art research campus, housing cutting-edge laboratories, bioequivalence units, and quality control centers designed to accelerate pharmaceutical innovation.
             </p>
           </motion.div>

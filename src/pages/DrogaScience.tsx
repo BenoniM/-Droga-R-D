@@ -197,43 +197,52 @@ const DrogaScience = () => {
         .to(c0, { val: parseInt(statCols[0].dataset.end || "0"), duration: 0.3, ease: "none", onUpdate: () => updateText(0, c0.val) }, 0.7)
         .to(c4, { val: parseInt(statCols[4].dataset.end || "0"), duration: 0.3, ease: "none", onUpdate: () => updateText(4, c4.val) }, 0.7);
     }
+
+    // Parallax on all about-parallax-img elements
+    gsap.utils.toArray<HTMLElement>('.about-parallax-img').forEach((img) => {
+      gsap.fromTo(img, { yPercent: -15 }, {
+        yPercent: 15, ease: "none",
+        scrollTrigger: { trigger: img.parentElement, start: "top bottom", end: "bottom top", scrub: true }
+      });
+    });
   }, { scope: statsRef, dependencies: [] });
 
   return (
     <div className="min-h-screen bg-background">
       <Navbar />
 
-      {/* Hero with image matching Grants/Publications style */}
-      <section className="relative pt-32 pb-24 px-6 overflow-hidden">
-        <motion.img
-          src={moleculesImg}
-          alt="Seminar Hero"
-          className="absolute inset-0 w-full h-full object-cover"
-          initial={{ scale: 1.1 }}
-          animate={{ scale: 1 }}
-          transition={{ duration: 1.4, ease: [0.22, 1, 0.36, 1] }}
-        />
-        <div className="absolute inset-0 bg-foreground/70" />
-        <div className="relative container-grid z-10">
+      {/* Hero Section - Standardized Premium Hero */}
+      <section className="relative h-[70vh] md:h-[80vh] flex items-center overflow-hidden">
+        <div className="absolute inset-0 overflow-hidden">
+          <motion.img
+            src={moleculesImg}
+            alt="Seminar Hero"
+            className="absolute inset-0 w-full h-[120%] -top-[10%] object-cover about-parallax-img"
+            initial={{ scale: 1.1 }}
+            animate={{ scale: 1 }}
+            transition={{ duration: 1.4, ease: [0.22, 1, 0.36, 1] }}
+          />
+        </div>
+        <div className="absolute inset-0 bg-gradient-to-r from-black/80 via-black/50 to-black/30" />
+        <div className="relative container-grid px-6 z-10">
           <motion.div
-            initial={{ opacity: 0, y: 30 }}
+            initial={{ opacity: 0, y: 40 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8 }}
-            className="text-center max-w-4xl mx-auto"
+            transition={{ duration: 0.9, delay: 0.2 }}
           >
-            <div className="flex items-center justify-center gap-3 mb-6">
+            <div className="flex items-center gap-3 mb-6">
               <motion.div
                 animate={{ rotate: [0, 5, -5, 0] }}
                 transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
               >
-                <Users className="w-10 h-10 text-highlight" strokeWidth={1.5} />
+                <Users className="w-10 h-10 text-[#FFF200]" strokeWidth={1.5} />
               </motion.div>
-              <span className="text-xs font-bold uppercase tracking-[0.3em] text-highlight">Knowledge Exchange</span>
+              <span className="text-sm font-bold uppercase tracking-[0.3em] text-[#FFF200]">Knowledge Exchange</span>
             </div>
-            <h1 className="font-heading text-5xl md:text-7xl font-bold tracking-tighter text-surface-dark-foreground mt-4">
+            <h1 className="font-heading text-5xl md:text-7xl lg:text-8xl font-bold tracking-tighter text-white mt-4 leading-tight">
               Droga Seminar
             </h1>
-            <p className="mt-6 text-lg text-surface-dark-foreground/70 max-w-2xl mx-auto font-body leading-relaxed">
+            <p className="mt-6 text-lg md:text-xl text-white/80 max-w-2xl leading-relaxed">
               Bringing together experts, partners, and researchers to exchange knowledge and discuss new findings in pharmaceutical science.
             </p>
           </motion.div>

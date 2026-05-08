@@ -153,106 +153,45 @@ const unitPillars = [
 ];
 
 
-const HexagonalPartnersGrid = () => {
-  const [activePartner, setActivePartner] = useState<number | null>(null);
-  const gridRef = useRef<HTMLDivElement>(null);
-  const [isMobile, setIsMobile] = useState(() => typeof window !== 'undefined' && window.innerWidth < 768);
-
-  useEffect(() => {
-    const checkMobile = () => setIsMobile(window.innerWidth < 768);
-    window.addEventListener('resize', checkMobile);
-    return () => window.removeEventListener('resize', checkMobile);
-  }, []);
-
-  const togglePartner = (index: number) => {
-    setActivePartner(activePartner === index ? null : index);
-  };
-
-  useEffect(() => {
-    const handleClickOutside = (event: MouseEvent) => {
-      if (gridRef.current && !gridRef.current.contains(event.target as Node)) {
-        setActivePartner(null);
-      }
-    };
-
-    document.addEventListener("mousedown", handleClickOutside);
-    return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
-    };
-  }, []);
-
+const SlidingPartnersGrid = () => {
   return (
-    <div className="w-full max-w-6xl mx-auto py-4 md:py-12 relative" ref={gridRef}>
-      {activePartner !== null && (
-        <div
-          className="absolute inset-0 z-30 cursor-pointer"
-          onClick={() => setActivePartner(null)}
-        />
-      )}
-      <div className="flex flex-wrap justify-center items-center px-2 md:px-4 relative z-10">
-        {partners.map((partner, index) => {
-          const isActive = activePartner === index;
-          const isCompressed = activePartner !== null && !isActive;
+    <div className="flex items-start w-full overflow-hidden mb-20 gap-[2px] bg-white">
+      {partners.map((partner, index) => {
+        // Vary the heights slightly for the "trickle" look, but keep widths equal
+        const heights = [
+          'h-56 md:h-80',
+          'h-48 md:h-72',
+          'h-64 md:h-96',
+          'h-40 md:h-64'
+        ];
+        const heightClass = heights[index % heights.length];
 
-          return (
-            <div
-              key={index}
-              className={`relative w-[100px] h-[115px] md:w-[160px] md:h-[184px] transition-all duration-500 ${isActive ? 'z-40' : 'z-10'} ${isCompressed ? 'scale-[0.8] opacity-20 blur-[1px]' : 'scale-100 opacity-100'}`}
-              style={{
-                margin: isMobile ? '1rem 0.25rem' : '-1rem 0.5rem', // Spread out vertically on mobile, interlocking on desktop
-              }}
+        return (
+          <div
+            key={index}
+            className={`partner-segment flex-1 bg-[#FFF200] flex items-end justify-center shadow-sm pb-8 md:pb-12 ${heightClass}`}
+          >
+            <motion.div
+              className="w-full h-24 md:h-32 flex items-center justify-center transition-all duration-500 cursor-pointer p-2 md:p-4"
+              whileHover={{ scale: 1.1 }}
             >
-              {/* The expanded container uses absolute positioning to overlay without moving siblings */}
-              <div
-                onClick={() => togglePartner(index)}
-                className={`absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 cursor-pointer transition-all duration-500 ease-[cubic-bezier(0.34,1.56,0.64,1)] ${isActive
-                  ? 'w-[280px] h-[320px] md:w-[360px] md:h-[415px]'
-                  : 'w-[100px] h-[115px] md:w-[160px] md:h-[184px]'
-                  }`}
-                style={{
-                  filter: isActive
-                    ? "drop-shadow(0 25px 35px rgba(0,0,0,0.02)) drop-shadow(0 10px 10px rgba(0,0,0,0.15))"
-                    : "drop-shadow(0 10px 15px rgba(0,0,0,0.1)) drop-shadow(0 4px 6px rgba(0,0,0,0.05))"
-                }}
-              >
-                <div
-                  className={`w-full h-full group flex flex-col items-center justify-center transition-colors duration-300 relative ${isActive ? 'bg-white pt-2 pb-2 px-6 md:pt-4 md:pb-4 md:px-10' : 'bg-white p-0'
-                    }`}
-                  style={{ clipPath: 'polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%)' }}
-                >
-                  {/* Expanding circle on hover */}
-                  {!isActive && (
-                    <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-4 h-4 bg-[#FFF200] rounded-full scale-0 group-hover:scale-[20] transition-transform duration-700 ease-out z-0" />
-                  )}
-
-                  <div className={`flex items-center justify-center shrink-0 transition-all duration-500 relative z-10 ${isActive ? 'w-20 h-20 md:w-28 md:h-28 mb-4' : 'w-[70%] h-[70%]'}`}>
-                    {partner.logo ? (
-                      <img
-                        src={partner.logo}
-                        alt={partner.name}
-                        className={`max-h-full max-w-full object-contain transition-all duration-300 grayscale-0`}
-                      />
-                    ) : (
-                      <span className={`font-heading text-sm md:text-base font-bold text-center px-4 transition-colors duration-300 ${isActive ? 'text-black' : 'text-muted-foreground group-hover:text-black'}`}>{partner.name}</span>
-                    )}
-                  </div>
-
-                  {/* We only render the text if active so it doesn't try to cram into the small hexagon */}
-                  <div
-                    className={`flex-1 text-center flex flex-col justify-start w-full transition-all duration-500 overflow-hidden relative z-10 ${isActive ? 'opacity-100 max-h-[200px]' : 'opacity-0 max-h-0'}`}
-                  >
-                    <h4 className={`font-heading text-lg md:text-xl font-bold mb-1 line-clamp-2 mt-1 text-black`}>{partner.name}</h4>
-                    <p className={`text-xs md:text-sm leading-tight line-clamp-4 px-2 text-black/70`}>{partner.description}</p>
-                  </div>
-                </div>
-              </div>
-            </div>
-          );
-        })}
-      </div>
+              <img
+                src={partner.logo}
+                alt={partner.name}
+                className="max-h-full max-w-full object-contain"
+                title={partner.name}
+              />
+            </motion.div>
+          </div>
+        );
+      })}
     </div>
   );
 };
+
+
+
+
 
 const About = () => {
   const pageRef = useRef<HTMLDivElement>(null);
@@ -408,6 +347,73 @@ const About = () => {
         .fromTo([wrappers[1], wrappers[2]], { y: 600 }, { y: 35, duration: 1, ease: "power2.out" }, "+=0.1")
         .fromTo([wrappers[0], wrappers[3]], { y: 600 }, { y: 35, duration: 1, ease: "power2.out" }, "-=0.1");
     }
+
+    // Vision & Mission Scroll Animations
+    gsap.fromTo(".vision-divider", { scaleY: 0 }, {
+      scaleY: 1, duration: 1.5, ease: "power4.inOut", scrollTrigger: { trigger: "#vision", start: "top 70%" }
+    });
+
+    // Hover Parallax for cards
+    const cards = gsap.utils.toArray<HTMLElement>('.vision-card, .mission-card');
+    cards.forEach(card => {
+      const content = card.querySelector('.parallax-content');
+      const bg = card.querySelector('.hover-bg');
+      if (!content || !bg) return;
+
+      const isVision = card.classList.contains('vision-card');
+      // Set initial clip-path (hidden)
+      gsap.set(bg, {
+        clipPath: isVision ? "inset(0 100% 0 0)" : "inset(0 0 0 100%)",
+        opacity: 1
+      });
+
+      card.addEventListener('mouseenter', () => {
+        gsap.to(bg, { clipPath: "inset(0 0% 0 0%)", duration: 0.8, ease: "power3.inOut" });
+      });
+
+      card.addEventListener('mouseleave', () => {
+        gsap.to(bg, {
+          clipPath: isVision ? "inset(0 100% 0 0)" : "inset(0 0 0 100%)",
+          duration: 0.6,
+          ease: "power3.inOut"
+        });
+        gsap.to(content, { x: 0, y: 0, rotateX: 0, rotateY: 0, duration: 1, ease: "elastic.out(1, 0.3)" });
+      });
+
+      card.addEventListener('mousemove', (e: MouseEvent) => {
+        const rect = card.getBoundingClientRect();
+        const x = (e.clientX - rect.left) / rect.width - 0.5;
+        const y = (e.clientY - rect.top) / rect.height - 0.5;
+        gsap.to(content, {
+          x: x * 30,
+          y: y * 30,
+          rotateX: -y * 10,
+          rotateY: x * 10,
+          duration: 0.6,
+          ease: "power2.out",
+          transformPerspective: 1000
+        });
+      });
+    });
+
+    // Partners unified trickling & receding animation
+    gsap.fromTo(".partner-segment",
+      { y: -450 },
+      {
+        y: 0,
+        ease: "power2.out",
+        stagger: {
+          amount: 1.2,
+          from: "random"
+        },
+        scrollTrigger: {
+          trigger: "#partners",
+          start: "top 110%", // Start earlier
+          end: "top 40%",   // End later but keep it scrubbed
+          scrub: 1.5,       // Smoother but still responsive
+        }
+      }
+    );
   }, { scope: pageRef });
 
   return (
@@ -415,7 +421,7 @@ const About = () => {
       <Navbar />
 
       {/* Hero — CRF-inspired split with parallax */}
-      <section className="relative h-[85vh] md:h-screen flex items-center overflow-hidden">
+      <section className="relative h-[70vh] md:h-[80vh] flex items-center overflow-hidden">
         <div className="absolute inset-0 overflow-hidden">
           <motion.img
             src={project2Img}
@@ -435,7 +441,7 @@ const About = () => {
             transition={{ duration: 0.9, delay: 0.2 }}
           >
             <span className="text-sm font-bold uppercase tracking-[0.3em] text-[#FFF200]">About Us</span>
-            <h1 className="font-heading text-6xl md:text-8xl lg:text-9xl font-bold tracking-tighter text-white mt-4 leading-none whitespace-normal md:whitespace-nowrap">
+            <h1 className="font-heading text-5xl md:text-7xl lg:text-8xl font-bold tracking-tighter text-white mt-4 leading-tight whitespace-normal md:whitespace-nowrap">
               Our Story
             </h1>
             <div className="w-24 h-1 bg-[#FFF200] mt-6 origin-left section-line" />
@@ -495,38 +501,67 @@ const About = () => {
 
       {/* Vision & Mission — Refined design with white bg */}
       <section id="vision" className="bg-white py-24 md:py-32 relative overflow-hidden border-t border-black/10">
-        <div className="container-grid relative px-6 md:px-12">
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-16 relative z-10">
+        <div className="container-grid relative px-6 md:px-12 z-10">
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-16 lg:gap-0 relative">
             {/* Vision */}
-            <div className="lg:col-span-5">
-              <SectionReveal>
-                <div className="flex items-center gap-4 mb-6">
-                  <div className="w-12 h-px bg-black origin-left section-line" />
-                  <span className="text-sm font-bold uppercase tracking-[0.2em] text-black/60">Our Vision</span>
-                </div>
-                <h3 className="font-heading tracking-wide text-3xl md:text-3xl font-base text-black leading-tight mb-8">
-                  <span className="font-semibold"> Vision:</span> To be the leading integrated healthcare ecosystem provider in Ethiopia.
-                </h3>
-              </SectionReveal>
+            <div className="lg:col-span-5 vision-card group relative py-4 transition-colors duration-500 cursor-pointer">
+              {/* Sliding Yellow Background - Spans to central divider */}
+              <div className="hover-bg absolute top-0 bottom-0 bg-[#FFF200] z-0"
+                style={{ left: '-100vw', right: '-20%' }} />
+
+              <div className="parallax-content relative z-10">
+                <SectionReveal>
+                  <div className="px-6 md:px-8 py-4">
+                    <div className="flex items-center gap-4 mb-8">
+                      <div className="w-12 h-px bg-black origin-left section-line" />
+                      <span className="text-xs font-bold uppercase tracking-[0.3em] text-black/40 group-hover:text-black transition-colors duration-500">Our Vision</span>
+                    </div>
+                    <div className="flex flex-col md:flex-row items-start gap-6">
+                      <div className="shrink-0 p-4 bg-black/5 rounded-full group-hover:bg-white transition-all duration-500 shadow-sm">
+                        <Eye className="w-8 h-8 text-black" strokeWidth={1.5} />
+                      </div>
+                      <div className="flex-1">
+                        <h3 className="font-heading text-xl md:text-2xl lg:text-3xl font-bold text-black leading-snug tracking-tight">
+                          To be the leading integrated healthcare ecosystem provider in Ethiopia.
+                        </h3>
+                      </div>
+                    </div>
+                  </div>
+                </SectionReveal>
+              </div>
             </div>
 
             {/* Divider on large screens */}
-            <div className="hidden lg:block lg:col-span-2 relative">
-              <div className="absolute left-1/2 top-0 bottom-0 w-px bg-black/10" />
+            <div className="hidden lg:block lg:col-span-2 relative h-full">
+              <div className="absolute left-1/2 top-0 bottom-0 w-px bg-black/10 origin-top vision-divider scale-y-100" />
             </div>
 
             {/* Mission */}
-            <div className="lg:col-span-5">
-              <SectionReveal delay={0.2}>
-                <div className="flex items-center gap-4 mb-6">
-                  <div className="w-12 h-px bg-black origin-left section-line" />
-                  <span className="text-sm font-bold uppercase tracking-[0.2em] text-black/60">Our Mission</span>
-                </div>
-                <h3 className="font-heading tracking-wide text-3xl md:text-3xl font-base text-black leading-tight mb-8">
-                  <span
-                    className="font-semibold"> Mission:</span> We provide integrated, quality, and innovative healthcare products and services that enhance the health and well-being of every community we serve.
-                </h3>
-              </SectionReveal>
+            <div className="lg:col-span-5 mission-card group relative py-4 transition-colors duration-500 cursor-pointer">
+              {/* Sliding Yellow Background - Spans to central divider */}
+              <div className="hover-bg absolute top-0 bottom-0 bg-[#FFF200] z-0"
+                style={{ left: '-20%', right: '-100vw' }} />
+
+              <div className="parallax-content relative z-10">
+                <SectionReveal delay={0.2}>
+                  <div className="px-6 md:px-8 py-4">
+                    <div className="flex items-center gap-4 mb-8">
+                      <div className="w-12 h-px bg-black origin-left section-line" />
+                      <span className="text-xs font-bold uppercase tracking-[0.3em] text-black/40 group-hover:text-black transition-colors duration-500">Our Mission</span>
+                    </div>
+                    <div className="flex flex-col md:flex-row items-start gap-6">
+                      <div className="shrink-0 p-4 bg-black/5 rounded-full group-hover:bg-white transition-all duration-500 shadow-sm">
+                        <Target className="w-8 h-8 text-black" strokeWidth={1.5} />
+                      </div>
+                      <div className="flex-1">
+                        <h3 className="font-heading text-xl md:text-2xl lg:text-3xl font-bold text-black leading-snug tracking-tight">
+                          We provide quality and innovative products that enhance the well-being of every community.
+                        </h3>
+                      </div>
+                    </div>
+                  </div>
+                </SectionReveal>
+              </div>
             </div>
           </div>
         </div>
@@ -538,7 +573,7 @@ const About = () => {
 
           {/* Split layout: Text Left, Video Right, both absolute/moving together */}
           <div className="hidden md:flex absolute inset-x-0 top-0 mt-8 px-[10%] justify-between items-start pointer-events-none z-0">
-            
+
             {/* Text (Left) - Moving with GSAP */}
             <div className="w-1/2 pillars-text-wrapper">
               <SectionReveal>
@@ -956,21 +991,23 @@ const About = () => {
 
 
       {/* Partners */}
-      <section id="partners" className="py-12 md:py-24 px-6 relative overflow-hidden bg-gray-50/50">
-        <div className="container-grid text-center relative">
-          <SectionReveal>
-            <div className="flex items-center justify-center gap-4 mb-2">
-              <div className="w-12 h-px bg-[#FFF200] origin-left section-line" />
-              <span className="text-sm font-bold uppercase tracking-[0.2em] text-muted-foreground">Collaboration</span>
-              <div className="w-12 h-px bg-[#FFF200] origin-right section-line" />
-            </div>
-            <h2 className="font-heading text-4xl md:text-5xl font-bold tracking-tight mt-4 text-foreground">Our Partners</h2>
-            <p className="mt-6 text-lg text-muted-foreground max-w-2xl mx-auto">
-              We collaborate with pharmaceutical companies, research institutes, academic organizations, and regulatory bodies.
-            </p>
-          </SectionReveal>
-          <div className="mt-12">
-            <HexagonalPartnersGrid />
+      <section id="partners" className="relative overflow-hidden bg-white">
+        <div className="w-full relative">
+          <SlidingPartnersGrid />
+
+          {/* Titles second */}
+          <div className="text-center pb-24 px-6">
+            <SectionReveal>
+              <div className="flex items-center justify-center gap-4 mb-2">
+                <div className="w-12 h-px bg-[#FFF200] origin-left section-line" />
+                <span className="text-sm font-bold uppercase tracking-[0.2em] text-muted-foreground">Collaboration</span>
+                <div className="w-12 h-px bg-[#FFF200] origin-right section-line" />
+              </div>
+              <h2 className="font-heading text-4xl md:text-5xl font-bold tracking-tight mt-4 text-foreground">Our Partners</h2>
+              <p className="mt-6 text-lg text-muted-foreground max-w-2xl mx-auto leading-relaxed">
+                We collaborate with pharmaceutical companies, research institutes, academic organizations, and regulatory bodies to advance the frontiers of healthcare.
+              </p>
+            </SectionReveal>
           </div>
         </div>
       </section>

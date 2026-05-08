@@ -9,6 +9,11 @@ import moleculesImg from "@/assets/Images/IMG_4543.jpg";
 import plantsImg from "@/assets/Images/IMG_4565.jpg";
 import facilityImg from "@/assets/Images/IMG_4514.jpg";
 import heroImg from "@/assets/Images/IMG_4582.jpg";
+import gsap from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
+import { useGSAP } from "@gsap/react";
+
+gsap.registerPlugin(ScrollTrigger);
 
 const filters = ["All", "Biotechnology", "Medicine", "Public Health", "AI"];
 
@@ -25,19 +30,40 @@ const Projects = () => {
   const [activeFilter, setActiveFilter] = useState("All");
   const filtered = activeFilter === "All" ? projects : projects.filter(p => p.category === activeFilter);
 
+  useGSAP(() => {
+    // Parallax on all about-parallax-img elements
+    gsap.utils.toArray<HTMLElement>('.about-parallax-img').forEach((img) => {
+      gsap.fromTo(img, { yPercent: -15 }, {
+        yPercent: 15, ease: "none",
+        scrollTrigger: { trigger: img.parentElement, start: "top bottom", end: "bottom top", scrub: true }
+      });
+    });
+  });
+
   return (
     <div className="min-h-screen bg-background">
       <Navbar />
 
-      {/* Hero */}
-      <section className="pt-32 pb-20 px-6 bg-highlight">
-        <div className="container-grid">
-          <motion.div initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8 }}>
-            <span className="text-xs font-bold uppercase tracking-[0.3em] text-foreground/60">Research</span>
-            <h1 className="font-heading text-5xl md:text-7xl font-bold tracking-tighter text-foreground mt-4">
+      {/* Hero Section - Standardized Premium Hero */}
+      <section className="relative h-[70vh] md:h-[80vh] flex items-center overflow-hidden">
+        <div className="absolute inset-0 overflow-hidden">
+          <motion.img
+            src={heroImg}
+            alt="Research Projects"
+            className="absolute inset-0 w-full h-[120%] -top-[10%] object-cover about-parallax-img"
+            initial={{ scale: 1.1 }}
+            animate={{ scale: 1 }}
+            transition={{ duration: 1.4, ease: [0.22, 1, 0.36, 1] }}
+          />
+        </div>
+        <div className="absolute inset-0 bg-gradient-to-r from-black/80 via-black/50 to-black/30" />
+        <div className="relative container-grid px-6 z-10">
+          <motion.div initial={{ opacity: 0, y: 40 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.9, delay: 0.2 }}>
+            <span className="text-sm font-bold uppercase tracking-[0.3em] text-[#FFF200]">Scientific Innovation</span>
+            <h1 className="font-heading text-5xl md:text-7xl lg:text-8xl font-bold tracking-tighter text-white mt-4 leading-tight">
               Research Projects
             </h1>
-            <p className="mt-6 text-lg text-foreground/70 max-w-2xl font-body leading-relaxed">
+            <p className="mt-6 text-lg md:text-xl text-white/80 max-w-2xl font-body leading-relaxed">
               Explore our portfolio of innovative research spanning biotechnology, medicine, and public health.
             </p>
           </motion.div>

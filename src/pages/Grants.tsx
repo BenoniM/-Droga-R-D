@@ -2,6 +2,11 @@ import { useRef, useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { motion, useScroll, useTransform } from "framer-motion";
 import type { Variants } from "framer-motion";
+import gsap from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
+import { useGSAP } from "@gsap/react";
+
+gsap.registerPlugin(ScrollTrigger);
 import { Award, Medal, Trophy, Star, BadgeCheck, Crown, FileCheck, Users, ShieldCheck, Clock } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import Navbar from "@/components/Navbar";
@@ -30,19 +35,19 @@ const pastGrants = [
 ];
 
 function FlaskIcon({ className }: { className?: string }) {
-  return <svg className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><path d="M10 2v7.527a2 2 0 0 1-.211.896L4.72 20.55a1 1 0 0 0 .9 1.45h12.76a1 1 0 0 0 .9-1.45l-5.069-10.127A2 2 0 0 1 14 9.527V2"/><path d="M8.5 2h7"/></svg>;
+  return <svg className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><path d="M10 2v7.527a2 2 0 0 1-.211.896L4.72 20.55a1 1 0 0 0 .9 1.45h12.76a1 1 0 0 0 .9-1.45l-5.069-10.127A2 2 0 0 1 14 9.527V2" /><path d="M8.5 2h7" /></svg>;
 }
 function LeafIcon({ className }: { className?: string }) {
-  return <svg className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><path d="M11 20A7 7 0 0 1 9.8 6.9C15.5 4.9 17 3.5 19 2c1 2 2 4.5 2 8 0 5.5-4.5 10-10 10Z"/><path d="M2 21c0-3 1.85-5.36 5.08-6C9.5 14.52 12 13 13 12"/></svg>;
+  return <svg className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><path d="M11 20A7 7 0 0 1 9.8 6.9C15.5 4.9 17 3.5 19 2c1 2 2 4.5 2 8 0 5.5-4.5 10-10 10Z" /><path d="M2 21c0-3 1.85-5.36 5.08-6C9.5 14.52 12 13 13 12" /></svg>;
 }
 function HeartIcon({ className }: { className?: string }) {
-  return <svg className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"/></svg>;
+  return <svg className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z" /></svg>;
 }
 function BeakerIcon({ className }: { className?: string }) {
-  return <svg className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><path d="M4.5 3h15"/><path d="M6 3v16a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2V3"/><path d="M6 14h12"/></svg>;
+  return <svg className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><path d="M4.5 3h15" /><path d="M6 3v16a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2V3" /><path d="M6 14h12" /></svg>;
 }
 function SparkleIcon({ className }: { className?: string }) {
-  return <svg className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><path d="m12 3-1.912 5.813a2 2 0 0 1-1.275 1.275L3 12l5.813 1.912a2 2 0 0 1 1.275 1.275L12 21l1.912-5.813a2 2 0 0 1 1.275-1.275L21 12l-5.813-1.912a2 2 0 0 1-1.275-1.275L12 3Z"/></svg>;
+  return <svg className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><path d="m12 3-1.912 5.813a2 2 0 0 1-1.275 1.275L3 12l5.813 1.912a2 2 0 0 1 1.275 1.275L12 21l1.912-5.813a2 2 0 0 1 1.275-1.275L21 12l-5.813-1.912a2 2 0 0 1-1.275-1.275L12 3Z" /></svg>;
 }
 
 const containerVariants: Variants = {
@@ -94,45 +99,40 @@ function StickyGrantCard({
   const rotate = useTransform(
     scrollYProgress,
     [segStart, exitStart, segEnd],
-    isLast ? [0, 0, 0] : [0, 0, -3.5]
+    isLast ? [0, 0, 0] : [0, 0, -4]
   );
   const scale = useTransform(
     scrollYProgress,
     [segStart, exitStart, segEnd],
-    isLast ? [1, 1, 1] : [1, 1, 0.92]
+    isLast ? [1, 1, 1] : [1, 1, 0.95]
   );
-  // Only fade the text panel, not the whole card
+  // Fade only the text panel slightly
   const textOpacity = useTransform(
     scrollYProgress,
     [segStart, exitStart, segEnd],
-    isLast ? [1, 1, 1] : [1, 1, 0.4]
+    isLast ? [1, 1, 1] : [1, 1, 0.2]
   );
   const y = useTransform(
     scrollYProgress,
     [segStart, exitStart, segEnd],
-    isLast ? ["0%", "0%", "0%"] : ["0%", "0%", "-5%"]
+    isLast ? ["0%", "0%", "0%"] : ["0%", "0%", "-2%"]
   );
 
   const cardBg = index % 2 === 0 ? "#ffffff" : "#fffef5";
 
   return (
     <div
-      className="sticky top-0 h-[100dvh] flex items-center justify-center px-4 md:px-12 bg-background py-16 md:py-0"
-      style={{ zIndex: index + 1, isolation: "isolate" }}
+      className="sticky top-0 h-[100dvh] flex items-center justify-center px-4 md:px-12 py-16 md:py-0"
+      style={{ zIndex: index + 1 }}
     >
       <motion.div
-        style={{ rotate, scale, y, transformOrigin: "50% 110%", willChange: "auto" }}
-        className="w-full max-w-6xl rounded-2xl overflow-hidden shadow-2xl border border-black/[0.06] flex flex-col lg:flex-row"
-        transformTemplate={(_, generated) =>
-          generated === "none" || generated === "translateZ(0px) translateY(0%) scale(1) rotate(0deg)"
-            ? "none"
-            : generated
-        }
+        style={{ rotate, scale, y, transformZ: 0, transformOrigin: "50% 110%" }}
+        className="w-full max-w-6xl rounded-2xl overflow-hidden shadow-2xl border border-black/[0.06] flex flex-col lg:flex-row relative z-10 bg-white"
       >
         {/* Left: text */}
         <motion.div
-          style={isMobile ? { background: cardBg } : { opacity: textOpacity, background: cardBg, willChange: "auto" }}
           className="flex-1 flex flex-col justify-between p-10 md:p-14"
+          style={{ opacity: textOpacity, background: cardBg, transformZ: 0 }}
         >
           <span
             className="font-heading font-bold text-[6rem] md:text-[8rem] leading-none select-none"
@@ -194,71 +194,88 @@ const Grants = () => {
     return () => window.removeEventListener('resize', checkMobile);
   }, []);
 
+  useGSAP(() => {
+    // Parallax on all about-parallax-img elements
+    gsap.utils.toArray<HTMLElement>('.about-parallax-img').forEach((img) => {
+      gsap.fromTo(img, { yPercent: -15 }, {
+        yPercent: 15, ease: "none",
+        scrollTrigger: { trigger: img.parentElement, start: "top bottom", end: "bottom top", scrub: true }
+      });
+    });
+  });
+
   return (
     <div className="min-h-screen bg-background">
       <Navbar />
 
-      {/* Hero */}
-      <section className="relative pt-32 pb-24 px-6 overflow-hidden">
-        <motion.img
-          src={heroImg}
-          alt="Research grants"
-          className="absolute inset-0 w-full h-full object-cover"
-          initial={{ scale: 1.1 }}
-          animate={{ scale: 1 }}
-          transition={{ duration: 1.4, ease: [0.22, 1, 0.36, 1] }}
-        />
-        <div className="absolute inset-0 bg-foreground/70" />
-        <div className="relative container-grid z-10">
+      {/* Hero Section - Standardized Premium Hero */}
+      <section className="relative h-[70vh] md:h-[80vh] flex items-center overflow-hidden">
+        <div className="absolute inset-0 overflow-hidden">
+          <motion.img
+            src={heroImg}
+            alt="Research grants"
+            className="absolute inset-0 w-full h-[120%] -top-[10%] object-cover about-parallax-img"
+            initial={{ scale: 1.1 }}
+            animate={{ scale: 1 }}
+            transition={{ duration: 1.4, ease: [0.22, 1, 0.36, 1] }}
+          />
+        </div>
+        <div className="absolute inset-0 bg-gradient-to-r from-black/80 via-black/50 to-black/30" />
+        <div className="relative container-grid px-6 z-10">
           <motion.div
-            initial={{ opacity: 0, y: 30 }}
+            initial={{ opacity: 0, y: 40 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8 }}
-            className="text-center max-w-4xl mx-auto"
+            transition={{ duration: 0.9, delay: 0.2 }}
           >
-            <div className="flex items-center justify-center gap-3 mb-6">
+            <div className="flex items-center gap-3 mb-6">
               <motion.div
                 animate={{ rotate: [0, 10, -10, 0] }}
                 transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
               >
-                <Crown className="w-10 h-10 text-highlight" strokeWidth={1.5} />
+                <Crown className="w-10 h-10 text-[#FFF200]" strokeWidth={1.5} />
               </motion.div>
-              <span className="text-xs font-bold uppercase tracking-[0.3em] text-highlight">Excellence in Research</span>
+              <span className="text-sm font-bold uppercase tracking-[0.3em] text-[#FFF200]">Excellence in Research</span>
             </div>
-            <h1 className="font-heading text-5xl md:text-7xl font-bold tracking-tighter text-surface-dark-foreground mt-4">
+            <h1 className="font-heading text-5xl md:text-7xl lg:text-8xl font-bold tracking-tighter text-white mt-4 leading-tight">
               Droga Research Grant
             </h1>
-            <p className="mt-6 text-lg text-surface-dark-foreground/70 max-w-2xl mx-auto font-body leading-relaxed">
+            <p className="mt-6 text-lg md:text-xl text-white/80 max-w-2xl leading-relaxed">
               Recognizing and funding outstanding pharmaceutical research that transforms healthcare outcomes.
             </p>
           </motion.div>
         </div>
       </section>
 
-      {/* About DRG */}
-      <section className="section-padding">
-        <div className="container-grid max-w-4xl text-center mx-auto">
+      {/* 01 Overview — CRF numbered section */}
+      <section className="section-padding relative overflow-hidden">
+        <div className="container-grid relative">
           <SectionReveal>
-            <motion.div
-              animate={{ y: [0, -5, 0] }}
-              transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
-              className="inline-block mb-6"
-            >
-              <Trophy className="w-16 h-16 text-highlight mx-auto" strokeWidth={1} />
-            </motion.div>
-            <h2 className="font-heading text-3xl md:text-4xl font-semibold tracking-tight text-foreground">
-              Our Commitment to Advancing Pharmaceutical Research
+            <div className="flex items-center gap-4 mb-2">
+              <Trophy className="w-8 h-8 text-highlight" strokeWidth={1.5} />
+            </div>
+            <h2 className="font-heading text-2xl md:text-3xl font-bold tracking-tight mt-4 text-foreground leading-tight">
+              Our Commitment to Advancing<br className="hidden md:block" /> Pharmaceutical Research
             </h2>
-            <p className="mt-6 text-lg font-body text-muted-foreground leading-relaxed max-w-2xl mx-auto">
-              At Droga Research Grant (DRG), we believe that meaningful health solutions start with innovative research.
-              Our mission is to support both junior and senior researchers who are dedicated to improving human health
-              through pharmaceutical and related research. We are particularly interested in projects that address real
-              challenges faced by our communities and country, and that have the potential to make a tangible impact on people's lives.
-            </p>
-            <p className="mt-4 text-md font-body text-muted-foreground leading-relaxed max-w-2xl mx-auto">
-              Our goal is to empower researchers to transform ideas into solutions that improve the quality of pharmaceuticals and healthcare products.
-            </p>
           </SectionReveal>
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 md:gap-16 mt-6 md:mt-12">
+            <SectionReveal>
+              <div className="space-y-6 text-sm text-muted-foreground font-body leading-relaxed">
+                <p>
+                  At Droga Research Grant (DRG), we believe that meaningful health solutions start with innovative research. Our mission is to support both junior and senior researchers who are dedicated to improving human health through pharmaceutical and related research.
+                </p>
+                <p className="hidden md:block">
+                  We are particularly interested in projects that address real challenges faced by our communities and country, and that have the potential to make a tangible impact on people's lives. Our goal is to empower researchers to transform ideas into solutions that improve the quality of pharmaceuticals and healthcare products.
+                </p>
+              </div>
+            </SectionReveal>
+            <SectionReveal delay={0.15}>
+              <div className="space-y-0 md:space-y-6 text-sm text-muted-foreground font-body leading-relaxed">
+                <p className="hidden md:block">
+                  Since its inception, DRG has evolved into a cornerstone of pharmaceutical innovation in Ethiopia. By providing financial support and academic recognition, we foster an environment where scientific rigor meets community-focused development.
+                </p>
+              </div>
+            </SectionReveal>
+          </div>
         </div>
       </section>
 
