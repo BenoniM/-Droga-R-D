@@ -99,24 +99,19 @@ function StickyGrantCard({
   const rotate = useTransform(
     scrollYProgress,
     [segStart, exitStart, segEnd],
-    isLast ? [0, 0, 0] : [0, 0, -4]
+    isLast ? [0, 0, 0] : [0, 0, -3.5]
   );
   const scale = useTransform(
     scrollYProgress,
     [segStart, exitStart, segEnd],
     isLast ? [1, 1, 1] : [1, 1, 0.95]
   );
-  // Fade only the text panel slightly
-  const textOpacity = useTransform(
-    scrollYProgress,
-    [segStart, exitStart, segEnd],
-    isLast ? [1, 1, 1] : [1, 1, 0.2]
-  );
   const y = useTransform(
     scrollYProgress,
     [segStart, exitStart, segEnd],
-    isLast ? ["0%", "0%", "0%"] : ["0%", "0%", "-2%"]
+    isLast ? ["0%", "0%", "0%"] : ["0%", "0%", "-5%"]
   );
+  const textOpacity = 1; // Keep text at full opacity for maximum clarity
 
   const cardBg = index % 2 === 0 ? "#ffffff" : "#fffef5";
 
@@ -126,13 +121,13 @@ function StickyGrantCard({
       style={{ zIndex: index + 1 }}
     >
       <motion.div
-        style={{ rotate, scale, y, transformZ: 0, transformOrigin: "50% 110%" }}
-        className="w-full max-w-6xl rounded-2xl overflow-hidden shadow-2xl border border-black/[0.06] flex flex-col lg:flex-row relative z-10 bg-white"
+        style={{ rotate, scale, y, transformOrigin: "50% 110%" }}
+        className="w-full max-w-6xl rounded-2xl overflow-hidden shadow-2xl border border-black/[0.06] flex flex-col lg:flex-row relative z-10 bg-white antialiased transform-gpu"
       >
         {/* Left: text */}
-        <motion.div
+        <div
           className="flex-1 flex flex-col justify-between p-10 md:p-14"
-          style={{ opacity: textOpacity, background: cardBg, transformZ: 0 }}
+          style={{ background: cardBg }}
         >
           <span
             className="font-heading font-bold text-[6rem] md:text-[8rem] leading-none select-none"
@@ -168,7 +163,7 @@ function StickyGrantCard({
               {index + 1} of {total} funded projects
             </span>
           </div>
-        </motion.div>
+        </div>
 
         {/* Right: image */}
         <div
