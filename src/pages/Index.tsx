@@ -628,7 +628,7 @@ const Index = () => {
       });
     }
 
-    // Latest News 3-Segment Reveal — Restored original design with maximum performance optimizations
+    // Latest News 3-Segment Reveal — Smooth scroll-driven wipe with heavy interpolation
     const newsSegments = gsap.utils.toArray<HTMLElement>('.news-segment');
     const newsCols = gsap.utils.toArray<HTMLElement>('.news-content-col');
     if (newsSegments.length === 3 && newsCols.length === 3 && window.innerWidth >= 768) {
@@ -636,33 +636,32 @@ const Index = () => {
       const getNewsCols = (indices: number[]) => indices.map(i => newsCols[i]);
 
       // Set initial states in GSAP instead of CSS to avoid transform clashes
-      gsap.set(newsSegments, { yPercent: 100 });
-      gsap.set(newsCols, { yPercent: 100 });
+      gsap.set(newsSegments, { yPercent: 100, force3D: true });
+      gsap.set(newsCols, { yPercent: 100, force3D: true });
 
       const tl = gsap.timeline({
         scrollTrigger: {
           trigger: ".latest-news-section",
           start: "top bottom",
-          end: "+=800",
-          scrub: 0.5, // Perfect balance between 1:1 tracking and smoothing
-          anticipatePin: 1,
+          end: "+=700",
+          scrub: 1.8,
         }
       });
 
+      // Center segment starts first, outer segments start slightly later
+      // All end at the SAME timeline position (1.2) to guarantee pixel-perfect alignment
       tl.to([...getNewsSegs([1]), ...getNewsCols([1])], {
         yPercent: 0,
-        duration: 1,
+        duration: 1.2,
         ease: "none",
         force3D: true,
-        lazy: false
       }, 0)
         .to([...getNewsSegs([0, 2]), ...getNewsCols([0, 2])], {
           yPercent: 0,
-          duration: 0.5,
+          duration: 0.8,
           ease: "none",
           force3D: true,
-          lazy: false
-        }, 0.5);
+        }, 0.4);
     }
 
 
@@ -902,10 +901,10 @@ const Index = () => {
         {/* Our Core Research Pillars - Glassmorphism Grid */}
         <section className="relative overflow-hidden bg-white pillars-section">
           <div className="section-padding relative w-full h-full pillars-pin-target">
-            
+
             {/* Split layout: Text Left, Video Right, both absolute/moving together */}
             <div className="hidden md:flex absolute inset-x-0 top-0 mt-8 px-[10%] justify-between items-start pointer-events-none z-0">
-              
+
               {/* Text (Left) - Moving with GSAP */}
               <div className="w-1/2 pillars-text-wrapper">
                 <SectionReveal>
@@ -1228,15 +1227,15 @@ const Index = () => {
         </section>
 
         {/* DESKTOP: Latest News — complex wipe animation */}
-        <section className="hidden md:block relative z-20 min-h-screen section-padding latest-news-section overflow-hidden pointer-events-none">
+        <section className="hidden md:block relative z-20 h-[100vh] latest-news-section overflow-hidden pointer-events-none">
           {/* Solid grey for anything below the 100vh overlap to prevent white gaps! */}
           <div className="absolute inset-x-0 bottom-0 top-full bg-white z-0 pointer-events-auto"></div>
 
-          {/* 3-segment wipe over the frozen 100vh page */}
-          <div className="absolute inset-x-0 top-0 h-[100vh] flex z-0">
-            <div className="w-1/3 h-full bg-white news-segment pointer-events-auto" style={{ willChange: 'transform' }}></div>
-            <div className="w-1/3 h-full bg-white news-segment pointer-events-auto" style={{ willChange: 'transform' }}></div>
-            <div className="w-1/3 h-full bg-white news-segment pointer-events-auto" style={{ willChange: 'transform' }}></div>
+          {/* 3-segment wipe over the frozen 100vh page — CSS Grid prevents subpixel gaps */}
+          <div className="absolute inset-x-0 top-0 h-[100vh] grid grid-cols-3 z-0">
+            <div className="h-full bg-white news-segment pointer-events-auto"></div>
+            <div className="h-full bg-white news-segment pointer-events-auto"></div>
+            <div className="h-full bg-white news-segment pointer-events-auto"></div>
           </div>
 
           {/* 100vh Window that clips the content while translated down */}
@@ -1244,7 +1243,7 @@ const Index = () => {
             <div className="w-[94%] mx-auto h-full pt-[20vh] pb-[10vh] flex gap-10 pointer-events-auto">
 
               {/* Left Column */}
-              <div className="flex-1 flex flex-col justify-between news-content-col h-full" style={{ willChange: 'transform' }}>
+              <div className="flex-1 flex flex-col justify-between news-content-col h-full">
                 <div className="pt-2">
                   <span className="text-base font-bold uppercase tracking-[0.2em] text-black">Latest News</span>
                 </div>
@@ -1262,7 +1261,7 @@ const Index = () => {
               </div>
 
               {/* Middle Column */}
-              <div className="flex-1 flex flex-col justify-end news-content-col h-full" style={{ willChange: 'transform' }}>
+              <div className="flex-1 flex flex-col justify-end news-content-col h-full">
                 <div className="mt-auto">
                   <article className="group cursor-pointer overflow-hidden rounded-sm bg-card transition-all duration-300 hover:bg-highlight hover:-translate-y-1.5 shadow-sm">
                     <div className="aspect-[16/10] bg-surface-subtle overflow-hidden">
@@ -1277,7 +1276,7 @@ const Index = () => {
               </div>
 
               {/* Right Column */}
-              <div className="flex-1 flex flex-col justify-between news-content-col h-full" style={{ willChange: 'transform' }}>
+              <div className="flex-1 flex flex-col justify-between news-content-col h-full">
                 <div className="flex justify-end pt-2">
                   <Link to="/news" className="flex items-center gap-2 text-base font-heading font-medium text-foreground transition-colors border-2 rounded-full px-6 py-3 border-black hover:bg-highlight hover:text-black">
                     View All <ArrowRight className="w-4 h-4" />
