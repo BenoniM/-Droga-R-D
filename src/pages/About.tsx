@@ -1,5 +1,6 @@
 import { useRef, useState, useEffect } from "react";
 import { motion } from "framer-motion";
+import useEmblaCarousel from "embla-carousel-react";
 import { Users, Target, Eye, FlaskConical, Droplet, Apple, Microscope, Leaf, TestTube, ArrowRight } from "lucide-react";
 import { Link } from "react-router-dom";
 import gsap from "gsap";
@@ -23,8 +24,12 @@ import plantsImg from "@/assets/Images/IMG_4565.jpg";
 import nurseryImg from "@/assets/new-imgs/Plant Nursery.jpg";
 import pillarVideo from "@/assets/pillar/MVI_4700.mp4";
 
-import labVideo1 from "@/assets/labs/MVI_4536.mp4";
-import labVideo2 from "@/assets/labs/MVI_4559.mp4";
+import bioanalyticalVideo1 from "@/assets/infrastructure/bioanalytical1.mp4";
+import bioanalyticalVideo2 from "@/assets/infrastructure/bioanalytical2.mp4";
+import bioanalyticalVideo3 from "@/assets/infrastructure/bioanalytical3.mp4";
+import researchFormulationImg1 from "@/assets/research/research1.jpg";
+import researchFormulationImg2 from "@/assets/research/research2.jpg";
+import researchFormulationImg3 from "@/assets/research/research3.jpg";
 import labVideo3 from "@/assets/labs/MVI_4697.mp4";
 import labVideo4 from "@/assets/labs/MVI_4760.mp4";
 
@@ -152,6 +157,11 @@ const unitPillars = [
   }
 ];
 
+const researchFormulationSlides = [
+  { src: researchFormulationImg1, alt: "Research and formulation laboratory" },
+  { src: researchFormulationImg2, alt: "Research laboratory" },
+  { src: researchFormulationImg3, alt: "Formulation laboratory" },
+];
 
 const SlidingPartnersGrid = () => {
   return (
@@ -199,6 +209,29 @@ const About = () => {
   const [hexActive, setHexActive] = useState(false);
   const [hexSpots, setHexSpots] = useState<any[]>([]);
   const [isMobile, setIsMobile] = useState(() => typeof window !== 'undefined' && window.innerWidth < 768);
+
+  const [researchEmblaRef, researchEmblaApi] = useEmblaCarousel({
+    loop: true,
+    align: "start",
+    skipSnaps: false,
+  });
+  const [researchSlideIndex, setResearchSlideIndex] = useState(0);
+
+  useEffect(() => {
+    if (!researchEmblaApi) return;
+    const onSelect = () => setResearchSlideIndex(researchEmblaApi.selectedScrollSnap());
+    researchEmblaApi.on("select", onSelect);
+    onSelect();
+    return () => {
+      researchEmblaApi.off("select", onSelect);
+    };
+  }, [researchEmblaApi]);
+
+  useEffect(() => {
+    if (!researchEmblaApi) return;
+    const id = window.setInterval(() => researchEmblaApi.scrollNext(), 5500);
+    return () => window.clearInterval(id);
+  }, [researchEmblaApi]);
 
   useEffect(() => {
     const checkMobile = () => setIsMobile(window.innerWidth < 768);
@@ -732,9 +765,11 @@ const About = () => {
                   </h3>
                 </div>
 
-                {/* Image Container */}
-                <div className="w-full lg:w-[70%] h-[250px] md:h-[400px] lg:h-[550px] relative overflow-hidden mt-12 lg:mt-0">
-                  <video src={labVideo1} autoPlay loop muted playsInline className="w-full h-[130%] -top-[15%] absolute object-cover about-parallax-img" />
+                {/* Video strip — all three infrastructure clips */}
+                <div className="w-full lg:w-[70%] h-[250px] md:h-[400px] lg:h-[550px] relative overflow-hidden mt-12 lg:mt-0 grid grid-cols-1 sm:grid-cols-3 gap-1 sm:gap-2">
+                  <video src={bioanalyticalVideo1} autoPlay loop muted playsInline className="h-full w-full min-h-[200px] sm:min-h-0 object-cover about-parallax-img" />
+                  <video src={bioanalyticalVideo2} autoPlay loop muted playsInline className="h-full w-full min-h-[200px] sm:min-h-0 object-cover about-parallax-img" />
+                  <video src={bioanalyticalVideo3} autoPlay loop muted playsInline className="h-full w-full min-h-[200px] sm:min-h-0 object-cover about-parallax-img" />
                 </div>
 
                 {/* Content Box */}
@@ -785,7 +820,32 @@ const About = () => {
 
                 {/* Image Container */}
                 <div className="w-full lg:w-[70%] h-[250px] md:h-[400px] lg:h-[550px] relative overflow-hidden mt-12 lg:mt-0 order-1 lg:order-2">
-                  <video src={labVideo2} autoPlay loop muted playsInline className="w-full h-[130%] -top-[15%] absolute object-cover about-parallax-img" />
+                  <div className="overflow-hidden h-full w-full cursor-grab active:cursor-grabbing" ref={researchEmblaRef}>
+                    <div className="flex h-full">
+                      {researchFormulationSlides.map((slide, i) => (
+                        <div key={i} className="min-w-0 shrink-0 grow-0 basis-full h-full relative">
+                          <img
+                            src={slide.src}
+                            alt={slide.alt}
+                            className="absolute inset-0 w-full h-full object-cover about-parallax-img select-none pointer-events-none"
+                            draggable={false}
+                          />
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                  <div className="absolute bottom-3 left-0 right-0 z-20 flex justify-center gap-2" aria-label="Carousel slides">
+                    {researchFormulationSlides.map((_, i) => (
+                      <button
+                        key={i}
+                        type="button"
+                        aria-label={`Go to image ${i + 1}`}
+                        aria-current={researchSlideIndex === i}
+                        onClick={() => researchEmblaApi?.scrollTo(i)}
+                        className={`h-2 rounded-full transition-all duration-300 ${researchSlideIndex === i ? "w-8 bg-white" : "w-2 bg-white/45 hover:bg-white/70"}`}
+                      />
+                    ))}
+                  </div>
                 </div>
               </div>
             </div>

@@ -235,7 +235,7 @@ const Grants = () => {
               Droga Research Grant
             </h1>
             <p className="mt-6 text-lg md:text-xl text-white/80 max-w-2xl leading-relaxed">
-              Recognizing and funding outstanding pharmaceutical research that transforms healthcare outcomes.
+            Empowering researchers and institutions to drive innovative, problem-solving health researches though sustainable support and Corporate Social Responsibility. 
             </p>
           </motion.div>
         </div>

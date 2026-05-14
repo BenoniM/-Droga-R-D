@@ -16,7 +16,6 @@ import Footer from "@/components/Footer";
 import SectionReveal from "@/components/SectionReveal";
 import { Button } from "@/components/ui/button";
 
-import facilityImg from "@/assets/Images/IMG_4514.jpg";
 import labImg from "@/assets/Images/IMG_4555.jpg";
 import logoImg from "@/assets/logo.png";
 
@@ -25,6 +24,32 @@ import chooseAdvanced from "@/assets/choose/Advanced.jpg";
 import chooseFast from "@/assets/choose/Fast.jpg";
 import chooseQC from "@/assets/choose/QC.jpg";
 import chooseRegulatory from "@/assets/choose/Regulatory.jpg";
+
+import whyChooseUs1 from "@/assets/whychooseus/Why1.jpg";
+import whyChooseUs2 from "@/assets/whychooseus/Why2.jpg";
+import whyChooseUs3 from "@/assets/whychooseus/Why3.jpg";
+import whyChooseUs4 from "@/assets/whychooseus/Why4.png";
+
+import raw1 from "@/assets/raw/raw1.mp4";
+import raw2 from "@/assets/raw/raw2.mp4";
+
+import finished1 from "@/assets/finished/finished1.mp4";
+import finished2 from "@/assets/finished/finished2.mp4";
+import finished3 from "@/assets/finished/finished3.mp4";
+
+import highperformance from "@/assets/instrument/highperformance.jpg";
+import uvvisible from "@/assets/instrument/uv1.jpg";
+import uvvisible2 from "@/assets/instrument/uv2.jpg";
+import fourier from "@/assets/instrument/fourier.jpg";
+import dissolution1 from "@/assets/instrument/dissolution1.jpg";
+import dissolution2 from "@/assets/instrument/dissolution2.jpg";
+import analyticalbalance from "@/assets/instrument/analytical.jpg";
+import phmeter from "@/assets/instrument/ph1.jpg";
+import phmeter2 from "@/assets/instrument/ph2.jpg";
+import laboratoryscale from "@/assets/instrument/laboratory1.jpg";
+import laboratoryscale2 from "@/assets/instrument/laboratory2.jpg";
+import laboratoryscale3 from "@/assets/instrument/laboratory3.jpg";
+
 
 import shimadzuLogo from "@/assets/Partners/Shimadzu.png";
 import electroLabLogo from "@/assets/Partners/Electrolab.png";
@@ -87,6 +112,19 @@ const baseInstruments = [
 
 const instruments = baseInstruments;
 
+/** Photos shown below the description in the instrumentation info card (index aligns with baseInstruments). */
+const instrumentCardPhotos: (string[] | null)[] = [
+  [highperformance],
+  [uvvisible, uvvisible2],
+  [fourier],
+  [dissolution1, dissolution2],
+  [analyticalbalance],
+  [phmeter, phmeter2],
+  null,
+  null,
+  [laboratoryscale, laboratoryscale2, laboratoryscale3],
+];
+
 // Quality commitment points
 const qualityPoints = [
   { text: "EFDA regulatory compliance in all applicable research, development, and analytical activities", icon: Gavel },
@@ -102,13 +140,13 @@ const whyChooseUs = [
     icon: Building2,
     title: "Segregated QC Facilities",
     desc: "Dedicated and controlled QC areas ensure secure, unbiased, and reliable testing.",
-    img: chooseQC
+    img: whyChooseUs1
   },
   {
     icon: CheckCircle,
     title: "Accuracy & Reliability",
     desc: "Analytical processes designed to deliver precise, consistent, and reproducible results.",
-    img: chooseAccuracy
+    img: whyChooseUs2
   },
   {
     icon: ClipboardCheck,
@@ -120,13 +158,13 @@ const whyChooseUs = [
     icon: Clock,
     title: "Fast Turnaround Times",
     desc: "Efficient workflows and skilled teams enable timely analysis without compromising quality.",
-    img: chooseFast
+    img: whyChooseUs4
   },
   {
     icon: Microscope,
     title: "Advanced Infrastructure",
     desc: "Modern, well-maintained laboratory equipment supports high-quality research and testing outcomes.",
-    img: chooseAdvanced
+    img: whyChooseUs3
   },
 ];
 
@@ -382,9 +420,10 @@ const Services = () => {
                   </h3>
                 </div>
 
-                {/* Image Container */}
-                <div className="w-full lg:w-[70%] h-[250px] md:h-[400px] relative overflow-hidden mt-12 lg:mt-0 rounded-sm">
-                  <img src={labImg} alt="Raw Material Testing" className="w-full h-[130%] -top-[15%] absolute object-cover svc-parallax-img" />
+                {/* Video strip — raw material testing (matches bioanalytical layout) */}
+                <div className="w-full lg:w-[70%] h-[250px] md:h-[400px] lg:h-[550px] relative overflow-hidden mt-12 lg:mt-0 grid grid-cols-1 sm:grid-cols-2 gap-1 sm:gap-2 rounded-sm">
+                  <video src={raw1} autoPlay loop muted playsInline className="h-full w-full min-h-[200px] sm:min-h-0 object-cover svc-parallax-img" />
+                  <video src={raw2} autoPlay loop muted playsInline className="h-full w-full min-h-[200px] sm:min-h-0 object-cover svc-parallax-img" />
                 </div>
 
                 {/* Content Box */}
@@ -431,9 +470,11 @@ const Services = () => {
                   </SectionReveal>
                 </div>
 
-                {/* Image Container */}
-                <div className="w-full lg:w-[70%] h-[250px] md:h-[400px] relative overflow-hidden mt-12 lg:mt-0 order-1 lg:order-2 rounded-sm">
-                  <img src={facilityImg} alt="Finished Product Testing" className="w-full h-[130%] -top-[15%] absolute object-cover svc-parallax-img" />
+                {/* Video strip — finished product testing */}
+                <div className="w-full lg:w-[70%] h-[250px] md:h-[400px] lg:h-[550px] relative overflow-hidden mt-12 lg:mt-0 order-1 lg:order-2 grid grid-cols-1 sm:grid-cols-3 gap-1 sm:gap-2 rounded-sm">
+                  <video src={finished1} autoPlay loop muted playsInline className="h-full w-full min-h-[200px] sm:min-h-0 object-cover svc-parallax-img" />
+                  <video src={finished2} autoPlay loop muted playsInline className="h-full w-full min-h-[200px] sm:min-h-0 object-cover svc-parallax-img" />
+                  <video src={finished3} autoPlay loop muted playsInline className="h-full w-full min-h-[200px] sm:min-h-0 object-cover svc-parallax-img" />
                 </div>
               </div>
             </div>
@@ -510,6 +551,36 @@ const Services = () => {
                 <p className="text-foreground/80 text-sm md:text-base italic font-medium leading-relaxed transition-all duration-300">
                   {baseInstruments[focusedInst].desc}
                 </p>
+                {(() => {
+                  const photos = instrumentCardPhotos[focusedInst];
+                  if (!photos?.length) return null;
+                  const name = baseInstruments[focusedInst].name;
+                  if (photos.length === 1) {
+                    return (
+                      <img
+                        src={photos[0]}
+                        alt={name}
+                        className="mt-5 w-full max-h-[200px] sm:max-h-[240px] md:max-h-[280px] object-cover rounded-md border border-black/5"
+                      />
+                    );
+                  }
+                  const gridClass =
+                    photos.length >= 3
+                      ? "grid grid-cols-1 sm:grid-cols-3 gap-2"
+                      : "grid grid-cols-1 sm:grid-cols-2 gap-2";
+                  return (
+                    <div className={`mt-5 ${gridClass}`}>
+                      {photos.map((src, i) => (
+                        <img
+                          key={i}
+                          src={src}
+                          alt={`${name} — photo ${i + 1}`}
+                          className="w-full h-32 sm:h-36 md:h-40 object-cover rounded-md border border-black/5"
+                        />
+                      ))}
+                    </div>
+                  );
+                })()}
               </div>
 
               {/* Next Button - Desktop Only */}

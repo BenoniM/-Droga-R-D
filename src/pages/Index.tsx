@@ -23,14 +23,15 @@ import pillarVideo from "@/assets/pillar/MVI_4700.mp4";
 import project1Img from "@/assets/Project/Droga Oil Manufacturing Plant.jpg";
 import project2Img from "@/assets/Project/droga-manufacture.png";
 import project3Img from "@/assets/new-imgs/Soap.jpg";
-import project4Img from "@/assets/new-imgs/Rosmary.jpg";
+import project5Img from "@/assets/new-imgs/Rosmary.jpg";
+import project4Img from "@/assets/Project/rosemary.png";
 import nurseryNewImg from "@/assets/new-imgs/Plant Nursery.jpg";
 
-import heroImg1 from "@/assets/Images/IMG_4565.jpg";
-import heroImg2 from "@/assets/Images/IMG_4713.jpg";
-import heroImg3 from "@/assets/Images/IMG_4784.jpg";
-import heroImg4 from "@/assets/Images/IMG_4555.jpg";
-import heroImg5 from "@/assets/Images/IMG_4517.jpg";
+import heroImg1 from "@/assets/Hero/home1.jpg";
+import heroImg2 from "@/assets/Hero/home2.jpg";
+import heroImg3 from "@/assets/Hero/home3.jpg";
+import heroImg4 from "@/assets/Hero/home4.jpg";
+import heroImg5 from "@/assets/Hero/home5.jpg";
 
 const heroStackImages = [heroImg1, heroImg2, heroImg3, heroImg4, heroImg5];
 
@@ -78,7 +79,7 @@ const heroSlidesData = [
   {
     image: heroImg1,
     subtitle: "State-of-the-Art Infrastructure",
-    desc: "Translating complex biological data into scalable pharmaceutical solutions through innovative research and scientific excellence."
+    desc: "Translating complex into scalable pharmaceutical solutions through innovative research and scientific excellence."
   },
   {
     image: heroImg2,
@@ -88,7 +89,7 @@ const heroSlidesData = [
   {
     image: heroImg3,
     subtitle: "Advanced Bioequivalence",
-    desc: "GCP-compliant clinical unit with comprehensive analytical testing services for reliable evaluation."
+    desc: "Comprehensive compliant bioanalytical and analytical testing services delivering accurate, reliable, and traceable results."
   },
   {
     image: heroImg4,
@@ -223,7 +224,7 @@ const featuredProjectsData = [
     image: project4Img,
     description: "The Butajira Rosemary Processing Plant aims to improve the livelihood of farmers in Meskan Woreda, Eastern Gurage Zone, through sustainable rosemary cultivation and market integration. The initiative covers 20 hectares of investment land and 40 hectares of partner farms, engaging 160 local farmers in modern rosemary production supported by training, technology transfer, and cooperative formation.",
     paragraphs: [
-      "With a total investment of ETB 77.24 million, the project focuses on producing high-quality rosemary for essential oil extraction used in pharmaceutical, cosmetic, and food industries. It combines scientific cultivation practices with irrigation technology to yield over 20,000 quintals of rosemary twice a year, ensuring consistent supply and export potential."
+      "The Butajira Botanical Garden is envisioned as a center of excellence for the conservation, research, cultivation, and sustainable utilization of Ethiopia’s indigenous plant diversity. Located in the ecologically rich landscape of Butajira, the garden serves as a living repository of native, medicinal, aromatic, endemic, and economically valuable plant species while promoting environmental sustainability and community development. Inspired by successful botanical conservation initiatives in Ethiopia and globally, the garden aims to protect threatened indigenous flora through both in-situ and ex-situ conservation approaches. Botanical gardens play a critical role in conserving endangered and economically important plant species, supporting biodiversity research, environmental education, and ecotourism development."
     ],
     footer: "Beyond its economic impact, the project promotes environmental sustainability, job creation (11 permanent and 60 temporary positions), and community empowerment. By linking farmers to formal markets and improving production standards, Droga Pharma PLC is positioning Meskan Woreda as a center of excellence for essential oil-bearing crops and contributing to Ethiopia's growing natural product industry.",
     imageFirst: true,
