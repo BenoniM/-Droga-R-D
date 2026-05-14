@@ -25,9 +25,9 @@ import chooseFast from "@/assets/choose/Fast.jpg";
 import chooseQC from "@/assets/choose/QC.jpg";
 import chooseRegulatory from "@/assets/choose/Regulatory.jpg";
 
-import whyChooseUs1 from "@/assets/whychooseus/Why1.jpg";
-import whyChooseUs2 from "@/assets/whychooseus/Why2.jpg";
-import whyChooseUs3 from "@/assets/whychooseus/Why3.jpg";
+import whyChooseUs1 from "@/assets/whychooseus/why1.jpg";
+import whyChooseUs2 from "@/assets/whychooseus/why2.jpg";
+import whyChooseUs3 from "@/assets/whychooseus/why3.jpg";
 import whyChooseUs4 from "@/assets/whychooseus/Why4.png";
 
 import raw1 from "@/assets/raw/raw1.mp4";
@@ -57,7 +57,7 @@ import lotusLogo from "@/assets/Partners/Lotus.png";
 import emiLogo from "@/assets/Partners/EMI.png";
 import tekLogo from "@/assets/Partners/Tek.png";
 import dbuLogo from "@/assets/Partners/Debre Berhan.png";
-import aauLogo from "@/assets/Partners/AAU.jpg";
+import aauLogo from "@/assets/Partners/AAU.png";
 import emaLogo from "@/assets/Partners/EMA.png";
 import breezeLogo from "@/assets/Partners/Breeze.png";
 
