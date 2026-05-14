@@ -28,7 +28,7 @@ import chooseRegulatory from "@/assets/choose/Regulatory.jpg";
 import whyChooseUs1 from "@/assets/whychooseus/why1.jpg";
 import whyChooseUs2 from "@/assets/whychooseus/why2.jpg";
 import whyChooseUs3 from "@/assets/whychooseus/why3.jpg";
-import whyChooseUs4 from "@/assets/whychooseus/Why4.png";
+import whyChooseUs4 from "@/assets/whychooseus/why4.png";
 
 import raw1 from "@/assets/raw/raw1.mp4";
 import raw2 from "@/assets/raw/raw2.mp4";
