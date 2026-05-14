@@ -926,7 +926,7 @@ const About = () => {
         <img src={facilityImg} alt="Facility" className="absolute inset-0 w-full h-[140%] -top-[20%] object-cover about-parallax-img" />
         <div className="absolute inset-0 bg-black/60 flex items-center justify-center">
           <SectionReveal className="text-center max-w-2xl px-6">
-            <h2 className="font-heading text-3xl md:text-5xl font-bold text-white tracking-tight">World-Class Facilities</h2>
+            <h2 className="font-heading text-3xl md:text-5xl font-bold text-white tracking-tight">World-Class</h2>
             <p className="mt-4 text-lg text-white/70">Our integrated research campus houses laboratories, bioequivalence units, and quality control centers.</p>
           </SectionReveal>
         </div>
