@@ -397,7 +397,7 @@ const Grants = () => {
             >
               <Crown className="w-14 h-14 text-foreground mx-auto" strokeWidth={1} />
             </motion.div>
-            <h2 className="font-heading text-3xl md:text-5xl font-bold tracking-tight text-foreground">Collaboration for DRG</h2>
+            <h2 className="font-heading text-3xl md:text-5xl font-bold tracking-tight text-foreground">Contact Us for Collaboration</h2>
             <p className="mt-4 text-base md:text-lg font-body text-foreground/70 max-w-xl mx-auto">
               Applications open every January. Ethiopian healthcare professionals, researchers, and academicians are welcome to submit their proposals.
             </p>
