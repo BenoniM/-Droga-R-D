@@ -792,7 +792,7 @@ const Index = () => {
           </div>
           <div className="flex gap-2 md:flex-wrap md:gap-4">
             <Button variant="default" size="lg" asChild className="flex-1 md:flex-none bg-black text-white hover:bg-[#FFF200] hover:text-black transition-all duration-300 border-none text-xs md:text-base px-3 md:px-6">
-              <Link to="/droga-science">Explore Research</Link>
+              <Link to="/droga-science/home">Explore Research</Link>
             </Button>
             <Button
               type="button"
