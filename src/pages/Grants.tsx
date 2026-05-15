@@ -7,23 +7,26 @@ import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { useGSAP } from "@gsap/react";
 
 gsap.registerPlugin(ScrollTrigger);
-import { Award, Medal, Trophy, Star, BadgeCheck, Crown, FileCheck, Users, ShieldCheck, Clock } from "lucide-react";
+import {
+  Award, Medal, Trophy, Star, BadgeCheck, Crown, FileCheck, Users, ShieldCheck, Clock,
+  FlaskConical, Leaf, Apple, Beaker, Palette,
+} from "lucide-react";
 import { Button } from "@/components/ui/button";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import SectionReveal from "@/components/SectionReveal";
 import heroImg from "@/assets/Images/IMG_4565.jpg";
 import grantImg1 from "@/assets/Grant/hgfj.png";
-import grantImg2 from "@/assets/Grant/jy.png";
-import grantImg3 from "@/assets/Grant/tyte.png";
-import grantImg4 from "@/assets/Grant/xcv.png";
+import grantImg3 from "@/assets/Grant/jy.png";
+import grantImg4 from "@/assets/Grant/tyte.png";
+import grantImg2 from "@/assets/Grant/xcv.png";
 
 const grantCategories = [
-  { name: "API Discovery & Excipient Characterization", icon: FlaskIcon },
-  { name: "Herbal Medicine", icon: LeafIcon },
-  { name: "Food Supplements & Nutraceuticals", icon: HeartIcon },
-  { name: "Formulation Development", icon: BeakerIcon },
-  { name: "Cosmetics", icon: SparkleIcon },
+  { name: "API Discovery & Excipient Characterization", icon: FlaskConical },
+  { name: "Herbal Medicine", icon: Leaf },
+  { name: "Food Supplements & Nutraceuticals", icon: Apple },
+  { name: "Formulation Development", icon: Beaker },
+  { name: "Cosmetics", icon: Palette },
 ];
 
 const pastGrants = [
@@ -33,22 +36,6 @@ const pastGrants = [
   { title: "Formulation, In-Vitro evaluation & optimization of milk based oral dispersible Griseofulvin tablets prepared by direct compression method", amount: "90,750.00", icon: Star, image: grantImg4 },
   { title: "Formulation design and physicochemical evaluation of Diabetic foot care emollient, A way to tackling diabetic foot xerosis (DFX)", amount: "89,400.00", icon: BadgeCheck, image: grantImg1 },
 ];
-
-function FlaskIcon({ className }: { className?: string }) {
-  return <svg className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><path d="M10 2v7.527a2 2 0 0 1-.211.896L4.72 20.55a1 1 0 0 0 .9 1.45h12.76a1 1 0 0 0 .9-1.45l-5.069-10.127A2 2 0 0 1 14 9.527V2" /><path d="M8.5 2h7" /></svg>;
-}
-function LeafIcon({ className }: { className?: string }) {
-  return <svg className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><path d="M11 20A7 7 0 0 1 9.8 6.9C15.5 4.9 17 3.5 19 2c1 2 2 4.5 2 8 0 5.5-4.5 10-10 10Z" /><path d="M2 21c0-3 1.85-5.36 5.08-6C9.5 14.52 12 13 13 12" /></svg>;
-}
-function HeartIcon({ className }: { className?: string }) {
-  return <svg className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z" /></svg>;
-}
-function BeakerIcon({ className }: { className?: string }) {
-  return <svg className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><path d="M4.5 3h15" /><path d="M6 3v16a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2V3" /><path d="M6 14h12" /></svg>;
-}
-function SparkleIcon({ className }: { className?: string }) {
-  return <svg className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><path d="m12 3-1.912 5.813a2 2 0 0 1-1.275 1.275L3 12l5.813 1.912a2 2 0 0 1 1.275 1.275L12 21l1.912-5.813a2 2 0 0 1 1.275-1.275L21 12l-5.813-1.912a2 2 0 0 1-1.275-1.275L12 3Z" /></svg>;
-}
 
 const containerVariants: Variants = {
   hidden: { opacity: 0 },
@@ -355,7 +342,7 @@ const Grants = () => {
       {/* Past Achievements — Sticky Scroll Cards */}
       <section className="bg-background">
         {/* Section header */}
-        <div className="container-grid px-6 py-20 border-b border-foreground/10">
+        <div className="container-grid px-6 py-10 border-b border-foreground/10">
           <SectionReveal>
             <span className="text-xs font-bold uppercase tracking-[0.3em] text-foreground/50">
               Celebrating Past Research
@@ -370,7 +357,7 @@ const Grants = () => {
         </div>
 
         {/* Sticky cards */}
-        <div className="relative" ref={stickyContainerRef}>
+        <div className="relative 2xl:-mt-40 -mt-20" ref={stickyContainerRef}>
           {pastGrants.map((grant, i) => (
             <StickyGrantCard
               key={grant.title}

@@ -10,7 +10,7 @@ import Footer from "@/components/Footer";
 import SectionReveal from "@/components/SectionReveal";
 import { Button } from "@/components/ui/button";
 import moleculesImg from "@/assets/Images/IMG_4543.jpg";
-import heroImg from "@/assets/Project/droga-manufacture.png";
+import heroImg from "@/assets/Hero/pub.jpg";
 import seminarImg1 from "@/assets/Seminar/gfhf.png";
 import seminarImg2 from "@/assets/Seminar/s.png";
 import seminarImg3 from "@/assets/Seminar/sdfsdf.png";
@@ -181,7 +181,7 @@ const DrogaScienceHome = () => {
             </h2>
           </SectionReveal>
 
-          <motion.div className="mt-20 space-y-32">
+          <motion.div className="mt-10 space-y-32">
             {sciencePrograms.map((program, index) => {
               const isLast = index === sciencePrograms.length - 1;
               const titleBarClass = program.alignRight

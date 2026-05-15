@@ -68,7 +68,7 @@ const Footer = () => {
           <div className="col-span-1 text-center md:text-left">
             <h4 className="font-heading text-xs font-black uppercase tracking-widest text-foreground mb-6">Quick Links</h4>
             <ul className="space-y-3">
-              {["About Us", "Services", "Droga Science", "News", "Contact"].map((link) => (
+              {["About Us", "Services","News", "Contact"].map((link) => (
                 <li key={link}>
                   <Link
                     to={`/${link.toLowerCase().replace(/\s+/g, "-")}`}
@@ -85,7 +85,7 @@ const Footer = () => {
           <div className="col-span-1 text-center md:text-left">
             <h4 className="font-heading text-xs font-black uppercase tracking-widest text-foreground mb-6">Research</h4>
             <ul className="space-y-3">
-              {["Grants", "Projects", "Publications", "Labs & Facilities"].map((link) => (
+              {["Droga Science", "Projects", "Labs & Facilities"].map((link) => (
                 <li key={link}>
                   <Link
                     to="/droga-science"

@@ -215,6 +215,22 @@ const newsArticles: NewsArticle[] = [
   },
 ];
 
+/** Parse display dates like "June 7, 2025", "Feb 10, 2025", or "2023" for sorting. */
+const parseNewsDate = (dateStr: string): number => {
+  const s = dateStr.trim();
+  if (/^\d{4}$/.test(s)) {
+    return new Date(Number(s), 11, 31).getTime();
+  }
+  const direct = Date.parse(s);
+  if (!Number.isNaN(direct)) return direct;
+  const withDay = s.replace(/^([A-Za-z]+)\s+(\d{4})$/, "$1 1, $2");
+  return Date.parse(withDay) || 0;
+};
+
+const sortedNewsArticles = [...newsArticles].sort(
+  (a, b) => parseNewsDate(b.date) - parseNewsDate(a.date)
+);
+
 const EASE: [number, number, number, number] = [0.25, 0.46, 0.45, 0.94];
 
 const textVariants = {
@@ -242,12 +258,12 @@ const News = () => {
 
   const next = useCallback(() => {
     setDirection(1);
-    setCurrent((prev) => (prev + 1) % newsArticles.length);
+    setCurrent((prev) => (prev + 1) % sortedNewsArticles.length);
   }, []);
 
   const prev = useCallback(() => {
     setDirection(-1);
-    setCurrent((prev) => (prev - 1 + newsArticles.length) % newsArticles.length);
+    setCurrent((prev) => (prev - 1 + sortedNewsArticles.length) % sortedNewsArticles.length);
   }, []);
 
   const handleManualNav = (fn: () => void) => {
@@ -268,9 +284,9 @@ const News = () => {
     else setTimeout(() => setPaused(false), 2000);
   }, [modalArticle]);
 
-  const nextIndex = (current + 1) % newsArticles.length;
-  const article = newsArticles[current];
-  const nextArticle = newsArticles[nextIndex];
+  const nextIndex = (current + 1) % sortedNewsArticles.length;
+  const article = sortedNewsArticles[current];
+  const nextArticle = sortedNewsArticles[nextIndex];
 
   return (
     <div className="min-h-screen bg-background flex flex-col">
@@ -331,7 +347,7 @@ const News = () => {
                 />
               </div>
               <span className="text-sm text-foreground/40 tabular-nums">
-                {String(newsArticles.length).padStart(2, "0")}
+                {String(sortedNewsArticles.length).padStart(2, "0")}
               </span>
             </div>
           </div>
@@ -402,7 +418,7 @@ const News = () => {
                   {String(current + 1).padStart(2, "0")}
                 </span>
                 <span className="text-sm text-foreground/40 tabular-nums">
-                  / {String(newsArticles.length).padStart(2, "0")}
+                  / {String(sortedNewsArticles.length).padStart(2, "0")}
                 </span>
               </div>
               <div className="flex gap-2">
@@ -446,7 +462,7 @@ const News = () => {
 
       {/* Dot indicators */}
       <div className="bg-[#f5f5f3] flex justify-center gap-2 pb-6">
-        {newsArticles.map((_, i) => (
+        {sortedNewsArticles.map((_, i) => (
           <button
             key={i}
             onClick={() => handleManualNav(() => {

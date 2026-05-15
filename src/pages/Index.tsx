@@ -10,6 +10,7 @@ import {
   Dna, Beaker, Zap, Activity, Pill, ChevronDown, X
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import SectionReveal from "@/components/SectionReveal";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
@@ -22,14 +23,14 @@ import plantsImg from "@/assets/Images/IMG_4565.jpg";
 import pillarImg1 from "@/assets/Images/IMG_4529.jpg";
 import nurseryImg from "@/assets/new-imgs/Plant Nursery.jpg";
 import pillarImg3 from "@/assets/new-imgs/Soap.jpg";
-import pillarImg4 from "@/assets/Images/lab1.jpg";
-import pillarVideo from "@/assets/pillar/MVI_4700.mp4";
+import pillarImg4 from "@/assets/Hero/analytical.jpg";
+import pillarFeatureImg from "@/assets/Hero/home2.jpg";
 
 import project1Img from "@/assets/Project/Droga Oil Manufacturing Plant.jpg";
 import project2Img from "@/assets/Project/droga-manufacture.png";
 import project3Img from "@/assets/new-imgs/Soap.jpg";
 import project5Img from "@/assets/new-imgs/Rosmary.jpg";
-import project4Img from "@/assets/Project/rosemary.png";
+import project4Img from "@/assets/Hero/rosemary.jpg";
 
 const pillarImg2 = nurseryImg;
 const nurseryNewImg = nurseryImg;
@@ -113,7 +114,7 @@ const heroSlidesData = [
 const pillarCards = [
   {
     image: pillarImg1,
-    title: "Drug Discovery",
+    title: "Drug Discovery Development",
     color: "#ffdf22",
     summary: "Research of natural, herbal food and drug discovery, development and formulation.",
     details: [
@@ -229,7 +230,7 @@ const featuredProjectsData = [
     id: 4,
     title: "Project II: Butajira Rosmary Manufacturing Plant",
     image: project4Img,
-    description: "The Butajira Rosemary Processing Plant aims to improve the livelihood of farmers in Meskan Woreda, Eastern Gurage Zone, through sustainable rosemary cultivation and market integration. The initiative covers 20 hectares of investment land and 40 hectares of partner farms, engaging 160 local farmers in modern rosemary production supported by training, technology transfer, and cooperative formation.",
+    // description: "The Butajira Rosemary Processing Plant aims to improve the livelihood of farmers in Meskan Woreda, Eastern Gurage Zone, through sustainable rosemary cultivation and market integration. The initiative covers 20 hectares of investment land and 40 hectares of partner farms, engaging 160 local farmers in modern rosemary production supported by training, technology transfer, and cooperative formation.",
     paragraphs: [
       "The Butajira Botanical Garden is envisioned as a center of excellence for the conservation, research, cultivation, and sustainable utilization of Ethiopia’s indigenous plant diversity. Located in the ecologically rich landscape of Butajira, the garden serves as a living repository of native, medicinal, aromatic, endemic, and economically valuable plant species while promoting environmental sustainability and community development. Inspired by successful botanical conservation initiatives in Ethiopia and globally, the garden aims to protect threatened indigenous flora through both in-situ and ex-situ conservation approaches. Botanical gardens play a critical role in conserving endangered and economically important plant species, supporting biodiversity research, environmental education, and ecotourism development."
     ],
@@ -310,7 +311,7 @@ const Index = () => {
   const [currentSlide, setCurrentSlide] = useState(0);
   const [prevSlide, setPrevSlide] = useState(heroSlidesData.length - 1);
   const [displayIndex, setDisplayIndex] = useState(0);
-  const [activePillar, setActivePillar] = useState<number | null>(null);
+  const [modalPillar, setModalPillar] = useState<number | null>(null);
   const [activeProjectDetail, setActiveProjectDetail] = useState<number | null>(null);
   const [hexActive, setHexActive] = useState(false);
   const [hexSpots, setHexSpots] = useState<any[]>([]);
@@ -924,7 +925,7 @@ const Index = () => {
         <section className="relative overflow-hidden bg-white pillars-section">
           <div className="section-padding relative w-full h-full pillars-pin-target">
 
-            {/* Split layout: Text Left, Video Right, both absolute/moving together */}
+            {/* Split layout: Text Left, Image Right, both absolute/moving together */}
             <div className="hidden md:flex absolute inset-x-0 top-0 mt-8 px-[10%] justify-between items-start pointer-events-none z-0">
 
               {/* Text (Left) - Moving with GSAP */}
@@ -943,16 +944,16 @@ const Index = () => {
                 </SectionReveal>
               </div>
 
-              {/* Thinner Video (Right) */}
+              {/* Feature image (Right) */}
               <div className="w-[60%] lg:w-[35%] h-[420px] relative rounded-[0.3rem] border border-black overflow-hidden opacity-90 pillar-video">
-                <video src={pillarVideo} autoPlay loop muted playsInline className="w-full h-full object-cover" />
+                <img src={pillarFeatureImg} alt="Droga research laboratory" className="w-full h-full object-cover" />
               </div>
             </div>
 
-            {/* Mobile video & text — in normal flow */}
+            {/* Mobile image & text — in normal flow */}
             <div className="md:hidden flex flex-col items-center mb-8">
               <div className="w-[90%] h-[240px] relative rounded-[0.3rem] border border-black overflow-hidden opacity-90 mb-8">
-                <video src={pillarVideo} autoPlay loop muted playsInline className="w-full h-full object-cover" />
+                <img src={pillarFeatureImg} alt="Droga research laboratory" className="w-full h-full object-cover" />
               </div>
               <div className="px-4 text-center">
                 <span className="block text-xs font-bold uppercase tracking-[0.2em] text-black">In‑Depth Capabilities</span>
@@ -961,99 +962,98 @@ const Index = () => {
             </div>
 
             <div className="grid grid-cols-2 md:flex md:flex-row md:flex-wrap lg:flex-nowrap gap-4 md:gap-6 md:mt-16 perspective-1000 pillar-card-container">
-              {pillarCards.map((pillar, index) => {
-                const isActive = activePillar === index;
-                const isCompressed = activePillar !== null && !isActive && !isMobile;
+              {pillarCards.map((pillar, index) => (
+                <div
+                  key={pillar.title}
+                  className="pillar-wrapper pillar-flex-default transition-all duration-700 ease-[cubic-bezier(0.16,1,0.3,1)] md:w-[calc(50%-0.75rem)] lg:w-auto lg:min-w-0"
+                >
+                  <div className="pillar-card relative rounded-[0.3rem] overflow-hidden border border-[#DBDBDB] bg-white/50 backdrop-blur-lg shadow-[0_8px_30px_rgb(0,0,0,0.04)] flex flex-col items-center p-4 md:p-8 h-[200px] md:h-[550px]">
+                    <div className="w-full text-center">
+                      <h3 className="font-heading text-sm md:text-xl lg:text-2xl font-bold text-black leading-tight flex items-center justify-center whitespace-pre-line min-h-[2.5rem] md:h-16">
+                        {pillar.title}
+                      </h3>
+                    </div>
 
-                return (
-                  <div
-                    key={pillar.title}
-                    className={`pillar-wrapper transition-all duration-700 ease-[cubic-bezier(0.16,1,0.3,1)] md:w-[calc(50%-0.75rem)] lg:w-auto lg:min-w-0 ${isMobile ? (isActive ? 'col-span-2' : '') : (isActive ? 'pillar-flex-active' : isCompressed ? 'pillar-flex-compressed' : 'pillar-flex-default')}`}
-                    style={{ transitionProperty: 'flex, width' }}
-                  >
-                    <div
-                      className={`pillar-card relative rounded-[0.3rem] overflow-hidden border border-[#DBDBDB] bg-white/50 backdrop-blur-lg shadow-[0_8px_30px_rgb(0,0,0,0.04)] transition-all duration-700 flex flex-col items-center p-4 md:p-8
-                        ${isMobile ? (isActive ? 'h-auto min-h-[260px]' : 'h-[200px]') : `h-[550px] ${isActive ? 'shadow-[0_20px_40px_rgb(0,0,0,0.08)]' : ''}`}`}
-                    >
-                      {/* Title */}
-                      <div className={`w-full text-center transition-all duration-700 ${!isMobile && isActive ? '-translate-y-4' : ''} ${isCompressed ? 'opacity-0 scale-75 pointer-events-none' : 'opacity-100 scale-100'}`}>
-                        <h3 className="font-heading text-sm md:text-xl lg:text-2xl font-bold text-black leading-tight flex items-center justify-center whitespace-pre-line min-h-[2.5rem] md:h-16">
-                          {pillar.title}
-                        </h3>
-                      </div>
+                    <div className={`${isMobile ? "flex-1 flex" : "absolute inset-0 flex"} items-center justify-center`}>
+                      <img
+                        src={pillar.image}
+                        alt={pillar.title}
+                        className="w-28 h-28 md:w-48 md:h-48 object-cover rounded-full shadow-md"
+                      />
+                    </div>
 
-                      {/* Image */}
-                      <div className={`${isMobile ? 'flex-1 flex' : 'absolute inset-0 flex'} items-center justify-center transition-all duration-700 ${!isMobile && isActive ? 'scale-75 -translate-y-8 opacity-20' : ''} ${isCompressed ? 'opacity-0 scale-50 pointer-events-none' : 'opacity-100'}`}>
-                        <img
-                          src={pillar.image}
-                          alt={pillar.title}
-                          className="w-28 h-28 md:w-48 md:h-48 object-cover rounded-full shadow-md"
-                        />
-                      </div>
+                    <div className="hidden md:block absolute bottom-20 left-8 right-8 text-center">
+                      <p className="text-sm text-black/70 font-body">{pillar.summary}</p>
+                    </div>
 
-                      {/* Compressed State: Vertical Title (desktop only) */}
-                      <div className={`hidden md:flex absolute inset-0 items-center justify-center transition-all duration-700 pointer-events-none ${isCompressed ? 'opacity-100 delay-200' : 'opacity-0'}`}>
-                        <h3 className="font-heading text-sm font-black text-black tracking-widest whitespace-nowrap -rotate-90">
-                          {pillar.title}
-                        </h3>
-                      </div>
-
-                      {/* Summary (desktop only) */}
-                      <div className={`hidden md:block absolute bottom-20 left-8 right-8 text-center transition-all duration-700 ${isActive || isCompressed ? 'opacity-0 translate-y-4 pointer-events-none' : 'opacity-100 translate-y-0'}`}>
-                        <p className="text-sm text-black/70 font-body">{pillar.summary}</p>
-                      </div>
-
-                      {/* Button */}
-                      <div className={`${isMobile ? 'mt-2 flex justify-center' : 'absolute bottom-6 left-0 right-0 flex justify-center'} transition-all duration-700 z-10 opacity-100`}>
-                        <Button
-                          variant="outline"
-                          className="rounded-full border-black/20 text-[10px] md:text-xs text-black uppercase tracking-wider bg-white/50 backdrop-blur hover:bg-[var(--pillar-color)] hover:text-[var(--pillar-text)] hover:border-[var(--pillar-color)] transition-colors px-3 py-1 md:px-4 md:py-2"
-                          style={{
-                            '--pillar-color': pillar.color,
-                            '--pillar-text': pillar.title === "Drug Discovery" ? "black" : "white"
-                          } as React.CSSProperties}
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            setActivePillar(isActive ? null : index);
-                          }}
-                        >
-                          {isActive ? 'Close' : 'Details'}
-                        </Button>
-                      </div>
-
-                      {/* Details panel */}
-                      <div className={`${isMobile ? 'w-full mt-3 border-t border-black/10 pt-3' : 'absolute inset-x-0 bottom-0 h-[75%] border-t border-white/30'} transition-all duration-700 ease-in-out bg-white/95 backdrop-blur-2xl p-3 md:p-6 overflow-y-auto custom-scrollbar ${isMobile ? (isActive ? 'block' : 'hidden') : (isActive ? 'translate-y-0 opacity-100 pointer-events-auto' : 'translate-y-full opacity-0 pointer-events-none')}`}>
-                        <div className="flex flex-col gap-6">
-                          {pillar.details.map((detail, i) => (
-                            <div key={i}>
-                              {detail.heading && <h4 className="font-heading text-xs font-bold text-black mb-2 uppercase tracking-wide border-b border-black/10 pb-1">{detail.heading}</h4>}
-                              {detail.content && (
-                                <div className="space-y-3 mb-3">
-                                  {detail.content.split('\n\n').map((paragraph, k) => (
-                                    <p key={k} className="text-[11px] text-black/80 font-medium leading-relaxed">{paragraph}</p>
-                                  ))}
-                                </div>
-                              )}
-                              {detail.items && detail.items.length > 0 && (
-                                <ul className="space-y-2">
-                                  {detail.items.map((item, j) => (
-                                    <li key={j} className="flex items-start gap-2 text-[11px] text-black/80 font-medium leading-relaxed">
-                                      <span className="text-[#FFF200] font-bold mt-0.5">•</span>
-                                      <span>{item}</span>
-                                    </li>
-                                  ))}
-                                </ul>
-                              )}
-                            </div>
-                          ))}
-                        </div>
-                        {/* Bottom spacer to prevent button overlap */}
-                        <div className="h-12 w-full" />
-                      </div>
+                    <div className={`${isMobile ? "mt-2 flex justify-center" : "absolute bottom-6 left-0 right-0 flex justify-center"} z-10`}>
+                      <Button
+                        variant="outline"
+                        className="rounded-full border-black/20 text-[10px] md:text-xs text-black uppercase tracking-wider bg-white/50 backdrop-blur hover:bg-[#FFF200] hover:text-black hover:border-[#FFF200] transition-colors px-3 py-1 md:px-4 md:py-2"
+                        onClick={() => setModalPillar(index)}
+                      >
+                        Details
+                      </Button>
                     </div>
                   </div>
-                );
-              })}
+                </div>
+              ))}
+
+              {modalPillar !== null && (
+                <Dialog open={modalPillar !== null} onOpenChange={(open) => { if (!open) setModalPillar(null); }}>
+                  <DialogContent className="max-w-3xl p-0 overflow-hidden bg-white border-black/10 flex flex-col !gap-0 max-h-[90vh] sm:rounded-2xl">
+                    <div className="p-6 md:p-8 shrink-0 border-b border-black/10" style={{ borderTopColor: pillarCards[modalPillar].color, borderTopWidth: 4 }}>
+                      <DialogHeader>
+                        <div className="flex items-start gap-4 pr-10">
+                          <img
+                            src={pillarCards[modalPillar].image}
+                            alt=""
+                            className="w-16 h-16 md:w-20 md:h-20 rounded-full object-cover shadow-md shrink-0"
+                          />
+                          <DialogTitle className="font-heading text-xl md:text-2xl font-bold leading-tight text-black text-left">
+                            {pillarCards[modalPillar].title}
+                          </DialogTitle>
+                        </div>
+                      </DialogHeader>
+                      <p className="mt-3 text-sm text-black/60 font-body leading-relaxed pr-10">
+                        {pillarCards[modalPillar].summary}
+                      </p>
+                    </div>
+                    <div className="p-6 md:p-8 overflow-y-auto custom-scrollbar">
+                      <div className="flex flex-col gap-6">
+                        {pillarCards[modalPillar].details.map((detail, i) => (
+                          <div key={i}>
+                            {detail.heading && (
+                              <h4 className="font-heading text-sm font-bold text-black mb-2 uppercase tracking-wide border-b border-black/10 pb-1">
+                                {detail.heading}
+                              </h4>
+                            )}
+                            {detail.content && (
+                              <div className="space-y-3 mb-3">
+                                {detail.content.split("\n\n").map((paragraph, k) => (
+                                  <p key={k} className="text-sm text-black/80 font-body leading-relaxed">
+                                    {paragraph}
+                                  </p>
+                                ))}
+                              </div>
+                            )}
+                            {detail.items && detail.items.length > 0 && (
+                              <ul className="space-y-2">
+                                {detail.items.map((item, j) => (
+                                  <li key={j} className="flex items-start gap-2 text-sm text-black/80 font-body leading-relaxed">
+                                    <span className="text-[#FFF200] font-bold mt-0.5">•</span>
+                                    <span>{item}</span>
+                                  </li>
+                                ))}
+                              </ul>
+                            )}
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  </DialogContent>
+                </Dialog>
+              )}
             </div>
           </div>
         </section>

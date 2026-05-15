@@ -1,4 +1,4 @@
-﻿import { useRef, useState, useEffect } from "react";
+import { useRef, useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import useEmblaCarousel from "embla-carousel-react";
 import { Target, Eye, ArrowRight } from "lucide-react";
@@ -11,6 +11,7 @@ import Footer from "@/components/Footer";
 import SectionReveal from "@/components/SectionReveal";
 import JourneySection from "@/components/JourneySection";
 import { Button } from "@/components/ui/button";
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import HexagonalBackground from "@/components/HexagonalBackground";
 
 gsap.registerPlugin(ScrollTrigger);
@@ -24,10 +25,9 @@ import plantsImg from "@/assets/Images/IMG_4565.jpg";
 import nurseryImg from "@/assets/new-imgs/Plant Nursery.jpg";
 import pillarImg1 from "@/assets/Images/IMG_4529.jpg";
 import pillarImg3 from "@/assets/new-imgs/Soap.jpg";
-import pillarImg4 from "@/assets/Images/lab1.jpg";
-import pillarVideo from "@/assets/pillar/MVI_4700.mp4";
-
+import pillarImg4 from "@/assets/Hero/analytical.jpg";
 const pillarImg2 = nurseryImg;
+import pillarFeatureImg from "@/assets/Hero/home2.jpg";
 
 import bioanalyticalVideo1 from "@/assets/infrastructure/bioanalytical1.mp4";
 import bioanalyticalVideo2 from "@/assets/infrastructure/bioanalytical2.mp4";
@@ -49,7 +49,7 @@ import lotusLogo from "@/assets/Partners/Lotus.png";
 import emiLogo from "@/assets/Partners/EMI.png";
 import tekLogo from "@/assets/Partners/Tek.png";
 import dbuLogo from "@/assets/Partners/Debre Berhan.png";
-import aauLogo from "@/assets/Partners/AAU.png";
+// import aauLogo from "@/assets/Partners/AAU.png";
 import emaLogo from "@/assets/Partners/EMA.png";
 import breezeLogo from "@/assets/Partners/Breeze.png";
 
@@ -74,7 +74,7 @@ const partners = [
   { name: "Tek Calibration and Services Center", logo: tekLogo, description: "Ensuring precision and compliance of all laboratory equipment." },
   { name: "Debere Berhan University", logo: dbuLogo, description: "Academic partner for joint botanical and pharmaceutical research." },
   { name: "Breeze Pharmaceutical Technologies PLC", logo: breezeLogo, description: "Technology partner for modern formulation techniques." },
-  { name: "Addis Ababa University", logo: aauLogo, description: "Fostering academic excellence and collaborative clinical studies." },
+  // { name: "Addis Ababa University", logo: aauLogo, description: "Fostering academic excellence and collaborative clinical studies." },
   { name: "EMA cons & Trading", logo: emaLogo, description: "Consulting and trading partner for regulatory compliance." },
 ];
 
@@ -91,7 +91,7 @@ const itemVariants = {
 const pillarCards = [
   {
     image: pillarImg1,
-    title: "Drug Discovery",
+    title: "Drug Discovery and Development",
     color: "#ffdf22",
     summary: "Research of natural, herbal food and drug discovery, development and formulation.",
     details: [
@@ -210,7 +210,7 @@ const SlidingPartnersGrid = () => {
 
 const About = () => {
   const pageRef = useRef<HTMLDivElement>(null);
-  const [activeUnit, setActiveUnit] = useState<number | null>(null);
+  const [modalUnit, setModalUnit] = useState<number | null>(null);
   const [hexActive, setHexActive] = useState(false);
   const [hexSpots, setHexSpots] = useState<any[]>([]);
   const [isMobile, setIsMobile] = useState(() => typeof window !== 'undefined' && window.innerWidth < 768);
@@ -488,7 +488,7 @@ const About = () => {
             </p>
             <div className="flex flex-col sm:flex-row gap-4 mt-8">
               <Button size="lg" asChild className="bg-[#FFF200] text-black hover:bg-white transition-all duration-300 font-bold w-full sm:w-auto h-auto py-3">
-                <Link to="/droga-science">Explore Research</Link>
+                <Link to="/about#major-research-units">Explore Our Scope</Link>
               </Button>
               <Button variant="outline" size="lg" asChild className="border-white/80 text-white bg-white/10 backdrop-blur-sm hover:bg-white hover:text-black transition-all duration-300 font-bold w-full sm:w-auto h-auto py-3">
                 <Link to="/contact">Contact Us</Link>
@@ -606,139 +606,135 @@ const About = () => {
       </section>
 
       {/* 02 Major Units â€” matches Home page */}
-      <section className="relative overflow-hidden bg-white pillars-section">
+      <section id="major-research-units" className="relative overflow-hidden bg-white pillars-section scroll-mt-24">
         <div className="section-padding relative w-full h-full pillars-pin-target">
 
-          {/* Split layout: Text Left, Video Right, both absolute/moving together */}
+          {/* Split layout: Text Left, Image Right, both absolute/moving together */}
           <div className="hidden md:flex absolute inset-x-0 top-0 mt-8 px-[10%] justify-between items-start pointer-events-none z-0">
 
             {/* Text (Left) - Moving with GSAP */}
             <div className="w-1/2 pillars-text-wrapper">
               <SectionReveal>
                 <span className="block text-sm md:text-base font-bold uppercase tracking-[0.2em] text-black">
-                  Inâ€‘Depth Capabilities
+                  InDepth Capabilities
                 </span>
                 <div className="w-60 h-[1.5px] bg-black mt-4" />
                 <h2 className="font-heading text-4xl md:text-5xl lg:text-5xl font-semibold tracking-tight mt-6 text-black leading-tight">
                   Our Major <br className="hidden lg:block" /> Research Units
                 </h2>
                 <p className="mt-8 text-base text-black/60 max-w-xl leading-relaxed">
-                  Endâ€‘toâ€‘end services spanning bioequivalence, drug discovery, nutraceuticals, and cosmetic science. Our research center is dedicated to advancing pharmaceutical excellence through innovation.
+                  End to end services spanning bioequivalence, drug discovery, nutraceuticals, and cosmetic science. Our research center is dedicated to advancing pharmaceutical excellence through innovation.
                 </p>
               </SectionReveal>
             </div>
 
-            {/* Thinner Video (Right) */}
+            {/* Feature image (Right) */}
             <div className="w-[60%] lg:w-[35%] h-[420px] relative rounded-[0.3rem] border border-black overflow-hidden opacity-90 pillar-video">
-              <video src={pillarVideo} autoPlay loop muted playsInline className="w-full h-full object-cover" />
+              <img src={pillarFeatureImg} alt="Droga research laboratory" className="w-full h-full object-cover" />
             </div>
           </div>
 
-          {/* Mobile video & text â€” in normal flow */}
+          {/* Mobile image & text â€” in normal flow */}
           <div className="md:hidden flex flex-col items-center mb-8">
             <div className="w-[90%] h-[240px] relative rounded-[0.3rem] border border-black overflow-hidden opacity-90 mb-8">
-              <video src={pillarVideo} autoPlay loop muted playsInline className="w-full h-full object-cover" />
+              <img src={pillarFeatureImg} alt="Droga research laboratory" className="w-full h-full object-cover" />
             </div>
             <div className="px-4 text-center">
-              <span className="block text-xs font-bold uppercase tracking-[0.2em] text-black">Inâ€‘Depth Capabilities</span>
+              <span className="block text-xs font-bold uppercase tracking-[0.2em] text-black">InDepth Capabilities</span>
               <h2 className="font-heading text-3xl font-semibold mt-2 text-black">Our Major Units</h2>
             </div>
           </div>
 
             <div className="grid grid-cols-2 md:flex md:flex-row md:flex-wrap lg:flex-nowrap gap-4 md:gap-6 md:mt-16 perspective-1000 pillar-card-container">
-              {pillarCards.map((pillar, index) => {
-                const isActive = activeUnit === index;
-                const isCompressed = activeUnit !== null && !isActive && !isMobile;
-
-                return (
+              {pillarCards.map((pillar, index) => (
                   <div
                     key={pillar.title}
-                    className={`pillar-wrapper transition-all duration-700 ease-[cubic-bezier(0.16,1,0.3,1)] md:w-[calc(50%-0.75rem)] lg:w-auto lg:min-w-0 ${isMobile ? (isActive ? 'col-span-2' : '') : (isActive ? 'pillar-flex-active' : isCompressed ? 'pillar-flex-compressed' : 'pillar-flex-default')}`}
-                    style={{ transitionProperty: 'flex, width' }}
+                    className="pillar-wrapper pillar-flex-default transition-all duration-700 ease-[cubic-bezier(0.16,1,0.3,1)] md:w-[calc(50%-0.75rem)] lg:w-auto lg:min-w-0"
                   >
-                    <div
-                      className={`pillar-card relative rounded-[0.3rem] overflow-hidden border border-[#DBDBDB] bg-white/50 backdrop-blur-lg shadow-[0_8px_30px_rgb(0,0,0,0.04)] transition-all duration-700 flex flex-col items-center p-4 md:p-8
-                        ${isMobile ? (isActive ? 'h-auto min-h-[260px]' : 'h-[200px]') : `h-[550px] ${isActive ? 'shadow-[0_20px_40px_rgb(0,0,0,0.08)]' : ''}`}`}
-                    >
-                      {/* Title */}
-                      <div className={`w-full text-center transition-all duration-700 ${!isMobile && isActive ? '-translate-y-4' : ''} ${isCompressed ? 'opacity-0 scale-75 pointer-events-none' : 'opacity-100 scale-100'}`}>
+                    <div className="pillar-card relative rounded-[0.3rem] overflow-hidden border border-[#DBDBDB] bg-white/50 backdrop-blur-lg shadow-[0_8px_30px_rgb(0,0,0,0.04)] flex flex-col items-center p-4 md:p-8 h-[200px] md:h-[550px]">
+                      <div className="w-full text-center">
                         <h3 className="font-heading text-sm md:text-xl lg:text-2xl font-bold text-black leading-tight flex items-center justify-center whitespace-pre-line min-h-[2.5rem] md:h-16">
                           {pillar.title}
                         </h3>
                       </div>
-
-                      <div className={`${isMobile ? 'flex-1 flex' : 'absolute inset-0 flex'} items-center justify-center transition-all duration-700 ${!isMobile && isActive ? 'scale-75 -translate-y-8 opacity-20' : ''} ${isCompressed ? 'opacity-0 scale-50 pointer-events-none' : 'opacity-100'}`}>
+                      <div className={`${isMobile ? "flex-1 flex" : "absolute inset-0 flex"} items-center justify-center`}>
                         <img
                           src={pillar.image}
                           alt={pillar.title}
                           className="w-28 h-28 md:w-48 md:h-48 object-cover rounded-full shadow-md"
                         />
                       </div>
-
-                      {/* Compressed State: Vertical Title (desktop only) */}
-                      <div className={`hidden md:flex absolute inset-0 items-center justify-center transition-all duration-700 pointer-events-none ${isCompressed ? 'opacity-100 delay-200' : 'opacity-0'}`}>
-                        <h3 className="font-heading text-sm font-black text-black tracking-widest whitespace-nowrap -rotate-90">
-                          {pillar.title}
-                        </h3>
+                      <div className="hidden md:block absolute bottom-20 left-8 right-8 text-center">
+                        <p className="text-sm text-black/70 font-body">{pillar.summary}</p>
                       </div>
-
-                      {/* Summary (desktop only) */}
-                      <div className={`hidden md:block absolute bottom-20 left-8 right-8 text-center transition-all duration-700 ${isActive || isCompressed ? 'opacity-0 translate-y-4 pointer-events-none' : 'opacity-100 translate-y-0'}`}>
-                        <p className="text-sm text-black/70 font-body">
-                          {pillar.summary}
-                        </p>
-                      </div>
-
-                      <div className={`${isMobile ? 'mt-2 flex justify-center' : 'absolute bottom-6 left-0 right-0 flex justify-center'} transition-all duration-700 z-10 opacity-100`}>
+                      <div className={`${isMobile ? "mt-2 flex justify-center" : "absolute bottom-6 left-0 right-0 flex justify-center"} z-10`}>
                         <Button
                           variant="outline"
-                          className="rounded-full border-black/20 text-[10px] md:text-xs text-black uppercase tracking-wider bg-white/50 backdrop-blur hover:bg-[var(--pillar-color)] hover:text-[var(--pillar-text)] hover:border-[var(--pillar-color)] transition-colors px-3 py-1 md:px-4 md:py-2"
-                          style={{
-                            '--pillar-color': pillar.color,
-                            '--pillar-text': pillar.title === "Drug Discovery" ? "black" : "white"
-                          } as React.CSSProperties}
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            setActiveUnit(isActive ? null : index);
-                          }}
+                          className="rounded-full border-black/20 text-[10px] md:text-xs text-black uppercase tracking-wider bg-white/50 backdrop-blur hover:bg-[#FFF200] hover:text-black hover:border-[#FFF200] transition-colors px-3 py-1 md:px-4 md:py-2"
+                          onClick={() => setModalUnit(index)}
                         >
-                          {isActive ? 'Close' : 'Details'}
+                          Details
                         </Button>
-                      </div>
-
-                      {/* Details panel */}
-                      <div className={`${isMobile ? 'w-full mt-3 border-t border-black/10 pt-3' : 'absolute inset-x-0 bottom-0 h-[75%] border-t border-white/30'} transition-all duration-700 ease-in-out bg-white/95 backdrop-blur-2xl p-3 md:p-6 overflow-y-auto custom-scrollbar ${isMobile ? (isActive ? 'block' : 'hidden') : (isActive ? 'translate-y-0 opacity-100 pointer-events-auto' : 'translate-y-full opacity-0 pointer-events-none')}`}>
-                        <div className="flex flex-col gap-6">
-                          {pillar.details.map((detail, i) => (
-                            <div key={i}>
-                              {detail.heading && <h4 className="font-heading text-xs font-bold text-black mb-2 uppercase tracking-wide border-b border-black/10 pb-1">{detail.heading}</h4>}
-                              {detail.content && (
-                                <div className="space-y-3 mb-3">
-                                  {detail.content.split('\n\n').map((paragraph, k) => (
-                                    <p key={k} className="text-[11px] text-black/80 font-medium leading-relaxed">{paragraph}</p>
-                                  ))}
-                                </div>
-                              )}
-                              {detail.items && detail.items.length > 0 && (
-                                <ul className="space-y-2">
-                                  {detail.items.map((item, j) => (
-                                    <li key={j} className="flex items-start gap-2 text-[11px] text-black/80 font-medium leading-relaxed">
-                                      <span className="text-[#FFF200] font-bold mt-0.5">â€¢</span>
-                                      <span>{item}</span>
-                                    </li>
-                                  ))}
-                                </ul>
-                              )}
-                            </div>
-                          ))}
-                        </div>
-                        {/* Bottom spacer to prevent button overlap */}
-                        <div className="h-12 w-full" />
                       </div>
                     </div>
                   </div>
-                );
-              })}
+              ))}
+
+          {modalUnit !== null && (
+            <Dialog open={modalUnit !== null} onOpenChange={(open) => { if (!open) setModalUnit(null); }}>
+              <DialogContent className="max-w-3xl p-0 overflow-hidden bg-white border-black/10 flex flex-col !gap-0 max-h-[90vh] sm:rounded-2xl">
+                <div className="p-6 md:p-8 shrink-0 border-b border-black/10" style={{ borderTopColor: pillarCards[modalUnit].color, borderTopWidth: 4 }}>
+                  <DialogHeader>
+                    <div className="flex items-start gap-4 pr-10">
+                      <img
+                        src={pillarCards[modalUnit].image}
+                        alt=""
+                        className="w-16 h-16 md:w-20 md:h-20 rounded-full object-cover shadow-md shrink-0"
+                      />
+                      <DialogTitle className="font-heading text-xl md:text-2xl font-bold leading-tight text-black text-left">
+                        {pillarCards[modalUnit].title}
+                      </DialogTitle>
+                    </div>
+                  </DialogHeader>
+                  <p className="mt-3 text-sm text-black/60 font-body leading-relaxed pr-10">
+                    {pillarCards[modalUnit].summary}
+                  </p>
+                </div>
+                <div className="p-6 md:p-8 overflow-y-auto custom-scrollbar">
+                  <div className="flex flex-col gap-6">
+                    {pillarCards[modalUnit].details.map((detail, i) => (
+                      <div key={i}>
+                        {detail.heading && (
+                          <h4 className="font-heading text-sm font-bold text-black mb-2 uppercase tracking-wide border-b border-black/10 pb-1">
+                            {detail.heading}
+                          </h4>
+                        )}
+                        {detail.content && (
+                          <div className="space-y-3 mb-3">
+                            {detail.content.split("\n\n").map((paragraph, k) => (
+                              <p key={k} className="text-sm text-black/80 font-body leading-relaxed">
+                                {paragraph}
+                              </p>
+                            ))}
+                          </div>
+                        )}
+                        {detail.items && detail.items.length > 0 && (
+                          <ul className="space-y-2">
+                            {detail.items.map((item, j) => (
+                              <li key={j} className="flex items-start gap-2 text-sm text-black/80 font-body leading-relaxed">
+                                <span className="text-[#FFF200] font-bold mt-0.5">•</span>
+                                <span>{item}</span>
+                              </li>
+                            ))}
+                          </ul>
+                        )}
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </DialogContent>
+            </Dialog>
+          )}
             </div>
         </div>
       </section>
@@ -955,7 +951,7 @@ const About = () => {
             <div className="flex items-center justify-center gap-4 mb-2">
               <span className="text-xl font-bold uppercase tracking-[0.2em] text-black">COMING SOON</span>
             </div>
-            <h2 className="font-heading text-4xl md:text-5xl font-bold tracking-tight mt-4 text-black">Manufacturing & Conservation</h2>
+            {/* <h2 className="font-heading text-4xl md:text-5xl font-bold tracking-tight mt-4 text-black">Manufacturing & Conservation</h2> */}
           </SectionReveal>
 
           <div className="mt-20 space-y-32">

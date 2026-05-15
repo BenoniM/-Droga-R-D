@@ -1,14 +1,13 @@
-import { useRef, useState, useCallback, useEffect } from "react";
+import { useRef, useState } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { useGSAP } from "@gsap/react";
-import useEmblaCarousel from "embla-carousel-react";
 import { motion } from "framer-motion";
 import {
   FlaskConical, Microscope, ArrowRight,
   CheckCircle, Beaker, ClipboardCheck, Gauge, ShieldCheck, Clock, Building2,
   BarChart3, Activity, Waves, Timer, Scale, Droplets, Flame, Settings,
-  ChevronLeft, ChevronRight, Gavel, BookOpen, Database, Lock
+  Gavel, BookOpen, Database, Lock
 } from "lucide-react";
 import { Link } from "react-router-dom";
 import Navbar from "@/components/Navbar";
@@ -110,9 +109,7 @@ const baseInstruments = [
   { name: "Laboratory Scale Sample Processing Equipment", icon: Settings, desc: "Facilitates grinding, mixing, filtration, and other preparation steps essential for reproducible analytical results." },
 ];
 
-const instruments = baseInstruments;
-
-/** Photos shown below the description in the instrumentation info card (index aligns with baseInstruments). */
+/** Photos shown below the description in each instrument card (index aligns with baseInstruments). */
 const instrumentCardPhotos: (string[] | null)[] = [
   [highperformance],
   [uvvisible, uvvisible2],
@@ -173,75 +170,6 @@ const whyChooseUs = [
 const Services = () => {
   const pageRef = useRef<HTMLDivElement>(null);
   const [activeIndex, setActiveIndex] = useState(0);
-  const [focusedInst, setFocusedInst] = useState(0);
-
-  const [emblaRef, emblaApi] = useEmblaCarousel({ 
-    loop: true, 
-    align: 'center', 
-    startIndex: baseInstruments.length,
-    skipSnaps: false,
-    dragFree: false,
-  });
-
-  const updateCardsEffects = useCallback(() => {
-    if (!emblaApi) return;
-    const slideNodes = emblaApi.slideNodes();
-    const viewportCenter = window.innerWidth / 2;
-
-    slideNodes.forEach((slideNode) => {
-      const rect = slideNode.getBoundingClientRect();
-      const cardCenter = rect.left + rect.width / 2;
-      const distFromCenter = Math.abs(viewportCenter - cardCenter);
-      const maxDist = window.innerWidth / 2;
-      const normalizedDist = Math.min(distFromCenter / maxDist, 1);
-
-      const scale = 1 - (normalizedDist * 0.15);
-      const opacity = 1 - (normalizedDist * 0.8);
-      const borderOpacity = 1 - (normalizedDist * 0.9);
-      const cardBlur = normalizedDist * 4;
-
-      const innerNode = slideNode.querySelector('.inst-card-inner');
-      if (innerNode) {
-        gsap.set(innerNode, {
-          scale: scale,
-          opacity: opacity,
-          borderColor: `rgba(255, 255, 255, ${borderOpacity * 0.5})`,
-          boxShadow: `0 ${8 - (normalizedDist * 8)}px ${30 - (normalizedDist * 20)}px rgba(0,0,0,${0.1 * (1 - normalizedDist)})`,
-          filter: `blur(${cardBlur}px)`
-        });
-      }
-    });
-  }, [emblaApi]);
-
-  useEffect(() => {
-    if (!emblaApi) return;
-
-    updateCardsEffects();
-    emblaApi.on('scroll', updateCardsEffects);
-    emblaApi.on('reInit', updateCardsEffects);
-    
-    const onSelect = () => {
-      const selectedIndex = emblaApi.selectedScrollSnap();
-      setFocusedInst(selectedIndex % baseInstruments.length);
-    };
-    
-    emblaApi.on('select', onSelect);
-    onSelect();
-
-    return () => {
-      emblaApi.off('scroll', updateCardsEffects);
-      emblaApi.off('reInit', updateCardsEffects);
-      emblaApi.off('select', onSelect);
-    };
-  }, [emblaApi, updateCardsEffects]);
-
-  const scrollPrev = useCallback(() => {
-    if (emblaApi) emblaApi.scrollPrev();
-  }, [emblaApi]);
-
-  const scrollNext = useCallback(() => {
-    if (emblaApi) emblaApi.scrollNext();
-  }, [emblaApi]);
 
   useGSAP(() => {
     // Hero Animation
@@ -330,12 +258,6 @@ const Services = () => {
         scrollTrigger: { trigger: el, start: "top 85%", once: true }
       });
     });
-
-    // Cards initialization (transformOrigin)
-    const cards = gsap.utils.toArray<HTMLElement>('.inst-card-inner');
-    if (cards.length > 0) {
-      gsap.set(cards, { transformOrigin: "center center" });
-    }
 
     ScrollTrigger.refresh();
   }, { scope: pageRef });
@@ -483,113 +405,62 @@ const Services = () => {
       </section>
 
       {/* 03 Instrumentation - Our Analytical Capabilities */}
-      <section className="relative overflow-hidden bg-surface-subtle min-h-[80vh] flex flex-col justify-center py-24">
-        {/* Blurred background logo */}
+      <section className="relative bg-surface-subtle py-24">
         <div className="absolute inset-0 flex items-center justify-center opacity-[0.15] z-0 pointer-events-none">
           <img src={logoImg} alt="Droga Logo" className="w-[500px] h-[500px] object-contain filter blur-[10px]" />
         </div>
 
-        <div className="container-grid relative w-full mb-12 z-10 px-6">
+        <div className="container-grid relative z-10 px-6">
           <div className="absolute -left-4 top-0 font-heading text-[10rem] md:text-[14rem] font-black text-black/[0.04] leading-none select-none pointer-events-none section-number">03</div>
-          <div className="flex flex-col gap-8">
-            <SectionReveal>
-              <div className="flex items-center gap-4 mb-2">
-                <span className="text-sm md:text-base font-bold uppercase tracking-[0.2em] text-muted-foreground">Advanced Instrumentation</span>
-              </div>
-              <h2 className="font-heading text-4xl md:text-6xl font-bold tracking-tight mt-4 text-foreground leading-tight">Our Analytical Capabilities</h2>
-            </SectionReveal>
-
-            {/* Carousel Navigation Buttons - Mobile Only */}
-            <div className="flex md:hidden items-center justify-center gap-8 mt-4">
-              <button onClick={scrollPrev} className="carousel-prev w-16 h-16 flex items-center justify-center rounded-full bg-[#FFF200] text-black hover:scale-110 transition-all duration-300 shadow-xl border-none">
-                <ChevronLeft className="w-8 h-8" />
-              </button>
-              <button onClick={scrollNext} className="carousel-next w-16 h-16 flex items-center justify-center rounded-full bg-[#FFF200] text-black hover:scale-110 transition-all duration-300 shadow-xl border-none">
-                <ChevronRight className="w-8 h-8" />
-              </button>
-            </div>
+          <div className="flex items-center gap-4 mb-2">
+            <span className="text-sm md:text-base font-bold uppercase tracking-[0.2em] text-muted-foreground">Advanced Instrumentation</span>
           </div>
-        </div>
+          <h2 className="font-heading text-4xl md:text-6xl font-bold tracking-tight mt-4 text-foreground leading-tight">Our Analytical Capabilities</h2>
 
-        {/* Horizontal Drag Wrapper */}
-        <div className="relative w-full h-[300px] md:h-[400px] flex items-center z-10 select-none">
-          <div className="overflow-hidden w-full h-full" ref={emblaRef}>
-            <div className="flex items-center h-full py-8 cursor-grab active:cursor-grabbing">
-              {[...instruments, ...instruments, ...instruments].map((inst, index) => (
-                <div
-                  key={`${inst.name}-${index}`}
-                  className="inst-card flex-[0_0_280px] md:flex-[0_0_380px] mx-3 md:mx-4"
+          <div className="mt-12 md:mt-16 grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6 md:gap-8">
+            {baseInstruments.map((inst, index) => {
+              const photos = instrumentCardPhotos[index];
+              const Icon = inst.icon;
+              return (
+                <article
+                  key={inst.name}
+                  className="flex flex-col p-6 md:p-8 bg-white border-l-4 border-highlight rounded-r-md shadow-md"
                 >
-                  <div className="inst-card-inner relative w-full h-[180px] md:h-[280px] flex flex-col items-center justify-center p-6 bg-white/10 backdrop-blur-2xl border border-white/10 rounded-2xl will-change-transform mt-12 md:mt-16">
-                    <div className="absolute -top-10 md:-top-16 w-24 h-24 md:w-36 md:h-36 bg-white rounded-full flex items-center justify-center shadow-lg border-4 border-surface-subtle">
-                      <inst.icon className="w-12 h-12 md:w-16 md:h-16 text-black" />
+                  <div className="flex items-start gap-4 mb-4">
+                    <div className="w-14 h-14 md:w-16 md:h-16 bg-surface-subtle rounded-full flex items-center justify-center shrink-0 border border-black/5">
+                      <Icon className="w-7 h-7 md:w-8 md:h-8 text-black" />
                     </div>
-                    <div className="mt-8 md:mt-12 text-center">
-                      <span className="font-body text-sm md:text-lg text-black font-bold leading-tight px-2">{inst.name}</span>
-                    </div>
+                    <h3 className="font-heading text-lg md:text-xl font-bold text-foreground leading-tight pt-1">
+                      {inst.name}
+                    </h3>
                   </div>
-                </div>
-              ))}
-            </div>
-          </div>
-        </div>
-
-        <div className="container-grid w-full mt-8 md:mt-12 z-10 relative px-6">
-          <SectionReveal delay={0.2}>
-            <div className="flex items-center justify-center gap-6 md:gap-12 w-full max-w-5xl mx-auto">
-              
-              {/* Prev Button - Desktop Only */}
-              <button onClick={scrollPrev} className="hidden md:flex carousel-prev w-16 h-16 md:w-20 md:h-20 items-center justify-center rounded-full bg-[#FFF200] text-black hover:scale-110 transition-all duration-300 shadow-xl border-none shrink-0">
-                <ChevronLeft className="w-8 h-8 md:w-10 md:h-10" />
-              </button>
-
-              {/* Center Info Box — dynamic per focused instrument */}
-              <div className="w-full max-w-3xl p-6 md:p-8 bg-white border-l-4 border-highlight rounded-r-md shadow-md">
-                <h4 className="font-heading text-lg md:text-xl font-bold text-foreground mb-3 transition-all duration-300">
-                  {baseInstruments[focusedInst].name}
-                </h4>
-                <p className="text-foreground/80 text-sm md:text-base italic font-medium leading-relaxed transition-all duration-300">
-                  {baseInstruments[focusedInst].desc}
-                </p>
-                {(() => {
-                  const photos = instrumentCardPhotos[focusedInst];
-                  if (!photos?.length) return null;
-                  const name = baseInstruments[focusedInst].name;
-                  if (photos.length === 1) {
-                    return (
-                      <img
-                        src={photos[0]}
-                        alt={name}
-                        className="mt-5 w-full max-h-[200px] sm:max-h-[240px] md:max-h-[280px] object-cover rounded-md border border-black/5"
-                      />
-                    );
-                  }
-                  const gridClass =
-                    photos.length >= 3
-                      ? "grid grid-cols-1 sm:grid-cols-3 gap-2"
-                      : "grid grid-cols-1 sm:grid-cols-2 gap-2";
-                  return (
-                    <div className={`mt-5 ${gridClass}`}>
+                  <p className="text-foreground/80 text-sm md:text-base leading-relaxed flex-1">
+                    {inst.desc}
+                  </p>
+                  {photos && photos.length > 0 && (
+                    <div
+                      className={
+                        photos.length >= 3
+                          ? "mt-5 grid grid-cols-1 sm:grid-cols-3 gap-2"
+                          : photos.length === 2
+                            ? "mt-5 grid grid-cols-1 sm:grid-cols-2 gap-2"
+                            : "mt-5"
+                      }
+                    >
                       {photos.map((src, i) => (
                         <img
                           key={i}
                           src={src}
-                          alt={`${name} — photo ${i + 1}`}
-                          className="w-full h-32 sm:h-36 md:h-40 object-cover rounded-md border border-black/5"
+                          alt={`${inst.name} — photo ${i + 1}`}
+                          className="w-full h-32 sm:h-36 object-cover rounded-md border border-black/5"
                         />
                       ))}
                     </div>
-                  );
-                })()}
-              </div>
-
-              {/* Next Button - Desktop Only */}
-              <button onClick={scrollNext} className="hidden md:flex carousel-next w-16 h-16 md:w-20 md:h-20 items-center justify-center rounded-full bg-[#FFF200] text-black hover:scale-110 transition-all duration-300 shadow-xl border-none shrink-0">
-                <ChevronRight className="w-8 h-8 md:w-10 md:h-10" />
-              </button>
-              
-            </div>
-          </SectionReveal>
+                  )}
+                </article>
+              );
+            })}
+          </div>
         </div>
       </section>
 
@@ -665,25 +536,26 @@ const Services = () => {
       </section>
 
       {/* 05 Why Choose Us - Split layout */}
-      <section className="relative overflow-hidden bg-white h-screen">
-        <div className="h-full flex flex-col lg:flex-row">
-          {/* LEFT — list of points (Anchored to top to prevent bumpy re-centering) */}
-          <div className="w-full lg:w-[45%] h-full flex flex-col justify-start pt-[12vh] px-8 md:px-16 lg:px-20 pb-12 relative z-10 bg-white">
+      <section className="relative overflow-x-hidden bg-white">
+        <div className="flex flex-col lg:flex-row lg:min-h-screen">
+          {/* LEFT — list of points */}
+          <div className="w-full lg:w-[45%] flex flex-col justify-start pt-16 md:pt-20 lg:pt-[12vh] px-8 md:px-16 lg:px-20 pb-16 lg:pb-12 relative z-10 bg-white lg:min-h-screen lg:max-h-screen lg:overflow-y-auto">
             {/* Section label */}
-            <div className="flex items-center gap-4 mb-8">
+            <div className="flex items-center gap-4 mb-6 md:mb-8 shrink-0">
               <span className="text-xs font-bold uppercase tracking-[0.25em] text-muted-foreground">Why Droga R&D</span>
             </div>
-            <h2 className="font-heading text-4xl md:text-5xl font-bold tracking-tight text-foreground leading-tight mb-10">
+            <h2 className="font-heading text-4xl md:text-5xl font-bold tracking-tight text-foreground leading-tight mb-6 md:mb-10 shrink-0">
               Why Choose Us
             </h2>
 
             {/* Items */}
-            <ul className="space-y-0 divide-y divide-black/8 border-t border-black/8">
+            <ul className="space-y-0 divide-y divide-black/8 border-t border-black/8 pb-4">
               {whyChooseUs.map((item, i) => (
                 <li
                   key={item.title}
-                  className="group cursor-pointer py-6 transition-all duration-300"
+                  className="group cursor-pointer py-4 md:py-6 transition-all duration-300"
                   onMouseEnter={() => setActiveIndex(i)}
+                  onClick={() => setActiveIndex(i)}
                 >
                   <div className="flex items-start gap-5">
                     {/* Number */}
@@ -701,8 +573,8 @@ const Services = () => {
                       <div className={`overflow-hidden transition-all duration-500 ease-in-out ${activeIndex === i ? "max-h-[500px] opacity-100 mt-4" : "max-h-0 opacity-0"}`}>
                         <p className="text-base text-muted-foreground leading-relaxed max-w-md mb-4">{item.desc}</p>
                         
-                        {/* Mobile Image */}
-                        <div className="lg:hidden w-full h-[200px] rounded-md overflow-hidden relative shadow-sm">
+                        {/* Mobile / tablet image */}
+                        <div className="lg:hidden w-full h-[180px] sm:h-[200px] rounded-md overflow-hidden relative shadow-sm">
                           <img src={item.img} alt={item.title} className="w-full h-full object-cover" />
                         </div>
                       </div>
@@ -717,7 +589,7 @@ const Services = () => {
           </div>
 
           {/* RIGHT — stacked image slider */}
-          <div className="hidden lg:flex w-full lg:w-[55%] h-full relative items-center justify-end bg-surface-subtle">
+          <div className="hidden lg:flex w-full lg:w-[55%] lg:min-h-screen lg:sticky lg:top-0 relative items-center justify-end bg-surface-subtle">
             {/* Extremely Wide Yellow accent pillar — right edge */}
             <div className="absolute top-0 right-0 w-[36rem] h-full bg-[#FFF200] z-20" />
 
