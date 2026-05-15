@@ -10,7 +10,7 @@ import Footer from "@/components/Footer";
 import SectionReveal from "@/components/SectionReveal";
 import { Button } from "@/components/ui/button";
 import moleculesImg from "@/assets/Images/IMG_4543.jpg";
-import heroImg from "@/assets/Images/IMG_4713.jpg";
+import heroImg from "@/assets/Project/droga-manufacture.png";
 import seminarImg1 from "@/assets/Seminar/gfhf.png";
 import seminarImg2 from "@/assets/Seminar/s.png";
 import seminarImg3 from "@/assets/Seminar/sdfsdf.png";

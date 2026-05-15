@@ -1,7 +1,7 @@
-import { useRef, useState, useEffect } from "react";
+﻿import { useRef, useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import useEmblaCarousel from "embla-carousel-react";
-import { Users, Target, Eye, FlaskConical, Droplet, Apple, Microscope, Leaf, TestTube, ArrowRight } from "lucide-react";
+import { Target, Eye, ArrowRight } from "lucide-react";
 import { Link } from "react-router-dom";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
@@ -22,7 +22,12 @@ import heroImg from "@/assets/Images/IMG_4582.jpg";
 import moleculesImg from "@/assets/Images/IMG_4543.jpg";
 import plantsImg from "@/assets/Images/IMG_4565.jpg";
 import nurseryImg from "@/assets/new-imgs/Plant Nursery.jpg";
+import pillarImg1 from "@/assets/Images/IMG_4529.jpg";
+import pillarImg3 from "@/assets/new-imgs/Soap.jpg";
+import pillarImg4 from "@/assets/Images/lab1.jpg";
 import pillarVideo from "@/assets/pillar/MVI_4700.mp4";
+
+const pillarImg2 = nurseryImg;
 
 import bioanalyticalVideo1 from "@/assets/infrastructure/bioanalytical1.mp4";
 import bioanalyticalVideo2 from "@/assets/infrastructure/bioanalytical2.mp4";
@@ -83,9 +88,9 @@ const itemVariants = {
   visible: { opacity: 1, y: 0, transition: { duration: 0.6, ease: "easeOut" } }
 } as const;
 
-const unitPillars = [
+const pillarCards = [
   {
-    icon: Microscope,
+    image: pillarImg1,
     title: "Drug Discovery",
     color: "#ffdf22",
     summary: "Research of natural, herbal food and drug discovery, development and formulation.",
@@ -101,7 +106,7 @@ const unitPillars = [
     ]
   },
   {
-    icon: Apple,
+    image: pillarImg2,
     title: "Food & Nutraceutical Sciences Research",
     color: "#C7372F",
     summary: "Dedicated to the research and development of nutrition-based products aimed at supporting health, wellness, and preventive care.",
@@ -112,7 +117,7 @@ const unitPillars = [
     ]
   },
   {
-    icon: Droplet,
+    image: pillarImg3,
     title: "Cosmetic & Detergent Research and Development",
     color: "#006994",
     summary: "Dedicated to the formulation, development, and optimization of medicated and non-medicated cosmetic, personal care, and hygiene products.",
@@ -123,7 +128,7 @@ const unitPillars = [
     ]
   },
   {
-    icon: FlaskConical,
+    image: pillarImg4,
     title: "Bioequivalence & Analytical Laboratory",
     color: "#507d2a",
     summary: "Providing bioequivalence (BE) studies, pharmacokinetic studies, and comprehensive analytical testing services.",
@@ -453,7 +458,7 @@ const About = () => {
     <div className="min-h-screen bg-background" ref={pageRef}>
       <Navbar />
 
-      {/* Hero — CRF-inspired split with parallax */}
+      {/* Hero â€” CRF-inspired split with parallax */}
       <section className="relative h-[70vh] md:h-[80vh] flex items-center overflow-hidden">
         <div className="absolute inset-0 overflow-hidden">
           <motion.img
@@ -493,7 +498,7 @@ const About = () => {
         </div>
       </section>
 
-      {/* 01 Overview — CRF numbered section */}
+      {/* 01 Overview â€” CRF numbered section */}
       <section className="section-padding relative overflow-hidden">
         <div className="container-grid relative">
           <div className="absolute -left-4 top-0 font-heading text-[10rem] md:text-[14rem] font-black text-black/[0.04] leading-none select-none pointer-events-none section-number">01</div>
@@ -532,7 +537,7 @@ const About = () => {
         </div>
       </section>
 
-      {/* Vision & Mission — Refined design with white bg */}
+      {/* Vision & Mission â€” Refined design with white bg */}
       <section id="vision" className="bg-white py-24 md:py-32 relative overflow-hidden border-t border-black/10">
         <div className="container-grid relative px-6 md:px-12 z-10">
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-16 lg:gap-0 relative">
@@ -600,7 +605,7 @@ const About = () => {
         </div>
       </section>
 
-      {/* 02 Major Units — Pillar style like Home Page */}
+      {/* 02 Major Units â€” matches Home page */}
       <section className="relative overflow-hidden bg-white pillars-section">
         <div className="section-padding relative w-full h-full pillars-pin-target">
 
@@ -610,17 +615,15 @@ const About = () => {
             {/* Text (Left) - Moving with GSAP */}
             <div className="w-1/2 pillars-text-wrapper">
               <SectionReveal>
-                <div className="flex flex-col items-start justify-center mb-2">
-                  <span className="block text-sm md:text-base font-bold uppercase tracking-[0.2em] text-black">
-                    Scientific Focus
-                  </span>
-                  <div className="w-60 h-px bg-black mt-4" />
-                </div>
+                <span className="block text-sm md:text-base font-bold uppercase tracking-[0.2em] text-black">
+                  Inâ€‘Depth Capabilities
+                </span>
+                <div className="w-60 h-[1.5px] bg-black mt-4" />
                 <h2 className="font-heading text-4xl md:text-5xl lg:text-5xl font-semibold tracking-tight mt-6 text-black leading-tight">
-                  Major Research <br className="hidden lg:block" /> Units
+                  Our Major <br className="hidden lg:block" /> Research Units
                 </h2>
-                <p className="mt-8 text-base text-black/70 max-w-xl leading-relaxed">
-                  Our department is organized into four specialized units, each focusing on critical areas of pharmaceutical and nutritional research. We integrate traditional knowledge with modern science to deliver innovative solutions.
+                <p className="mt-8 text-base text-black/60 max-w-xl leading-relaxed">
+                  Endâ€‘toâ€‘end services spanning bioequivalence, drug discovery, nutraceuticals, and cosmetic science. Our research center is dedicated to advancing pharmaceutical excellence through innovation.
                 </p>
               </SectionReveal>
             </div>
@@ -631,20 +634,19 @@ const About = () => {
             </div>
           </div>
 
-          {/* Mobile video & text — in normal flow */}
+          {/* Mobile video & text â€” in normal flow */}
           <div className="md:hidden flex flex-col items-center mb-8">
             <div className="w-[90%] h-[240px] relative rounded-[0.3rem] border border-black overflow-hidden opacity-90 mb-8">
               <video src={pillarVideo} autoPlay loop muted playsInline className="w-full h-full object-cover" />
             </div>
             <div className="px-4 text-center">
-              <span className="block text-xs font-bold uppercase tracking-[0.2em] text-black">Scientific Focus</span>
-              <h2 className="font-heading text-3xl font-semibold mt-2 text-black">Major Units</h2>
+              <span className="block text-xs font-bold uppercase tracking-[0.2em] text-black">Inâ€‘Depth Capabilities</span>
+              <h2 className="font-heading text-3xl font-semibold mt-2 text-black">Our Major Units</h2>
             </div>
           </div>
 
-          <div className="w-full max-w-[96%] mx-auto px-4 relative z-10">
-            <div className="grid grid-cols-2 md:flex md:flex-row md:flex-wrap lg:flex-nowrap gap-4 md:gap-6 mt-16 perspective-1000 pillar-card-container">
-              {unitPillars.map((pillar, index) => {
+            <div className="grid grid-cols-2 md:flex md:flex-row md:flex-wrap lg:flex-nowrap gap-4 md:gap-6 md:mt-16 perspective-1000 pillar-card-container">
+              {pillarCards.map((pillar, index) => {
                 const isActive = activeUnit === index;
                 const isCompressed = activeUnit !== null && !isActive && !isMobile;
 
@@ -655,10 +657,10 @@ const About = () => {
                     style={{ transitionProperty: 'flex, width' }}
                   >
                     <div
-                      className={`pillar-card relative rounded-[0.3rem] overflow-hidden border border-black/10 bg-white/70 backdrop-blur-md transition-all duration-700 flex flex-col items-center p-4 md:p-8
+                      className={`pillar-card relative rounded-[0.3rem] overflow-hidden border border-[#DBDBDB] bg-white/50 backdrop-blur-lg shadow-[0_8px_30px_rgb(0,0,0,0.04)] transition-all duration-700 flex flex-col items-center p-4 md:p-8
                         ${isMobile ? (isActive ? 'h-auto min-h-[260px]' : 'h-[200px]') : `h-[550px] ${isActive ? 'shadow-[0_20px_40px_rgb(0,0,0,0.08)]' : ''}`}`}
                     >
-                      {/* Default State: Title & Icon */}
+                      {/* Title */}
                       <div className={`w-full text-center transition-all duration-700 ${!isMobile && isActive ? '-translate-y-4' : ''} ${isCompressed ? 'opacity-0 scale-75 pointer-events-none' : 'opacity-100 scale-100'}`}>
                         <h3 className="font-heading text-sm md:text-xl lg:text-2xl font-bold text-black leading-tight flex items-center justify-center whitespace-pre-line min-h-[2.5rem] md:h-16">
                           {pillar.title}
@@ -666,22 +668,21 @@ const About = () => {
                       </div>
 
                       <div className={`${isMobile ? 'flex-1 flex' : 'absolute inset-0 flex'} items-center justify-center transition-all duration-700 ${!isMobile && isActive ? 'scale-75 -translate-y-8 opacity-20' : ''} ${isCompressed ? 'opacity-0 scale-50 pointer-events-none' : 'opacity-100'}`}>
-                        <pillar.icon
-                          className="w-10 h-10 md:w-20 md:h-20 lg:w-24 lg:h-24"
-                          style={{ color: "#FFF200" }}
-                          fill={pillar.title === "Drug Discovery" ? "none" : "#FFF200"}
-                          strokeWidth={1}
+                        <img
+                          src={pillar.image}
+                          alt={pillar.title}
+                          className="w-28 h-28 md:w-48 md:h-48 object-cover rounded-full shadow-md"
                         />
                       </div>
 
-                      {/* Compressed State: Vertical Title */}
+                      {/* Compressed State: Vertical Title (desktop only) */}
                       <div className={`hidden md:flex absolute inset-0 items-center justify-center transition-all duration-700 pointer-events-none ${isCompressed ? 'opacity-100 delay-200' : 'opacity-0'}`}>
                         <h3 className="font-heading text-sm font-black text-black tracking-widest whitespace-nowrap -rotate-90">
                           {pillar.title}
                         </h3>
                       </div>
 
-                      {/* Default Summary Text at the bottom */}
+                      {/* Summary (desktop only) */}
                       <div className={`hidden md:block absolute bottom-20 left-8 right-8 text-center transition-all duration-700 ${isActive || isCompressed ? 'opacity-0 translate-y-4 pointer-events-none' : 'opacity-100 translate-y-0'}`}>
                         <p className="text-sm text-black/70 font-body">
                           {pillar.summary}
@@ -705,8 +706,8 @@ const About = () => {
                         </Button>
                       </div>
 
-                      {/* Details slide up */}
-                      <div className={`${isMobile ? 'w-full mt-3 border-t border-black/10 pt-3 pb-20' : 'absolute inset-x-0 bottom-0 h-[75%] border-t border-black/5 pb-24'} transition-all duration-700 ease-in-out bg-white p-3 md:p-6 overflow-y-auto custom-scrollbar ${isMobile ? (isActive ? 'block' : 'hidden') : (isActive ? 'translate-y-0 opacity-100 pointer-events-auto' : 'translate-y-full opacity-0 pointer-events-none')}`}>
+                      {/* Details panel */}
+                      <div className={`${isMobile ? 'w-full mt-3 border-t border-black/10 pt-3' : 'absolute inset-x-0 bottom-0 h-[75%] border-t border-white/30'} transition-all duration-700 ease-in-out bg-white/95 backdrop-blur-2xl p-3 md:p-6 overflow-y-auto custom-scrollbar ${isMobile ? (isActive ? 'block' : 'hidden') : (isActive ? 'translate-y-0 opacity-100 pointer-events-auto' : 'translate-y-full opacity-0 pointer-events-none')}`}>
                         <div className="flex flex-col gap-6">
                           {pillar.details.map((detail, i) => (
                             <div key={i}>
@@ -722,7 +723,7 @@ const About = () => {
                                 <ul className="space-y-2">
                                   {detail.items.map((item, j) => (
                                     <li key={j} className="flex items-start gap-2 text-[11px] text-black/80 font-medium leading-relaxed">
-                                      <span className="text-[#FFF200] font-bold mt-0.5">•</span>
+                                      <span className="text-[#FFF200] font-bold mt-0.5">â€¢</span>
                                       <span>{item}</span>
                                     </li>
                                   ))}
@@ -732,18 +733,17 @@ const About = () => {
                           ))}
                         </div>
                         {/* Bottom spacer to prevent button overlap */}
-                        <div className="h-32 w-full" />
+                        <div className="h-12 w-full" />
                       </div>
                     </div>
                   </div>
                 );
               })}
             </div>
-          </div>
         </div>
       </section>
 
-      {/* 03 Our Facilities — CRF overlapping layout */}
+      {/* 03 Our Facilities â€” CRF overlapping layout */}
       <section id="our-laboratories" className="section-padding relative overflow-hidden bg-white scroll-mt-24">
         <div className="container-grid relative">
           <div className="absolute -left-4 top-0 font-heading text-[10rem] md:text-[14rem] font-black text-black/[0.04] leading-none select-none pointer-events-none section-number">03</div>
@@ -765,7 +765,7 @@ const About = () => {
                   </h3>
                 </div>
 
-                {/* Video strip — all three infrastructure clips */}
+                {/* Video strip â€” all three infrastructure clips */}
                 <div className="w-full lg:w-[70%] h-[250px] md:h-[400px] lg:h-[550px] relative overflow-hidden mt-12 lg:mt-0 grid grid-cols-1 sm:grid-cols-3 gap-1 sm:gap-2">
                   <video src={bioanalyticalVideo1} autoPlay loop muted playsInline className="h-full w-full min-h-[200px] sm:min-h-0 object-cover about-parallax-img" />
                   <video src={bioanalyticalVideo2} autoPlay loop muted playsInline className="h-full w-full min-h-[200px] sm:min-h-0 object-cover about-parallax-img" />
@@ -932,7 +932,7 @@ const About = () => {
         </div>
       </section> */}
 
-      {/* 04 Manufacturing & Conservation — 5-segment reveal */}
+      {/* 04 Manufacturing & Conservation â€” 5-segment reveal */}
       <section className="relative section-padding overflow-hidden mfg-section">
         {/* Hexagonal Background for Coming Soon section */}
         {/* <div className="absolute inset-0 z-[1] pointer-events-none mfg-hex-canvas-wrapper invisible opacity-0">
