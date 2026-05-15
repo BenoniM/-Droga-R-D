@@ -11,7 +11,7 @@ const navItems = [
   { label: "Services", path: "/services" },
   {
     label: "Droga Science",
-    path: "#",
+    path: "/droga-science/home",
     children: [
       { label: "Droga Seminar", path: "/droga-science" },
       { label: "Droga Research Grant", path: "/droga-science/grants" },
@@ -316,9 +316,10 @@ const Navbar = () => {
               const isActive =
                 location.pathname === item.path ||
                 (item.children &&
-                  item.children.some(
+                  (item.children.some(
                     (child) => location.pathname === child.path.split("#")[0]
-                  ));
+                  ) ||
+                    location.pathname.startsWith("/droga-science")));
               return (
                 <div
                   key={item.label}

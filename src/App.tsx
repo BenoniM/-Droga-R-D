@@ -9,6 +9,7 @@ import Index from "./pages/Index";
 import About from "./pages/About";
 import Services from "./pages/Services";
 import DrogaScience from "./pages/DrogaScience";
+import DrogaScienceHome from "./pages/DrogaScienceHome";
 import Grants from "./pages/Grants";
 import Projects from "./pages/Projects";
 import Publications from "./pages/Publications";
@@ -19,7 +20,7 @@ import NotFound from "./pages/NotFound";
 const queryClient = new QueryClient();
 
 const ScrollToTop = () => {
-  const { pathname } = useLocation();
+  const { pathname, hash } = useLocation();
 
   useEffect(() => {
     // Disable browser's automatic scroll restoration on refresh
@@ -29,9 +30,31 @@ const ScrollToTop = () => {
   }, []);
 
   useEffect(() => {
-    // Force instant scroll to top on route change or refresh
+    const scrollToHash = () => {
+      if (!hash) return false;
+      const id = hash.replace("#", "");
+      const el = document.getElementById(id);
+      if (el) {
+        el.scrollIntoView({ behavior: "smooth" });
+        return true;
+      }
+      return false;
+    };
+
+    if (hash) {
+      if (!scrollToHash()) {
+        const t1 = window.setTimeout(scrollToHash, 100);
+        const t2 = window.setTimeout(scrollToHash, 450);
+        return () => {
+          window.clearTimeout(t1);
+          window.clearTimeout(t2);
+        };
+      }
+      return;
+    }
+
     window.scrollTo(0, 0);
-  }, [pathname]);
+  }, [pathname, hash]);
 
   return null;
 };
@@ -71,6 +94,7 @@ const AppRoutes = () => {
             <Route path="/about" element={<About />} />
             <Route path="/about-us" element={<About />} />
             <Route path="/services" element={<Services />} />
+            <Route path="/droga-science/home" element={<DrogaScienceHome />} />
             <Route path="/droga-science" element={<DrogaScience />} />
             <Route path="/droga-science/grants" element={<Grants />} />
             <Route path="/droga-science/projects" element={<Projects />} />

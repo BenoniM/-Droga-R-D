@@ -3,10 +3,11 @@ import { Link } from "react-router-dom";
 import gsap from "gsap";
 import { useGSAP } from "@gsap/react";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
+import { ScrollToPlugin } from "gsap/ScrollToPlugin";
 import { motion, AnimatePresence } from "framer-motion";
 import {
-  ArrowRight, FlaskConical, Microscope, Brain, HeartPulse, Leaf, Newspaper,
-  Dna, Beaker, Zap, Activity, Pill, Apple, Droplet, ChevronDown, X
+  ArrowRight, FlaskConical, Brain, HeartPulse, Leaf, Newspaper,
+  Dna, Beaker, Zap, Activity, Pill, ChevronDown, X
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import SectionReveal from "@/components/SectionReveal";
@@ -18,6 +19,10 @@ import labImg from "@/assets/Images/IMG_4528.jpg";
 import facilityImg from "@/assets/Images/IMG_4514.jpg";
 import moleculesImg from "@/assets/Images/IMG_4543.jpg";
 import plantsImg from "@/assets/Images/IMG_4565.jpg";
+import pillarImg1 from "@/assets/Images/IMG_4529.jpg";
+import nurseryImg from "@/assets/new-imgs/Plant Nursery.jpg";
+import pillarImg3 from "@/assets/new-imgs/Soap.jpg";
+import pillarImg4 from "@/assets/Images/lab1.jpg";
 import pillarVideo from "@/assets/pillar/MVI_4700.mp4";
 
 import project1Img from "@/assets/Project/Droga Oil Manufacturing Plant.jpg";
@@ -25,7 +30,9 @@ import project2Img from "@/assets/Project/droga-manufacture.png";
 import project3Img from "@/assets/new-imgs/Soap.jpg";
 import project5Img from "@/assets/new-imgs/Rosmary.jpg";
 import project4Img from "@/assets/Project/rosemary.png";
-import nurseryNewImg from "@/assets/new-imgs/Plant Nursery.jpg";
+
+const pillarImg2 = nurseryImg;
+const nurseryNewImg = nurseryImg;
 
 import heroImg1 from "@/assets/Hero/home1.jpg";
 import heroImg2 from "@/assets/Hero/home2.jpg";
@@ -35,7 +42,7 @@ import heroImg5 from "@/assets/Hero/home5.jpg";
 
 const heroStackImages = [heroImg1, heroImg2, heroImg3, heroImg4, heroImg5];
 
-gsap.registerPlugin(ScrollTrigger);
+gsap.registerPlugin(ScrollTrigger, ScrollToPlugin);
 
 // CountUp component (unchanged)
 const CountUp = ({ end, suffix = "", label, prefix = "" }: { end: number; suffix?: string; label: string; prefix?: string }) => {
@@ -105,7 +112,7 @@ const heroSlidesData = [
 
 const pillarCards = [
   {
-    icon: Microscope,
+    image: pillarImg1,
     title: "Drug Discovery",
     color: "#ffdf22",
     summary: "Research of natural, herbal food and drug discovery, development and formulation.",
@@ -121,7 +128,7 @@ const pillarCards = [
     ]
   },
   {
-    icon: Apple,
+    image: pillarImg2,
     title: "Food & Nutraceutical Sciences Research",
     color: "#C7372F",
     summary: "Dedicated to the research and development of nutrition-based products aimed at supporting health, wellness, and preventive care.",
@@ -132,7 +139,7 @@ const pillarCards = [
     ]
   },
   {
-    icon: Droplet,
+    image: pillarImg3,
     title: "Cosmetic & Detergent Research and Development",
     color: "#006994",
     summary: "Dedicated to the formulation, development, and optimization of medicated and non-medicated cosmetic, personal care, and hygiene products.",
@@ -143,7 +150,7 @@ const pillarCards = [
     ]
   },
   {
-    icon: FlaskConical,
+    image: pillarImg4,
     title: "Bioequivalence & Analytical Laboratory",
     color: "#507d2a",
     summary: "Providing bioequivalence (BE) studies, pharmacokinetic studies, and comprehensive analytical testing services.",
@@ -308,6 +315,14 @@ const Index = () => {
   const [hexActive, setHexActive] = useState(false);
   const [hexSpots, setHexSpots] = useState<any[]>([]);
   const [isMobile, setIsMobile] = useState(() => typeof window !== 'undefined' && window.innerWidth < 768);
+
+  const scrollToFeaturedProjects = useCallback(() => {
+    gsap.to(window, {
+      duration: 1.2,
+      scrollTo: { y: "#featured-projects", autoKill: true },
+      ease: "power2.inOut",
+    });
+  }, []);
 
   useEffect(() => {
     // Randomize spots per segment on refresh
@@ -779,8 +794,14 @@ const Index = () => {
             <Button variant="default" size="lg" asChild className="flex-1 md:flex-none bg-black text-white hover:bg-[#FFF200] hover:text-black transition-all duration-300 border-none text-xs md:text-base px-3 md:px-6">
               <Link to="/droga-science">Explore Research</Link>
             </Button>
-            <Button variant="default" size="lg" asChild className="flex-1 md:flex-none bg-transparent border border-foreground text-foreground hover:bg-foreground hover:text-background transition-all duration-300 text-xs md:text-base px-3 md:px-6">
-              <Link to="/droga-science/projects">View Projects</Link>
+            <Button
+              type="button"
+              variant="default"
+              size="lg"
+              className="flex-1 md:flex-none bg-transparent border border-foreground text-foreground hover:bg-foreground hover:text-background transition-all duration-300 text-xs md:text-base px-3 md:px-6"
+              onClick={scrollToFeaturedProjects}
+            >
+              View Projects
             </Button>
           </div>
         </div>
@@ -961,13 +982,12 @@ const Index = () => {
                         </h3>
                       </div>
 
-                      {/* Icon */}
+                      {/* Image */}
                       <div className={`${isMobile ? 'flex-1 flex' : 'absolute inset-0 flex'} items-center justify-center transition-all duration-700 ${!isMobile && isActive ? 'scale-75 -translate-y-8 opacity-20' : ''} ${isCompressed ? 'opacity-0 scale-50 pointer-events-none' : 'opacity-100'}`}>
-                        <pillar.icon
-                          className="w-10 h-10 md:w-24 md:h-24"
-                          style={{ color: "#FFF200" }}
-                          fill={pillar.title === "Drug Discovery" ? "none" : "#FFF200"}
-                          strokeWidth={1}
+                        <img
+                          src={pillar.image}
+                          alt={pillar.title}
+                          className="w-28 h-28 md:w-48 md:h-48 object-cover rounded-full shadow-md"
                         />
                       </div>
 
@@ -1039,7 +1059,7 @@ const Index = () => {
         </section>
 
         {/* Projects */}
-        <section className="relative section-padding overflow-hidden featured-projects-section bg-[#FFF200]">
+        <section id="featured-projects" className="relative section-padding overflow-hidden featured-projects-section bg-[#FFF200]">
           {/* Sparse hexagonal clusters */}
           {/* <div className="absolute inset-0 z-[2] pointer-events-none hex-canvas-wrapper invisible opacity-0">
             <HexagonalBackground
@@ -1169,9 +1189,9 @@ const Index = () => {
             <div
               className="mt-16 text-center"
             >
-              <Button variant="hero" size="lg" asChild className="bg-black text-white hover:bg-white hover:text-black">
+              {/* <Button variant="hero" size="lg" asChild className="bg-black text-white hover:bg-white hover:text-black">
                 <Link to="/droga-science/projects">View All Projects <ArrowRight className="w-4 h-4 ml-2" /></Link>
-              </Button>
+              </Button> */}
             </div>
           </div>
         </section>
@@ -1192,7 +1212,7 @@ const Index = () => {
                 Our integrated research campus houses laboratories, bioequivalence units, and quality control centers.
               </p>
               <Button variant="default" size="lg" className="mt-8 bg-white text-black hover:bg-[#FFF200] hover:text-black" asChild>
-                <Link to="/about">Explore Facilities</Link>
+                <Link to="/about#our-laboratories">Explore Facilities</Link>
               </Button>
             </SectionReveal>
           </div>

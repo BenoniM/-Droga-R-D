@@ -744,7 +744,7 @@ const About = () => {
       </section>
 
       {/* 03 Our Facilities — CRF overlapping layout */}
-      <section className="section-padding relative overflow-hidden bg-white">
+      <section id="our-laboratories" className="section-padding relative overflow-hidden bg-white scroll-mt-24">
         <div className="container-grid relative">
           <div className="absolute -left-4 top-0 font-heading text-[10rem] md:text-[14rem] font-black text-black/[0.04] leading-none select-none pointer-events-none section-number">03</div>
           <SectionReveal>
@@ -851,22 +851,22 @@ const About = () => {
             </div>
 
             {/* Quality Control Units */}
-            <div className="relative pt-16 lg:pt-24 mb-32">
-              <div className="flex flex-col lg:flex-row relative items-start lg:items-center">
+            {/* <div className="relative pt-16 lg:pt-24 mb-32">
+              <div className="flex flex-col lg:flex-row relative items-start lg:items-center"> */}
                 {/* Dark Top Title */}
-                <div className="absolute -top-8 left-0 lg:left-[5%] z-20 bg-black px-6 py-4 md:px-10 md:py-6 shadow-md w-auto max-w-[90%]">
+                {/* <div className="absolute -top-8 left-0 lg:left-[5%] z-20 bg-black px-6 py-4 md:px-10 md:py-6 shadow-md w-auto max-w-[90%]">
                   <h3 className="text-white font-heading text-lg md:text-2xl font-bold tracking-widest uppercase m-0">
                     3. Quality Control Units
                   </h3>
-                </div>
+                </div> */}
 
                 {/* Image Container */}
-                <div className="w-full lg:w-[70%] h-[250px] md:h-[400px] lg:h-[550px] relative overflow-hidden mt-12 lg:mt-0">
+                {/* <div className="w-full lg:w-[70%] h-[250px] md:h-[400px] lg:h-[550px] relative overflow-hidden mt-12 lg:mt-0">
                   <video src={labVideo3} autoPlay loop muted playsInline className="w-full h-[130%] -top-[15%] absolute object-cover about-parallax-img" />
-                </div>
+                </div> */}
 
                 {/* Content Box */}
-                <div className="w-[90%] mx-auto lg:w-[45%] lg:absolute lg:right-0 lg:top-1/2 lg:-translate-y-1/2 z-10 bg-[#FFF200] p-8 md:p-12 shadow-xl -mt-16 lg:mt-0 relative facility-info-box">
+                {/* <div className="w-[90%] mx-auto lg:w-[45%] lg:absolute lg:right-0 lg:top-1/2 lg:-translate-y-1/2 z-10 bg-[#FFF200] p-8 md:p-12 shadow-xl -mt-16 lg:mt-0 relative facility-info-box">
                   <SectionReveal delay={0.2}>
                     <h4 className="font-heading text-2xl md:text-3xl font-black text-black mb-6 uppercase leading-tight tracking-tight">
                       Precision Analytical Instruments
@@ -882,20 +882,20 @@ const About = () => {
                   </SectionReveal>
                 </div>
               </div>
-            </div>
+            </div> */}
 
             {/* Formulation & Development */}
-            <div className="relative pt-16 lg:pt-24 mb-32">
-              <div className="flex flex-col lg:flex-row relative items-start lg:items-center justify-end">
+            {/* <div className="relative pt-16 lg:pt-24 mb-32">
+              <div className="flex flex-col lg:flex-row relative items-start lg:items-center justify-end"> */}
                 {/* Dark Top Title */}
-                <div className="absolute -top-8 right-0 lg:right-[5%] z-20 bg-black px-6 py-4 md:px-10 md:py-6 shadow-md w-auto max-w-[90%] text-right">
+                {/* <div className="absolute -top-8 right-0 lg:right-[5%] z-20 bg-black px-6 py-4 md:px-10 md:py-6 shadow-md w-auto max-w-[90%] text-right">
                   <h3 className="text-white font-heading text-lg md:text-2xl font-bold tracking-widest uppercase m-0">
                     4. Formulation & Development
                   </h3>
-                </div>
+                </div> */}
 
                 {/* Content Box */}
-                <div className="w-[90%] mx-auto lg:w-[45%] lg:absolute lg:left-0 lg:top-1/2 lg:-translate-y-1/2 z-10 bg-[#FFF200] p-8 md:p-12 shadow-xl -mt-16 lg:mt-0 relative order-2 lg:order-1 facility-info-box">
+                {/* <div className="w-[90%] mx-auto lg:w-[45%] lg:absolute lg:left-0 lg:top-1/2 lg:-translate-y-1/2 z-10 bg-[#FFF200] p-8 md:p-12 shadow-xl -mt-16 lg:mt-0 relative order-2 lg:order-1 facility-info-box">
                   <SectionReveal delay={0.2}>
                     <h4 className="font-heading text-2xl md:text-3xl font-black text-black mb-6 uppercase leading-tight tracking-tight">
                       Scaling Innovations to Market
@@ -909,20 +909,20 @@ const About = () => {
                       </p>
                     </div>
                   </SectionReveal>
-                </div>
+                </div> */}
 
                 {/* Image Container */}
-                <div className="w-full lg:w-[70%] h-[250px] md:h-[400px] lg:h-[550px] relative overflow-hidden mt-12 lg:mt-0 order-1 lg:order-2">
+                {/* <div className="w-full lg:w-[70%] h-[250px] md:h-[400px] lg:h-[550px] relative overflow-hidden mt-12 lg:mt-0 order-1 lg:order-2">
                   <video src={labVideo4} autoPlay loop muted playsInline className="w-full h-[130%] -top-[15%] absolute object-cover about-parallax-img" />
                 </div>
               </div>
-            </div>
+            </div> */}
           </div>
         </div>
       </section>
 
       {/* Full-width parallax image break */}
-      <section className="relative h-[40vh] md:h-[50vh] overflow-hidden">
+      {/* <section className="relative h-[40vh] md:h-[50vh] overflow-hidden">
         <img src={facilityImg} alt="Facility" className="absolute inset-0 w-full h-[140%] -top-[20%] object-cover about-parallax-img" />
         <div className="absolute inset-0 bg-black/60 flex items-center justify-center">
           <SectionReveal className="text-center max-w-2xl px-6">
@@ -930,7 +930,7 @@ const About = () => {
             <p className="mt-4 text-lg text-white/70">Our integrated research campus houses laboratories, bioequivalence units, and quality control centers.</p>
           </SectionReveal>
         </div>
-      </section>
+      </section> */}
 
       {/* 04 Manufacturing & Conservation — 5-segment reveal */}
       <section className="relative section-padding overflow-hidden mfg-section">
@@ -1022,7 +1022,7 @@ const About = () => {
             </div>
 
             {/* Conservation & Nursery */}
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
+            {/* <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
               <SectionReveal>
                 <div className="overflow-hidden rounded-sm shadow-xl aspect-[4/3] relative group">
                   <img src={nurseryImg} alt="Nursery" className="absolute inset-0 w-full h-[130%] -top-[15%] object-cover about-parallax-img" />
@@ -1039,7 +1039,7 @@ const About = () => {
                   </p>
                 </div>
               </SectionReveal>
-            </div>
+            </div> */}
           </div>
         </div>
       </section>
