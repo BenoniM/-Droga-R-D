@@ -23,7 +23,7 @@ import heroImg from "@/assets/Images/IMG_4582.jpg";
 import moleculesImg from "@/assets/Images/IMG_4543.jpg";
 import plantsImg from "@/assets/Images/IMG_4565.jpg";
 import nurseryImg from "@/assets/new-imgs/Plant Nursery.jpg";
-import pillarImg1 from "@/assets/Images/IMG_4529.jpg";
+import pillarImg1 from "@/assets/Hero/drug.jpg";
 import pillarImg3 from "@/assets/new-imgs/Soap.jpg";
 import pillarImg4 from "@/assets/Hero/analytical.jpg";
 const pillarImg2 = nurseryImg;
@@ -645,7 +645,7 @@ const About = () => {
           </div>
 
           {/* Cards — always below the text/image */}
-          <div className="grid grid-cols-2 md:flex md:flex-row md:flex-wrap lg:flex-nowrap gap-4 md:gap-6 perspective-1000 pillar-card-container relative z-0">
+          <div className="grid grid-cols-2 md:flex md:flex-row md:flex-wrap lg:flex-nowrap gap-4 md:gap-6 perspective-1000 pillar-card-container relative z-0 -mt-10">
             {pillarCards.map((pillar, index) => (
                 <div
                   key={pillar.title}
