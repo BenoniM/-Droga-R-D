@@ -371,7 +371,7 @@ const About = () => {
 
     const pillarText = document.querySelector('.pillars-text-wrapper');
 
-    if (wrappers.length === 4 && video && window.innerWidth >= 768) {
+    if (wrappers.length === 4 && window.innerWidth >= 768) {
       const tl = gsap.timeline({
         scrollTrigger: {
           trigger: ".pillars-pin-target",
@@ -381,9 +381,9 @@ const About = () => {
         }
       });
 
-      tl.fromTo([video, pillarText], { y: 600 }, { y: 0, duration: 1, ease: "power2.out" })
-        .fromTo([wrappers[1], wrappers[2]], { y: 600 }, { y: 35, duration: 1, ease: "power2.out" }, "+=0.1")
-        .fromTo([wrappers[0], wrappers[3]], { y: 600 }, { y: 35, duration: 1, ease: "power2.out" }, "-=0.1");
+      // Text and image are in normal flow — only animate cards up
+      tl.fromTo([wrappers[1], wrappers[2]], { y: 200 }, { y: 0, duration: 1, ease: "power2.out" })
+        .fromTo([wrappers[0], wrappers[3]], { y: 200 }, { y: 0, duration: 1, ease: "power2.out" }, "-=0.5");
     }
 
     // Vision & Mission Scroll Animations
@@ -507,14 +507,14 @@ const About = () => {
               <span className="text-xl font-bold uppercase tracking-[0.2em] text-muted-foreground">Overview</span>
             </div>
             <h2 className="font-heading text-4xl md:text-5xl font-bold tracking-tight mt-4 text-foreground leading-tight">
-              Droga Research and<br className="hidden md:block" /> Development Department
+              Droga Research and<br className="hidden md:block" /> Development Center
             </h2>
           </SectionReveal>
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 md:gap-16 mt-6 md:mt-12">
             <SectionReveal>
               <div className="space-y-6 text-lg text-muted-foreground font-body leading-relaxed">
                 <p>
-                  Established in 2021, the Droga Research and Development Department is one of the major wings of Droga Pharma PLC, a diversified private company operating mainly in healthcare services and agricultural exports. The company has evolved from a pharmaceutical wholesale and importing business into an integrated healthcare group with a strong national presence and expanding operations across multiple African markets.
+                  Established in 2021, the Droga Research and Development Center is one of the major wings of Droga Pharma PLC, a diversified private company operating mainly in healthcare services and agricultural exports. The company has evolved from a pharmaceutical wholesale and importing business into an integrated healthcare group with a strong national presence and expanding operations across multiple African markets.
                 </p>
                 <p className="hidden md:block">
                   This wing was established with the vision of becoming a state-of-the-art research center and providing quality research services that address challenges in conducting effective research in the country. It also focuses on identifying and addressing problems related to the nutritional and medicinal needs of society.
@@ -609,11 +609,10 @@ const About = () => {
       <section id="major-research-units" className="relative overflow-hidden bg-white pillars-section scroll-mt-24">
         <div className="section-padding relative w-full h-full pillars-pin-target">
 
-          {/* Split layout: Text Left, Image Right, both absolute/moving together */}
-          <div className="hidden md:flex absolute inset-x-0 top-0 mt-8 px-[10%] justify-between items-start pointer-events-none z-0">
-
-            {/* Text (Left) - Moving with GSAP */}
-            <div className="w-1/2 pillars-text-wrapper">
+          {/* Desktop: Text Left + Image Right — normal flow, cards below */}
+          <div className="hidden md:flex px-0 justify-between items-start mb-16 pillars-text-wrapper">
+            {/* Text (Left) */}
+            <div className="w-1/2">
               <SectionReveal>
                 <span className="block text-sm md:text-base font-bold uppercase tracking-[0.2em] text-black">
                   InDepth Capabilities
@@ -629,7 +628,7 @@ const About = () => {
             </div>
 
             {/* Feature image (Right) */}
-            <div className="w-[60%] lg:w-[35%] h-[420px] relative rounded-[0.3rem] border border-black overflow-hidden opacity-90 pillar-video">
+            <div className="w-[35%] h-[380px] relative rounded-[0.3rem] border border-black overflow-hidden opacity-90 pillar-video">
               <img src={pillarFeatureImg} alt="Droga research laboratory" className="w-full h-full object-cover" />
             </div>
           </div>
@@ -645,40 +644,48 @@ const About = () => {
             </div>
           </div>
 
-            <div className="grid grid-cols-2 md:flex md:flex-row md:flex-wrap lg:flex-nowrap gap-4 md:gap-6 md:mt-16 perspective-1000 pillar-card-container">
-              {pillarCards.map((pillar, index) => (
-                  <div
-                    key={pillar.title}
-                    className="pillar-wrapper pillar-flex-default transition-all duration-700 ease-[cubic-bezier(0.16,1,0.3,1)] md:w-[calc(50%-0.75rem)] lg:w-auto lg:min-w-0"
-                  >
-                    <div className="pillar-card relative rounded-[0.3rem] overflow-hidden border border-[#DBDBDB] bg-white/50 backdrop-blur-lg shadow-[0_8px_30px_rgb(0,0,0,0.04)] flex flex-col items-center p-4 md:p-8 h-[200px] md:h-[550px]">
-                      <div className="w-full text-center">
-                        <h3 className="font-heading text-sm md:text-xl lg:text-2xl font-bold text-black leading-tight flex items-center justify-center whitespace-pre-line min-h-[2.5rem] md:h-16">
-                          {pillar.title}
-                        </h3>
-                      </div>
-                      <div className={`${isMobile ? "flex-1 flex" : "absolute inset-0 flex"} items-center justify-center`}>
-                        <img
-                          src={pillar.image}
-                          alt={pillar.title}
-                          className="w-28 h-28 md:w-48 md:h-48 object-cover rounded-full shadow-md"
-                        />
-                      </div>
-                      <div className="hidden md:block absolute bottom-20 left-8 right-8 text-center">
-                        <p className="text-sm text-black/70 font-body">{pillar.summary}</p>
-                      </div>
-                      <div className={`${isMobile ? "mt-2 flex justify-center" : "absolute bottom-6 left-0 right-0 flex justify-center"} z-10`}>
-                        <Button
-                          variant="outline"
-                          className="rounded-full border-black/20 text-[10px] md:text-xs text-black uppercase tracking-wider bg-white/50 backdrop-blur hover:bg-[#FFF200] hover:text-black hover:border-[#FFF200] transition-colors px-3 py-1 md:px-4 md:py-2"
-                          onClick={() => setModalUnit(index)}
-                        >
-                          Details
-                        </Button>
-                      </div>
+          {/* Cards — always below the text/image */}
+          <div className="grid grid-cols-2 md:flex md:flex-row md:flex-wrap lg:flex-nowrap gap-4 md:gap-6 perspective-1000 pillar-card-container relative z-0">
+            {pillarCards.map((pillar, index) => (
+                <div
+                  key={pillar.title}
+                  className="pillar-wrapper pillar-flex-default transition-all duration-700 ease-[cubic-bezier(0.16,1,0.3,1)] md:w-[calc(50%-0.75rem)] lg:w-auto lg:min-w-0"
+                >
+                  <div className="pillar-card relative rounded-[0.3rem] overflow-hidden border border-[#DBDBDB] bg-white shadow-[0_8px_30px_rgb(0,0,0,0.04)] flex flex-col items-center p-4 md:p-8 h-[200px] md:h-[550px]">
+                    {/* Title */}
+                    <div className="w-full text-center">
+                      <h3 className="font-heading text-sm md:text-xl lg:text-2xl font-bold text-black leading-tight flex items-center justify-center whitespace-pre-line min-h-[2.5rem] md:h-16">
+                        {pillar.title}
+                      </h3>
+                    </div>
+
+                    {/* Circle image */}
+                    <div className={`${isMobile ? "flex-1 flex items-center justify-center" : "flex items-center justify-center mt-4 mb-4"}`}>
+                      <img
+                        src={pillar.image}
+                        alt={pillar.title}
+                        className="w-24 h-24 md:w-44 md:h-44 object-cover rounded-full shadow-md"
+                      />
+                    </div>
+
+                    {/* Summary */}
+                    <div className="hidden md:block text-center flex-1 flex items-start justify-center px-2">
+                      <p className="text-sm text-black/70 font-body leading-relaxed">{pillar.summary}</p>
+                    </div>
+
+                    {/* Button */}
+                    <div className={`${isMobile ? "mt-2" : "mt-auto pt-4"} flex justify-center`}>
+                      <Button
+                        variant="outline"
+                        className="rounded-full border-black/20 text-[10px] md:text-xs text-black uppercase tracking-wider bg-white hover:bg-[#FFF200] hover:text-black hover:border-[#FFF200] transition-colors px-3 py-1 md:px-4 md:py-2"
+                        onClick={() => setModalUnit(index)}
+                      >
+                        Details
+                      </Button>
                     </div>
                   </div>
-              ))}
+                </div>
+            ))}
 
           {modalUnit !== null && (
             <Dialog open={modalUnit !== null} onOpenChange={(open) => { if (!open) setModalUnit(null); }}>
@@ -762,10 +769,10 @@ const About = () => {
                 </div>
 
                 {/* Video strip â€” all three infrastructure clips */}
-                <div className="w-full lg:w-[70%] h-[250px] md:h-[400px] lg:h-[550px] relative overflow-hidden mt-12 lg:mt-0 grid grid-cols-1 sm:grid-cols-3 gap-1 sm:gap-2">
+                <div className="w-full lg:w-[70%] h-[250px] md:h-[400px] lg:h-[550px] relative overflow-hidden mt-12 lg:mt-0 grid grid-cols-1 sm:grid-cols-2 gap-1 sm:gap-2">
                   <video src={bioanalyticalVideo1} autoPlay loop muted playsInline className="h-full w-full min-h-[200px] sm:min-h-0 object-cover about-parallax-img" />
                   <video src={bioanalyticalVideo2} autoPlay loop muted playsInline className="h-full w-full min-h-[200px] sm:min-h-0 object-cover about-parallax-img" />
-                  <video src={bioanalyticalVideo3} autoPlay loop muted playsInline className="h-full w-full min-h-[200px] sm:min-h-0 object-cover about-parallax-img" />
+                  {/* <video src={bioanalyticalVideo3} autoPlay loop muted playsInline className="h-full w-full min-h-[200px] sm:min-h-0 object-cover about-parallax-img" /> */}
                 </div>
 
                 {/* Content Box */}
@@ -929,7 +936,7 @@ const About = () => {
       </section> */}
 
       {/* 04 Manufacturing & Conservation â€” 5-segment reveal */}
-      <section className="relative section-padding overflow-hidden mfg-section">
+      {/* <section className="relative section-padding overflow-hidden mfg-section"> */}
         {/* Hexagonal Background for Coming Soon section */}
         {/* <div className="absolute inset-0 z-[1] pointer-events-none mfg-hex-canvas-wrapper invisible opacity-0">
           <HexagonalBackground
@@ -941,22 +948,22 @@ const About = () => {
             spots={hexSpots}
           />
         </div> */}
-        <div className="absolute inset-0 flex z-0">
+        {/* <div className="absolute inset-0 flex z-0">
           {[0, 1, 2, 3, 4].map(i => <div key={i} className="w-1/5 h-full bg-[#FFF200] translate-y-full mfg-segment" />)}
         </div>
         <div className="container-grid relative z-10 mfg-content opacity-0">
-          <div className="absolute -left-4 top-0 font-heading text-[10rem] md:text-[14rem] font-black text-black/[0.04] leading-none select-none pointer-events-none section-number">04</div>
-
+          <div className="absolute -left-4 top-0 font-heading text-[10rem] md:text-[14rem] font-black text-black/[0.04] leading-none select-none pointer-events-none section-number">04</div> */}
+{/* 
           <SectionReveal className="text-center mb-16">
             <div className="flex items-center justify-center gap-4 mb-2">
               <span className="text-xl font-bold uppercase tracking-[0.2em] text-black">COMING SOON</span>
-            </div>
+            </div> */}
             {/* <h2 className="font-heading text-4xl md:text-5xl font-bold tracking-tight mt-4 text-black">Manufacturing & Conservation</h2> */}
-          </SectionReveal>
+          {/* </SectionReveal> */}
 
-          <div className="mt-20 space-y-32">
+          {/* <div className="mt-20 space-y-32"> */}
             {/* R&D Center */}
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
+            {/* <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
               <SectionReveal>
                 <div className="overflow-hidden rounded-sm shadow-xl aspect-[4/3] relative group">
                   <img src={project2Img} alt="R&D Center" className="absolute inset-0 w-full h-[130%] -top-[15%] object-cover about-parallax-img" />
@@ -973,7 +980,7 @@ const About = () => {
                   </p>
                 </div>
               </SectionReveal>
-            </div>
+            </div> */}
 
             {/* Oil Manufacturing */}
             {/* 
@@ -998,7 +1005,7 @@ const About = () => {
             */}
 
             {/* Soap & Rosemary */}
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
+            {/* <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
               <SectionReveal className="lg:order-1">
                 <h3 className="font-heading text-3xl font-bold mb-6 text-black">Natural Soap & Rosemary Processing</h3>
                 <div className="space-y-4 text-black font-medium leading-relaxed">
@@ -1008,14 +1015,14 @@ const About = () => {
                   <p>
                     These initiatives combine modern manufacturing with traditional herbal wisdom to deliver consistent, high-quality natural products for the global market.
                   </p>
-                </div>
-              </SectionReveal>
+                </div> */}
+              {/* </SectionReveal>
               <SectionReveal className="lg:order-2" delay={0.2}>
                 <div className="overflow-hidden rounded-sm shadow-xl aspect-[4/3] relative group">
                   <img src={project3Img} alt="Soap Plant" className="absolute inset-0 w-full h-[130%] -top-[15%] object-cover about-parallax-img" />
                 </div>
               </SectionReveal>
-            </div>
+            </div> */}
 
             {/* Conservation & Nursery */}
             {/* <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
@@ -1036,9 +1043,9 @@ const About = () => {
                 </div>
               </SectionReveal>
             </div> */}
-          </div>
-        </div>
-      </section>
+          {/* </div> */}
+        {/* </div>
+      </section> */}
 
       {/* Timeline */}
       <div id="milestones">

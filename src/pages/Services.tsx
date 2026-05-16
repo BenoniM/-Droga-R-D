@@ -38,7 +38,7 @@ import finished3 from "@/assets/finished/finished3.mp4";
 
 import highperformance from "@/assets/instrument/highperformance.jpg";
 import uvvisible from "@/assets/instrument/uv1.jpg";
-import uvvisible2 from "@/assets/instrument/uv2.jpg";
+// import uvvisible2 from "@/assets/instrument/uv2.jpg";
 import fourier from "@/assets/instrument/fourier.jpg";
 import dissolution1 from "@/assets/instrument/dissolution1.jpg";
 import dissolution2 from "@/assets/instrument/dissolution2.jpg";
@@ -112,9 +112,9 @@ const baseInstruments = [
 /** Photos shown below the description in each instrument card (index aligns with baseInstruments). */
 const instrumentCardPhotos: (string[] | null)[] = [
   [highperformance],
-  [uvvisible, uvvisible2],
+  [uvvisible],
   [fourier],
-  [dissolution1, dissolution2],
+  [dissolution2],
   [analyticalbalance],
   [phmeter, phmeter2],
   null,
@@ -417,7 +417,7 @@ const Services = () => {
           </div>
           <h2 className="font-heading text-4xl md:text-6xl font-bold tracking-tight mt-4 text-foreground leading-tight">Our Analytical Capabilities</h2>
 
-          <div className="mt-12 md:mt-16 grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6 md:gap-8">
+          <div className="mt-12 md:mt-16 grid grid-cols-1 md:grid-cols-2 xl:grid-cols-2 gap-6 md:gap-8">
             {baseInstruments.map((inst, index) => {
               const photos = instrumentCardPhotos[index];
               const Icon = inst.icon;
@@ -452,7 +452,7 @@ const Services = () => {
                           key={i}
                           src={src}
                           alt={`${inst.name} — photo ${i + 1}`}
-                          className="w-full h-32 sm:h-36 object-cover rounded-md border border-black/5"
+                          className="w-full h-48 sm:h-64 object-cover rounded-md border border-black/5"
                         />
                       ))}
                     </div>

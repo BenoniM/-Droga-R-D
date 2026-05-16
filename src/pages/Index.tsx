@@ -40,6 +40,9 @@ import heroImg2 from "@/assets/Hero/home2.jpg";
 import heroImg3 from "@/assets/Hero/home3.jpg";
 import heroImg4 from "@/assets/Hero/home4.jpg";
 import heroImg5 from "@/assets/Hero/home5.jpg";
+import newsImg1 from "@/assets/news/News 15 February 20 2026.png";
+import newsImg2 from "@/assets/news/News 14 June 7 2025 - 1.png";
+import newsImg3 from "@/assets/news/News 13 Feb 10 2025.png";
 
 const heroStackImages = [heroImg1, heroImg2, heroImg3, heroImg4, heroImg5];
 
@@ -195,9 +198,9 @@ const activeProjects = [
 ];
 
 const newsItems = [
-  { title: "New Bioequivalence Study Center Opens", date: "March 2026", excerpt: "State-of-the-art facility at Kilinto Industrial Park begins operations.", image: facilityImg },
-  { title: "DRG Grant Applications Now Open", date: "January 2026", excerpt: "Droga Research Grant accepting proposals across pharmaceutical sciences.", image: labImg },
-  { title: "Medicinal Plant Nursery Established", date: "December 2025", excerpt: "Butajira nursery to cultivate indigenous medicinal plant species.", image: nurseryNewImg },
+  { title: "Call for Droga Research Grant 2026", date: "February 20, 2026", excerpt: "Droga Pharma PLC is now accepting applications for the 2026 Droga Research Grant focusing on Formulation Development for Dermatological Products.", image: newsImg1 },
+  { title: "Droga Research Day 2025", date: "June 7, 2025", excerpt: "DRG 2025 awarded 89,400 ETB to Mr. Minychel Wale for his research on Diabetic Foot Care emollient formulation.", image: newsImg2 },
+  { title: "Droga Research Grant 2025 Announced", date: "February 10, 2025", excerpt: "Droga Pharma PLC announces the 2025 Droga Research Grant focusing on Food Supplements & Nutraceuticals and Formulation Development.", image: newsImg3 },
 ];
 
 // Featured Projects Detail Data
@@ -228,7 +231,7 @@ const featuredProjectsData = [
   },
   {
     id: 4,
-    title: "Project II: Butajira Rosmary Manufacturing Plant",
+    title: "Project II: The Butajira Botanical Garden",
     image: project4Img,
     // description: "The Butajira Rosemary Processing Plant aims to improve the livelihood of farmers in Meskan Woreda, Eastern Gurage Zone, through sustainable rosemary cultivation and market integration. The initiative covers 20 hectares of investment land and 40 hectares of partner farms, engaging 160 local farmers in modern rosemary production supported by training, technology transfer, and cooperative formation.",
     paragraphs: [
@@ -527,7 +530,7 @@ const Index = () => {
 
     const pillarText = document.querySelector('.pillars-text-wrapper');
 
-    if (wrappers.length === 4 && video && window.innerWidth >= 768) {
+    if (wrappers.length === 4 && window.innerWidth >= 768) {
       const tl = gsap.timeline({
         scrollTrigger: {
           trigger: ".pillars-pin-target",
@@ -537,9 +540,9 @@ const Index = () => {
         }
       });
 
-      tl.fromTo([video, pillarText], { y: 600 }, { y: 0, duration: 1, ease: "power2.out" })
-        .fromTo([wrappers[1], wrappers[2]], { y: 600 }, { y: 35, duration: 1, ease: "power2.out" }, "+=0.1")
-        .fromTo([wrappers[0], wrappers[3]], { y: 600 }, { y: 35, duration: 1, ease: "power2.out" }, "-=0.1");
+      // Text and image are now in normal flow — only animate the cards up
+      tl.fromTo([wrappers[1], wrappers[2]], { y: 200 }, { y: 0, duration: 1, ease: "power2.out" })
+        .fromTo([wrappers[0], wrappers[3]], { y: 200 }, { y: 0, duration: 1, ease: "power2.out" }, "-=0.5");
     }
 
     // Featured Projects 5-Segment Reveal (white covers slide away to reveal hex canvas)
@@ -925,11 +928,10 @@ const Index = () => {
         <section className="relative overflow-hidden bg-white pillars-section">
           <div className="section-padding relative w-full h-full pillars-pin-target">
 
-            {/* Split layout: Text Left, Image Right, both absolute/moving together */}
-            <div className="hidden md:flex absolute inset-x-0 top-0 mt-8 px-[10%] justify-between items-start pointer-events-none z-0">
-
-              {/* Text (Left) - Moving with GSAP */}
-              <div className="w-1/2 pillars-text-wrapper">
+            {/* Desktop: Text Left + Image Right — normal flow, cards below */}
+            <div className="hidden md:flex px-0 justify-between items-start mb-16 pillars-text-wrapper">
+              {/* Text (Left) */}
+              <div className="w-1/2">
                 <SectionReveal>
                   <span className="block text-sm md:text-base font-bold uppercase tracking-[0.2em] text-black">
                     In‑Depth Capabilities
@@ -945,7 +947,7 @@ const Index = () => {
               </div>
 
               {/* Feature image (Right) */}
-              <div className="w-[60%] lg:w-[35%] h-[420px] relative rounded-[0.3rem] border border-black overflow-hidden opacity-90 pillar-video">
+              <div className="w-[35%] h-[380px] relative rounded-[0.3rem] border border-black overflow-hidden opacity-90 pillar-video">
                 <img src={pillarFeatureImg} alt="Droga research laboratory" className="w-full h-full object-cover" />
               </div>
             </div>
@@ -961,35 +963,40 @@ const Index = () => {
               </div>
             </div>
 
-            <div className="grid grid-cols-2 md:flex md:flex-row md:flex-wrap lg:flex-nowrap gap-4 md:gap-6 md:mt-16 perspective-1000 pillar-card-container">
+            {/* Cards — always below the text/image */}
+            <div className="grid grid-cols-2 md:flex md:flex-row md:flex-wrap lg:flex-nowrap gap-4 md:gap-6 perspective-1000 pillar-card-container relative z-0">
               {pillarCards.map((pillar, index) => (
                 <div
                   key={pillar.title}
                   className="pillar-wrapper pillar-flex-default transition-all duration-700 ease-[cubic-bezier(0.16,1,0.3,1)] md:w-[calc(50%-0.75rem)] lg:w-auto lg:min-w-0"
                 >
-                  <div className="pillar-card relative rounded-[0.3rem] overflow-hidden border border-[#DBDBDB] bg-white/50 backdrop-blur-lg shadow-[0_8px_30px_rgb(0,0,0,0.04)] flex flex-col items-center p-4 md:p-8 h-[200px] md:h-[550px]">
+                  <div className="pillar-card relative rounded-[0.3rem] overflow-hidden border border-[#DBDBDB] bg-white shadow-[0_8px_30px_rgb(0,0,0,0.04)] flex flex-col items-center p-4 md:p-8 h-[200px] md:h-[640px]">
+                    {/* Title */}
                     <div className="w-full text-center">
                       <h3 className="font-heading text-sm md:text-xl lg:text-2xl font-bold text-black leading-tight flex items-center justify-center whitespace-pre-line min-h-[2.5rem] md:h-16">
                         {pillar.title}
                       </h3>
                     </div>
 
-                    <div className={`${isMobile ? "flex-1 flex" : "absolute inset-0 flex"} items-center justify-center`}>
+                    {/* Circle image */}
+                    <div className={`${isMobile ? "flex-1 flex items-center justify-center" : "flex items-center justify-center mt-6 mb-6"}`}>
                       <img
                         src={pillar.image}
                         alt={pillar.title}
-                        className="w-28 h-28 md:w-48 md:h-48 object-cover rounded-full shadow-md"
+                        className="w-24 h-24 md:w-56 md:h-56 object-cover rounded-full shadow-md"
                       />
                     </div>
 
-                    <div className="hidden md:block absolute bottom-20 left-8 right-8 text-center">
-                      <p className="text-sm text-black/70 font-body">{pillar.summary}</p>
+                    {/* Summary */}
+                    <div className="hidden md:block text-center flex-1 px-2">
+                      <p className="text-sm text-black/70 font-body leading-relaxed">{pillar.summary}</p>
                     </div>
 
-                    <div className={`${isMobile ? "mt-2 flex justify-center" : "absolute bottom-6 left-0 right-0 flex justify-center"} z-10`}>
+                    {/* Button */}
+                    <div className={`${isMobile ? "mt-2" : "mt-auto pt-4"} flex justify-center`}>
                       <Button
                         variant="outline"
-                        className="rounded-full border-black/20 text-[10px] md:text-xs text-black uppercase tracking-wider bg-white/50 backdrop-blur hover:bg-[#FFF200] hover:text-black hover:border-[#FFF200] transition-colors px-3 py-1 md:px-4 md:py-2"
+                        className="rounded-full border-black/20 text-[10px] md:text-xs text-black uppercase tracking-wider bg-white hover:bg-[#FFF200] hover:text-black hover:border-[#FFF200] transition-colors px-3 py-1 md:px-4 md:py-2"
                         onClick={() => setModalPillar(index)}
                       >
                         Details
