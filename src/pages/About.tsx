@@ -619,7 +619,7 @@ const About = () => {
                 </span>
                 <div className="w-60 h-[1.5px] bg-black mt-4" />
                 <h2 className="font-heading text-4xl md:text-5xl lg:text-5xl font-semibold tracking-tight mt-6 text-black leading-tight">
-                  Our Major <br className="hidden lg:block" /> Research Units
+                  Our Major Units
                 </h2>
                 <p className="mt-8 text-base text-black/60 max-w-xl leading-relaxed">
                   End to end services spanning bioequivalence, drug discovery, nutraceuticals, and cosmetic science. Our research center is dedicated to advancing pharmaceutical excellence through innovation.
